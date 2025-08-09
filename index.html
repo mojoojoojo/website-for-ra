@@ -1,0 +1,477 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Centralized Student Record System — Demo (Admin-managed Avatars - Square)</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg-1: #f3f6ff; --primary: #2563eb; --accent: #6a11cb; --muted: #6b7280;
+    --card: #ffffff; --danger: #ef4444; --success: #16a34a; --radius: 12px;
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0; font-family:Inter,system-ui,-apple-system,"Segoe UI",Roboto,Arial;
+    background: linear-gradient(180deg,#e9f0ff 0%,#f7fbff 100%); color:#0f172a; padding:20px; display:flex; justify-content:center;
+  }
+  .app { width:100%; max-width:1100px; display:flex; gap:20px; flex-direction:column; }
+
+  header.app-header { display:flex; align-items:center; justify-content:space-between; gap:12px; }
+  .brand { display:flex; gap:12px; align-items:center; }
+  .logo { width:56px; height:56px; border-radius:12px; background:linear-gradient(135deg,var(--accent),var(--primary)); color:white; display:flex; align-items:center; justify-content:center; font-weight:800; font-size:18px; box-shadow:0 6px 18px rgba(99,102,241,0.18); }
+  .title { font-weight:700; font-size:18px; } .subtitle { color:var(--muted); font-size:13px; }
+
+  .card { background:var(--card); border-radius:var(--radius); padding:16px; box-shadow:0 10px 30px rgba(2,6,23,0.06); }
+  .center { display:flex; align-items:center; justify-content:center; min-height:72vh; }
+
+  label { display:block; font-size:13px; color:var(--muted); margin-bottom:6px; }
+  input[type="text"], input[type="password"], input[type="date"], select, textarea, input[type="number"] { width:100%; padding:10px 12px; border-radius:10px; border:1px solid #e6eef8; font-size:14px; background:white; }
+  button { padding:10px 14px; border-radius:10px; border:none; cursor:pointer; font-weight:600; }
+  button.primary { background:var(--primary); color:white; } button.ghost { background:transparent; border:1px solid #e6eef8; color:var(--muted); } button.danger { background:var(--danger); color:white; }
+
+  .grid { display:grid; grid-template-columns: 1fr 360px; gap:18px; } @media (max-width:980px){ .grid{ grid-template-columns: 1fr } }
+  .tabs { display:flex; gap:8px; flex-wrap:wrap; margin-bottom:12px; } .tabs button { background:#f3f4f6; color:#0f172a; padding:8px 12px; border-radius:10px; } .tabs button.active { background:var(--primary); color:white; box-shadow:0 6px 16px rgba(37,99,235,0.12) }
+
+  table { width:100%; border-collapse:collapse; font-size:14px; } th, td { padding:10px 8px; border-bottom: 1px solid #eef2f7; text-align:left; } th { color:var(--muted); font-size:13px; font-weight:700; }
+  .muted{ color:var(--muted); font-size:13px } .pill{ display:inline-block; background:#f3f4f6; padding:6px 10px; border-radius:999px; font-size:13px; } .row{ display:flex; gap:8px; } .col{ flex:1; } .hr{ height:1px; background:#eef2f7; margin:12px 0; border-radius:4px; }
+
+  @media (max-width:600px){ th{display:none} td{display:block; padding:8px 0; border-bottom:1px solid #eef2f7} td::before{ content: attr(data-label); font-weight:700; display:block; color:var(--muted); margin-bottom:6px } }
+
+  /* ---------- Avatar: SQUARE 1:1 ---------- */
+  .avatar { width:150px; height:150px; object-fit:cover; display:block; margin-bottom:10px; border:4px solid white; box-shadow:0 8px 20px rgba(2,6,23,0.08); border-radius:0; }
+  .avatar-placeholder { width:150px; height:150px; display:flex; align-items:center; justify-content:center; background:#eef2ff; color:var(--primary); font-weight:700; font-size:36px; margin-bottom:10px; border:4px solid white; box-shadow:0 8px 20px rgba(2,6,23,0.08); border-radius:0; }
+
+  .thumb { width:40px; height:40px; border-radius:6px; object-fit:cover; display:inline-block; vertical-align:middle; margin-right:8px; }
+
+  .file-input { display:flex; gap:8px; align-items:center; } input[type="file"] { padding:6px; background:transparent; border:none }
+
+  @media (max-width:600px){
+    .avatar { width:100px; height:100px; }
+    .avatar-placeholder { width:100px; height:100px; font-size:22px; }
+  }
+</style>
+</head>
+<body>
+  <div class="app">
+    <header class="app-header">
+      <div class="brand">
+        <div class="logo">CSR</div>
+        <div>
+          <div class="title">Centralized Student Record System</div>
+          <div class="subtitle">ACSHS — ICT Grade 12 (Demo)</div>
+        </div>
+      </div>
+      <div class="muted">Admin demo: <strong>admin</strong> / <strong>admin123</strong></div>
+    </header>
+
+    <!-- LOGIN -->
+    <main id="loginView" class="card center">
+      <div style="max-width:520px; width:100%;">
+        <h2 style="margin-bottom:6px">Sign in</h2>
+        <div class="muted" style="margin-bottom:12px">Role and credentials. Student default password: <code>IDNumber-MMDD</code> (e.g. <code>12-1234-567-0531</code>).</div>
+
+        <label>Role</label>
+        <select id="loginRole"><option value="student">Student</option><option value="admin">Admin</option></select>
+
+        <label style="margin-top:10px">ID / Username</label>
+        <input id="loginId" type="text" placeholder="Student ID or admin">
+
+        <label>Password</label>
+        <input id="loginPass" type="password" placeholder="Password">
+
+        <div style="display:flex; gap:8px; margin-top:12px">
+          <button class="primary" onclick="login()">Login</button>
+          <button class="ghost" onclick="loadDemoData()">Load Demo</button>
+          <button class="ghost" onclick="clearAll()">Reset All</button>
+        </div>
+      </div>
+    </main>
+
+    <!-- DASHBOARD -->
+    <section id="dashboardView" style="display:none">
+      <div class="grid">
+        <div>
+          <div class="card">
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+              <div>
+                <div id="userTitle" style="font-weight:700; font-size:18px">Welcome</div>
+                <div id="userMeta" class="muted">Choose a tab to begin</div>
+              </div>
+              <div style="display:flex; gap:8px; align-items:center">
+                <button class="ghost" onclick="exportDatabase()">Export JSON</button>
+                <label class="ghost file-input" style="padding:8px; border-radius:10px; border:1px solid #eef2f7; cursor:pointer;">
+                  Import <input id="importFile" type="file" accept="application/json" style="display:none" onchange="importDatabase(event)">
+                </label>
+                <button class="danger" onclick="logout()">Logout</button>
+              </div>
+            </div>
+
+            <div class="hr"></div>
+
+            <div id="tabsArea" class="tabs"></div>
+            <div id="mainArea" style="margin-top:12px"></div>
+          </div>
+        </div>
+
+        <aside>
+          <div class="card" id="rightCard">
+            <div class="muted">Today</div>
+            <div style="font-weight:700; margin-top:6px" id="todayDate"></div>
+            <div class="hr"></div>
+            <div id="quickPills" style="display:flex; gap:8px; flex-wrap:wrap"></div>
+            <div style="margin-top:12px" id="rightShort"></div>
+          </div>
+        </aside>
+      </div>
+    </section>
+  </div>
+
+<script>
+/* Single-file CSR system with admin-controlled student avatars (square)
+   - avatars saved as Base64 data URLs at user.avatar
+   - all data in localStorage
+*/
+
+const LS = { USERS:'csr_users_v1', ATT:'csr_attendance_v1', GRADES:'csr_grades_v1', SCHED:'csr_schedule_v1' };
+const ADMIN = { username:'admin', password:'admin123' };
+
+/* Utilities */
+function read(key){ try{ return JSON.parse(localStorage.getItem(key) || 'null'); }catch(e){ return null; } }
+function write(key,val){ localStorage.setItem(key, JSON.stringify(val)); }
+function todayDate(){ return new Date().toLocaleDateString(); }
+function fullName(u){ return `${u.firstName} ${u.lastName}`; }
+function formatMMDDFromBirth(birth){ if(!birth) return ''; const p=birth.split('-'); return p.length===3 ? p[1].padStart(2,'0')+p[2].padStart(2,'0') : ''; }
+
+/* DOM refs */
+const loginView = document.getElementById('loginView');
+const dashboardView = document.getElementById('dashboardView');
+const loginRole = document.getElementById('loginRole');
+const loginId = document.getElementById('loginId');
+const loginPass = document.getElementById('loginPass');
+const userTitle = document.getElementById('userTitle');
+const userMeta  = document.getElementById('userMeta');
+const tabsArea  = document.getElementById('tabsArea');
+const mainArea  = document.getElementById('mainArea');
+const todayDateEl = document.getElementById('todayDate');
+const quickPills = document.getElementById('quickPills');
+const rightShort = document.getElementById('rightShort');
+
+todayDateEl.innerText = todayDate();
+
+/* App state */
+let state = { role:null, user:null };
+
+/* Demo data loader */
+function loadDemoData(){
+  const users = [
+    { id:'12-1234-567', firstName:'Juan', lastName:'Dela Cruz', track:'ICT', birth:'2005-05-31', avatar: null },
+    { id:'13-1111-888', firstName:'Maria', lastName:'Santos', track:'ICT', birth:'2005-08-12', avatar: null }
+  ];
+  const attendance = [
+    { userId:'12-1234-567', date:'2025-08-09', status:'Absent' },
+    { userId:'12-1234-567', date:'2025-08-08', status:'Tardy' },
+    { userId:'13-1111-888', date:'2025-08-08', status:'Absent' }
+  ];
+  const grades = [
+    { userId:'12-1234-567', schoolYear:'2024-2025', semester:'1st Semester', subject:'Math', grade:90 },
+    { userId:'12-1234-567', schoolYear:'2024-2025', semester:'1st Semester', subject:'English', grade:88 },
+    { userId:'12-1234-567', schoolYear:'2024-2025', semester:'1st Semester', subject:'Science', grade:92 }
+  ];
+  const schedule = [
+    { subject:'Math', time:'8:00 - 9:00', days:'Mon-Fri', room:'101', teacher:'Mr. Cruz' },
+    { subject:'English', time:'9:00 - 10:00', days:'Mon-Fri', room:'102', teacher:'Ms. Santos' }
+  ];
+  write(LS.USERS, users); write(LS.ATT, attendance); write(LS.GRADES, grades); write(LS.SCHED, schedule);
+  alert('Demo data loaded.');
+}
+
+/* Login/logout */
+function login(){
+  const role = loginRole.value;
+  const id = loginId.value.trim();
+  const pass = loginPass.value.trim();
+
+  if(role === 'admin'){
+    if(id === ADMIN.username && pass === ADMIN.password){
+      state.role = 'admin'; state.user = { username: ADMIN.username };
+      openDashboard(); return;
+    } else { alert('Invalid admin credentials'); return; }
+  }
+
+  const users = read(LS.USERS) || [];
+  const u = users.find(x=>x.id===id);
+  if(!u){ alert('Student ID not found'); return; }
+  const mmdd = formatMMDDFromBirth(u.birth);
+  const expected = `${u.id}-${mmdd}`;
+  if(pass === expected){ state.role='student'; state.user = u; openDashboard(); } else { alert('Invalid student password (format: ID-MMDD)'); }
+}
+function logout(){ state={role:null,user:null}; dashboardView.style.display='none'; loginView.style.display='flex'; loginId.value=''; loginPass.value=''; mainArea.innerHTML=''; tabsArea.innerHTML=''; quickPills.innerHTML=''; rightShort.innerHTML=''; }
+
+/* Dashboard open */
+function openDashboard(){
+  loginView.style.display='none'; dashboardView.style.display='block';
+  if(state.role==='admin'){ userTitle.innerText='Administrator'; userMeta.innerText='Full access'; buildAdminTabs(); } else { userTitle.innerText = fullName(state.user); userMeta.innerText = `${state.user.id} • ${state.user.track}`; buildStudentTabs(); }
+  renderRightSummary();
+}
+
+/* Tabs */
+function clearTabs(){ tabsArea.innerHTML=''; }
+function addTab(label, active=false, onClick=null){
+  const btn = document.createElement('button'); btn.innerText = label; btn.className = active ? 'active' : ''; btn.onclick = ()=>{
+    Array.from(tabsArea.children).forEach(c=>c.classList.remove('active')); btn.classList.add('active'); if(onClick) onClick();
+  }; tabsArea.appendChild(btn); if(active && onClick) onClick();
+}
+function buildStudentTabs(){ clearTabs(); addTab('Main Page', true, renderStudentMain); addTab('Schedule', false, renderStudentSchedule); addTab('Attendance', false, renderStudentAttendance); addTab('Grades', false, renderStudentGrades); }
+function buildAdminTabs(){ clearTabs(); addTab('Admin Home', true, renderAdminHome); addTab('Manage Students', false, renderManageStudents); addTab('Attendance', false, renderAdminAttendance); addTab('Grades', false, renderAdminGrades); addTab('Schedule', false, renderAdminSchedule); addTab('Import/Export', false, renderImportExport); }
+
+/* Right summary */
+function renderRightSummary(){
+  quickPills.innerHTML=''; rightShort.innerHTML='';
+  if(state.role==='admin'){
+    const users = read(LS.USERS)||[]; const att = read(LS.ATT)||[]; const grades = read(LS.GRADES)||[]; const sched = read(LS.SCHED)||[];
+    quickPills.innerHTML = `<div class="pill">${users.length} students</div><div class="pill">${att.length} attendance</div><div class="pill">${grades.length} grades</div><div class="pill">${sched.length} schedule</div>`;
+    rightShort.innerHTML = `<div class="muted" style="margin-top:10px">Tip: export data before importing a file to keep a backup.</div>`;
+  } else {
+    const uid = state.user.id; const att = (read(LS.ATT)||[]).filter(a=>a.userId===uid && a.status!=='Present'); const grades = (read(LS.GRADES)||[]).filter(g=>g.userId===uid);
+    quickPills.innerHTML = `<div class="pill">${att.length} absences/tardy</div><div class="pill">${grades.length} grades</div>`;
+    rightShort.innerHTML = `<div class="muted" style="margin-top:10px">Use tabs to view attendance, schedule, and grades.</div>`;
+  }
+}
+
+/* STUDENT VIEWS (avatar above name) */
+function renderStudentMain(){
+  const u = state.user;
+  const avatarHtml = u.avatar ? `<img src="${u.avatar}" alt="avatar" class="avatar">` : `<div class="avatar-placeholder">${(u.firstName||'')[0]}${(u.lastName||'')[0]}</div>`;
+  mainArea.innerHTML = `
+    <div class="card">
+      <div style="display:flex; gap:16px; align-items:center">
+        <div style="min-width:150px; text-align:center">${avatarHtml}</div>
+        <div style="flex:1">
+          <div class="muted">Student Information</div>
+          <div style="margin-top:8px; font-weight:700; font-size:18px">${fullName(u)}</div>
+          <div class="muted" style="margin-top:6px">${u.id} • ${u.track}</div>
+          <div class="hr"></div>
+          <div style="display:flex; gap:8px; flex-wrap:wrap">
+            <div class="pill">${countAbsences(u.id)} absences</div>
+            <div class="pill">${getGradesCount(u.id)} grades</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+function renderStudentSchedule(){
+  const sched = read(LS.SCHED) || [];
+  const rows = sched.map(s=>`<tr><td>${s.subject}</td><td>${s.time}</td><td>${s.days}</td><td>${s.room}</td><td>${s.teacher}</td></tr>`).join('') || '<tr><td colspan="5" class="muted">No schedule</td></tr>';
+  mainArea.innerHTML = `<div class="card"><h3>Schedule</h3><div style="overflow:auto"><table><thead><tr><th>Subject</th><th>Time</th><th>Days</th><th>Room</th><th>Teacher</th></tr></thead><tbody>${rows}</tbody></table></div></div>`;
+}
+
+function renderStudentAttendance(){
+  const uid = state.user.id;
+  const att = (read(LS.ATT)||[]).filter(a=>a.userId===uid).sort((a,b)=>b.date.localeCompare(a.date));
+  const rows = att.map(a=>`<li style="padding:8px 0; border-bottom:1px solid #f1f5f9; display:flex; justify-content:space-between"><span>${a.date}</span><span class="${a.status==='Absent'?'danger':a.status==='Tardy'?'muted':'success'}">${a.status}</span></li>`).join('') || '<li class="muted">No records</li>';
+  mainArea.innerHTML = `<div class="card"><h3>Attendance</h3><ul style="list-style:none; padding:0; margin-top:8px">${rows}</ul></div>`;
+}
+
+function renderStudentGrades(){
+  const uid = state.user.id;
+  const gradesAll = (read(LS.GRADES)||[]).filter(g=>g.userId===uid);
+  const schoolYears = Array.from(new Set(gradesAll.map(g=>g.schoolYear))).sort().reverse();
+  const syOptions = schoolYears.length ? schoolYears.map(s=>`<option>${s}</option>`).join('') : `<option>2024-2025</option>`;
+  const selectedSY = schoolYears[0] || '2024-2025';
+  const semOptions = `<option>1st Semester</option><option>2nd Semester</option>`;
+  const filtered = gradesAll.filter(g=>g.schoolYear===selectedSY && g.semester==='1st Semester');
+  const rows = filtered.map(g=>`<tr><td>${g.subject}</td><td>${g.grade}</td></tr>`).join('') || '<tr><td class="muted" colspan="2">No grades</td></tr>';
+  mainArea.innerHTML = `
+    <div class="card">
+      <h3>Grades</h3>
+      <div class="row" style="margin-bottom:10px">
+        <div class="col"><label>School Year</label><select id="studentSelSY">${syOptions}</select></div>
+        <div class="col"><label>Semester</label><select id="studentSelSem">${semOptions}</select></div>
+      </div>
+      <div style="overflow:auto"><table><thead><tr><th>Subject</th><th>Grade</th></tr></thead><tbody id="studentGradesTable">${rows}</tbody></table></div>
+    </div>
+  `;
+  document.getElementById('studentSelSY').value = selectedSY;
+  document.getElementById('studentSelSem').value = '1st Semester';
+  document.getElementById('studentSelSY').addEventListener('change', studentGradesRefresh);
+  document.getElementById('studentSelSem').addEventListener('change', studentGradesRefresh);
+}
+function studentGradesRefresh(){
+  const sy = document.getElementById('studentSelSY').value;
+  const sem = document.getElementById('studentSelSem').value;
+  const uid = state.user.id;
+  const filtered = (read(LS.GRADES)||[]).filter(g=>g.userId===uid && g.schoolYear===sy && g.semester===sem);
+  const rows = filtered.map(g=>`<tr><td>${g.subject}</td><td>${g.grade}</td></tr>`).join('') || '<tr><td class="muted" colspan="2">No grades</td></tr>';
+  document.getElementById('studentGradesTable').innerHTML = rows;
+}
+
+/* ADMIN VIEWS */
+function renderAdminHome(){
+  const users = read(LS.USERS)||[]; const att = read(LS.ATT)||[]; const grades = read(LS.GRADES)||[]; const sched = read(LS.SCHED)||[];
+  mainArea.innerHTML = `<div class="card"><h3>Admin Home</h3><div class="muted">System summary</div><div style="display:flex; gap:8px; margin-top:12px; flex-wrap:wrap"><div class="pill">${users.length} students</div><div class="pill">${att.length} attendance</div><div class="pill">${grades.length} grades</div><div class="pill">${sched.length} schedule items</div></div><div class="hr"></div><div class="muted">Quick Actions</div><div style="margin-top:8px; display:flex; gap:8px; flex-wrap:wrap"><button class="primary" onclick="openTabByName('Manage Students')">Add Student</button><button class="ghost" onclick="openTabByName('Attendance')">Manage Attendance</button><button class="ghost" onclick="openTabByName('Grades')">Manage Grades</button></div></div>`;
+}
+
+function renderManageStudents(){
+  const users = read(LS.USERS) || [];
+  const rows = users.map((u,i)=>`
+    <tr>
+      <td data-label="ID"><div style="display:flex;align-items:center">${u.avatar ? `<img src="${u.avatar}" class="thumb">` : ''}${u.id}</div></td>
+      <td data-label="Name">${fullName(u)}</td>
+      <td data-label="Track">${u.track}</td>
+      <td data-label="Actions">
+        <div class="actions">
+          <button class="ghost" onclick="editStudent(${i})">Edit</button>
+          <button class="ghost" onclick="uploadStudentPhoto(${i})">Upload Photo</button>
+          <button class="danger" onclick="deleteStudent(${i})">Delete</button>
+        </div>
+      </td>
+    </tr>`).join('') || `<tr><td class="muted" colspan="4">No students</td></tr>`;
+
+  mainArea.innerHTML = `
+    <div class="card">
+      <h3>Manage Students</h3>
+      <div class="muted">Add new student</div>
+      <div class="row" style="margin-top:8px">
+        <input id="newId" placeholder="ID e.g. 14-2222-333" />
+        <input id="newFirst" placeholder="First name" />
+      </div>
+      <div class="row" style="margin-top:8px">
+        <input id="newLast" placeholder="Last name" />
+        <input id="newTrack" placeholder="Track e.g. ICT" />
+      </div>
+      <div style="margin-top:8px">
+        <label>Birthdate</label>
+        <input id="newBirth" type="date" />
+      </div>
+      <div style="margin-top:8px; display:flex; gap:8px">
+        <button class="primary" onclick="addStudent()">Add Student</button>
+        <button class="ghost" onclick="loadDemoData()">Load Demo</button>
+      </div>
+      <div class="hr"></div>
+      <div style="overflow:auto"><table><thead><tr><th>ID</th><th>Name</th><th>Track</th><th>Actions</th></tr></thead><tbody id="studentsTableBody">${rows}</tbody></table></div>
+    </div>`;
+}
+
+function renderAdminAttendance(){
+  const att = read(LS.ATT) || []; const users = read(LS.USERS)||[];
+  const rows = att.map((a,i)=>`<tr><td data-label="Student">${a.userId}</td><td data-label="Date">${a.date}</td><td data-label="Status">${a.status}</td><td data-label="Action"><button class="danger" onclick="deleteAttendance(${i})">Delete</button></td></tr>`).join('') || `<tr><td class="muted" colspan="4">No records</td></tr>`;
+  mainArea.innerHTML = `<div class="card"><h3>Attendance</h3><div style="overflow:auto"><table><thead><tr><th>Student ID</th><th>Date</th><th>Status</th><th>Action</th></tr></thead><tbody>${rows}</tbody></table></div><div class="hr"></div><div class="muted">Add attendance</div><div class="row" style="margin-top:8px"><select id="attUser">${users.map(u=>`<option value="${u.id}">${u.id} • ${u.firstName}</option>`).join('')}</select><input id="attDate" type="date" value="${new Date().toISOString().slice(0,10)}"/><select id="attStatus"><option>Present</option><option>Absent</option><option>Tardy</option></select></div><div style="margin-top:8px"><button class="primary" onclick="addAttendance()">Add Attendance</button></div></div>`;
+}
+
+function renderAdminGrades(){
+  const grades = read(LS.GRADES)||[]; const users = read(LS.USERS)||[];
+  const rows = grades.map((g,i)=>`<tr><td data-label="Student">${g.userId}</td><td data-label="SY">${g.schoolYear}</td><td data-label="Sem">${g.semester}</td><td data-label="Subject">${g.subject}</td><td data-label="Grade"><input type="number" value="${g.grade}" onchange="editGrade(${i}, this.value)" style="width:80px"/></td><td data-label="Action"><button class="danger" onclick="deleteGrade(${i})">Delete</button></td></tr>`).join('') || `<tr><td class="muted" colspan="6">No grade records</td></tr>`;
+  mainArea.innerHTML = `<div class="card"><h3>Grades</h3><div style="overflow:auto"><table><thead><tr><th>Student ID</th><th>School Year</th><th>Semester</th><th>Subject</th><th>Grade</th><th>Action</th></tr></thead><tbody>${rows}</tbody></table></div><div class="hr"></div><div class="muted">Add grade</div><div class="row" style="margin-top:8px"><select id="gUser">${users.map(u=>`<option value="${u.id}">${u.id} • ${u.firstName}</option>`).join('')}</select><input id="gSY" placeholder="2024-2025" /></div><div class="row" style="margin-top:8px"><select id="gSem"><option>1st Semester</option><option>2nd Semester</option></select><input id="gSubject" placeholder="Subject" /><input id="gValue" type="number" placeholder="Grade" style="max-width:120px" /></div><div style="margin-top:8px"><button class="primary" onclick="addGrade()">Add Grade</button></div></div>`;
+}
+
+function renderAdminSchedule(){
+  const sched = read(LS.SCHED) || [];
+  const rows = sched.map((s,i)=>`<tr><td data-label="Subject">${s.subject}</td><td data-label="Time">${s.time}</td><td data-label="Days">${s.days}</td><td data-label="Room">${s.room}</td><td data-label="Teacher">${s.teacher}</td><td data-label="Action"><button class="danger" onclick="deleteSchedule(${i})">Delete</button></td></tr>`).join('') || `<tr><td class="muted" colspan="6">No schedule</td></tr>`;
+  mainArea.innerHTML = `<div class="card"><h3>Schedule</h3><div style="overflow:auto"><table><thead><tr><th>Subject</th><th>Time</th><th>Days</th><th>Room</th><th>Teacher</th><th>Action</th></tr></thead><tbody>${rows}</tbody></table></div><div class="hr"></div><div class="muted">Add schedule</div><div class="row" style="margin-top:8px"><input id="sSubject" placeholder="Subject" /><input id="sTime" placeholder="Time e.g. 8:00 - 9:00" /></div><div class="row" style="margin-top:8px"><input id="sDays" placeholder="Days e.g. Mon-Fri" /><input id="sRoom" placeholder="Room" /><input id="sTeacher" placeholder="Teacher" /></div><div style="margin-top:8px"><button class="primary" onclick="addSchedule()">Add Schedule</button></div></div>`;
+}
+
+function renderImportExport(){
+  mainArea.innerHTML = `<div class="card"><h3>Import / Export</h3><div class="muted">Export JSON backup of DB (includes avatars)</div><div style="margin-top:12px; display:flex; gap:8px;"><button class="primary" onclick="exportDatabase()">Export JSON</button><label class="ghost file-input" style="cursor:pointer; padding:8px; border-radius:10px; border:1px solid #eef2f7;">Import JSON<input id="importFile2" type="file" accept="application/json" style="display:none" onchange="importDatabase(event)"></label></div><div class="hr"></div><div class="muted">Warning: Import replaces current data</div></div>`;
+}
+
+/* ADMIN ACTIONS */
+function addStudent(){
+  const id = document.getElementById('newId').value.trim();
+  const first = document.getElementById('newFirst').value.trim();
+  const last = document.getElementById('newLast').value.trim();
+  const track = document.getElementById('newTrack').value.trim() || 'ICT';
+  const birth = document.getElementById('newBirth').value;
+  if(!id || !first || !last || !birth){ alert('Please fill all fields including birthdate'); return; }
+  const users = read(LS.USERS)||[];
+  if(users.some(u=>u.id===id)){ alert('ID already exists'); return; }
+  users.push({ id, firstName:first, lastName:last, track, birth, avatar:null });
+  write(LS.USERS, users);
+  document.getElementById('newId').value=''; document.getElementById('newFirst').value=''; document.getElementById('newLast').value=''; document.getElementById('newBirth').value=''; document.getElementById('newTrack').value='';
+  openTabByName('Manage Students'); renderRightSummary();
+}
+
+function editStudent(index){
+  const users = read(LS.USERS)||[]; const u = users[index];
+  const first = prompt('First name', u.firstName); if(first===null) return;
+  const last = prompt('Last name', u.lastName); if(last===null) return;
+  const track = prompt('Track', u.track); if(track===null) return;
+  const birth = prompt('Birth (YYYY-MM-DD)', u.birth); if(birth===null) return;
+  users[index] = {...u, firstName:first.trim(), lastName:last.trim(), track:track.trim(), birth:birth.trim()};
+  write(LS.USERS, users); openTabByName('Manage Students'); renderRightSummary();
+}
+
+function deleteStudent(index){
+  if(!confirm('Delete student and their records?')) return;
+  const users = read(LS.USERS)||[]; const id = users[index].id; users.splice(index,1); write(LS.USERS, users);
+  write(LS.ATT, (read(LS.ATT)||[]).filter(a=>a.userId!==id));
+  write(LS.GRADES, (read(LS.GRADES)||[]).filter(g=>g.userId!==id));
+  openTabByName('Manage Students'); renderRightSummary();
+}
+
+/* Upload avatar for student (admin-only) */
+function uploadStudentPhoto(index){
+  const input = document.createElement('input');
+  input.type = 'file'; input.accept = 'image/*';
+  input.onchange = function(e){
+    const file = e.target.files[0];
+    if(!file) return;
+    const reader = new FileReader();
+    reader.onload = function(ev){
+      const dataUrl = ev.target.result;
+      const users = read(LS.USERS) || [];
+      if(!users[index]) { alert('Student not found'); return; }
+      users[index].avatar = dataUrl;
+      write(LS.USERS, users);
+      alert('Profile image uploaded for ' + users[index].id);
+      openTabByName('Manage Students');
+      if(state.role==='student' && state.user.id === users[index].id){
+        state.user = users[index];
+        renderStudentMain();
+        renderRightSummary();
+      }
+      renderRightSummary();
+    };
+    reader.readAsDataURL(file);
+  };
+  input.click();
+}
+
+/* Attendance */
+function addAttendance(){ const userId=document.getElementById('attUser').value; const date=document.getElementById('attDate').value; const status=document.getElementById('attStatus').value; if(!date){ alert('Pick a date'); return; } const arr=read(LS.ATT)||[]; arr.push({ userId,date,status }); write(LS.ATT, arr); openTabByName('Attendance'); renderRightSummary(); }
+function deleteAttendance(i){ const arr=read(LS.ATT)||[]; if(!arr[i]) return; if(!confirm('Delete attendance?')) return; arr.splice(i,1); write(LS.ATT, arr); openTabByName('Attendance'); renderRightSummary(); }
+
+/* Grades */
+function addGrade(){ const userId=document.getElementById('gUser').value; const sy=document.getElementById('gSY').value.trim()||'2024-2025'; const sem=document.getElementById('gSem').value; const subject=document.getElementById('gSubject').value.trim(); const val=parseInt(document.getElementById('gValue').value,10); if(!subject||isNaN(val)){ alert('Enter subject and numeric grade'); return; } const arr=read(LS.GRADES)||[]; arr.push({ userId, schoolYear:sy, semester:sem, subject, grade:val }); write(LS.GRADES, arr); openTabByName('Grades'); renderRightSummary(); }
+function editGrade(i,val){ const arr=read(LS.GRADES)||[]; arr[i].grade = parseInt(val,10)||0; write(LS.GRADES, arr); }
+function deleteGrade(i){ const arr=read(LS.GRADES)||[]; if(!arr[i]) return; if(!confirm('Delete grade?')) return; arr.splice(i,1); write(LS.GRADES, arr); openTabByName('Grades'); renderRightSummary(); }
+
+/* Schedule */
+function addSchedule(){ const subject=document.getElementById('sSubject').value.trim(); const time=document.getElementById('sTime').value.trim(); const days=document.getElementById('sDays').value.trim(); const room=document.getElementById('sRoom').value.trim(); const teacher=document.getElementById('sTeacher').value.trim(); if(!subject||!time){ alert('Subject and time required'); return; } const arr=read(LS.SCHED)||[]; arr.push({ subject, time, days, room, teacher }); write(LS.SCHED, arr); openTabByName('Schedule'); renderRightSummary(); }
+function deleteSchedule(i){ const arr=read(LS.SCHED)||[]; if(!arr[i]) return; if(!confirm('Delete schedule?')) return; arr.splice(i,1); write(LS.SCHED, arr); openTabByName('Schedule'); renderRightSummary(); }
+
+/* Export/Import */
+function exportDatabase(){ const payload = { users: read(LS.USERS)||[], attendance: read(LS.ATT)||[], grades: read(LS.GRADES)||[], schedule: read(LS.SCHED)||[] }; const blob = new Blob([JSON.stringify(payload, null, 2)], { type:'application/json' }); const url = URL.createObjectURL(blob); const a = document.createElement('a'); a.href = url; a.download = 'csr_export.json'; a.click(); URL.revokeObjectURL(url); }
+function importDatabase(e){ const file = (e.target && e.target.files && e.target.files[0]) || null; if(!file){ alert('No file'); return; } const reader = new FileReader(); reader.onload = function(ev){ try{ const obj = JSON.parse(ev.target.result); write(LS.USERS, obj.users || []); write(LS.ATT, obj.attendance || []); write(LS.GRADES, obj.grades || []); write(LS.SCHED, obj.schedule || []); alert('Import successful (replaced current data).'); if(state.role==='admin') openTabByName('Admin Home'); renderRightSummary(); }catch(err){ alert('Invalid JSON: ' + err.message); } }; reader.readAsText(file); if(e.target) e.target.value=''; }
+
+/* Helpers */
+function openTabByName(name){ const btn = Array.from(tabsArea.children).find(b=>b.innerText===name); if(btn) btn.click(); }
+function countAbsences(userId){ return (read(LS.ATT)||[]).filter(a=>a.userId===userId && a.status==='Absent').length; }
+function getGradesCount(userId){ return (read(LS.GRADES)||[]).filter(g=>g.userId===userId).length; }
+
+/* Boot */
+(function boot(){ if(!localStorage.getItem(LS.USERS)) loadDemoData(); })();
+
+/* Expose */
+window.login = login; window.logout = logout; window.loadDemoData = loadDemoData; window.clearAll = function(){ if(!confirm('Clear all local data?')) return; localStorage.removeItem(LS.USERS); localStorage.removeItem(LS.ATT); localStorage.removeItem(LS.GRADES); localStorage.removeItem(LS.SCHED); alert('Local data cleared'); location.reload(); };
+window.addStudent = addStudent; window.editStudent = editStudent; window.deleteStudent = deleteStudent; window.uploadStudentPhoto = uploadStudentPhoto;
+window.addAttendance = addAttendance; window.deleteAttendance = deleteAttendance;
+window.addGrade = addGrade; window.editGrade = editGrade; window.deleteGrade = deleteGrade;
+window.addSchedule = addSchedule; window.deleteSchedule = deleteSchedule;
+window.exportDatabase = exportDatabase; window.importDatabase = importDatabase;
+</script>
+</body>
+</html>
