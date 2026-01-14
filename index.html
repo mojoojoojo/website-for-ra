@@ -1,934 +1,850 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-    <title>myACSHS | Enterprise Portal v7.0</title>
-    
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-    
-    <style>
-        /* --- PROFESSIONAL ENHANCED STYLING --- */
-        :root {
-            --bg-1: #f8fafc;
-            --bg-2: #ffffff;
-            --primary: #1e40af;
-            --primary-light: #3b82f6;
-            --accent: #7c3aed;
-            --accent-light: #a855f7;
-            --muted: #64748b;
-            --muted-light: #94a3b8;
-            --card: #ffffff;
-            --card-hover: #f1f5f9;
-            --danger: #dc2626;
-            --danger-light: #ef4444;
-            --success: #059669;
-            --success-light: #10b981;
-            --warning: #d97706;
-            --radius: 16px;
-            --radius-sm: 8px;
-            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-            --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        }
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1" />
+<title>myACSHS — Admin & Student Portal</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg-1: #f8fafc; --bg-2: #f1f5f9;
+    --primary: #2563eb; --primary-hover: #1d4ed8;
+    --accent: #6a11cb;
+    --muted: #64748b; --text: #0f172a;
+    --card: #ffffff;
+    --danger: #ef4444; --success: #16a34a; --warning: #f59e0b;
+    --radius: 12px;
+    --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  }
+  * { box-sizing: border-box; outline: none; -webkit-tap-highlight-color: transparent; }
+  
+  body {
+    margin: 0; font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    background: var(--bg-1); color: var(--text);
+    padding: 20px;
+    display: flex; justify-content: center; min-height: 100vh;
+  }
 
-        * { 
-            box-sizing: border-box; 
-            -webkit-font-smoothing: antialiased; 
-            -moz-osx-font-smoothing: grayscale;
-        }
+  /* --- Layout & Typography --- */
+  .app { width: 100%; max-width: 1200px; display: flex; gap: 20px; flex-direction: column; }
+  
+  header.app-header { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+  .brand { display: flex; gap: 12px; align-items: center; }
+  .logo { width: 48px; height: 48px; border-radius: 10px; background: linear-gradient(135deg, var(--accent), var(--primary)); color: white; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 16px; box-shadow: 0 4px 12px rgba(37,99,235,0.2); }
+  .title { font-weight: 700; font-size: 18px; color: var(--text); } 
+  .subtitle { color: var(--muted); font-size: 13px; }
 
-        body {
-            margin: 0;
-            font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: linear-gradient(135deg, var(--bg-1) 0%, #e2e8f0 100%);
-            color: #1e293b;
-            padding: 20px;
-            display: flex;
-            justify-content: center;
-            min-height: 100vh;
-            line-height: 1.6;
-        }
+  .card { 
+    background: var(--card); border-radius: var(--radius); padding: 20px; 
+    box-shadow: var(--shadow); border: 1px solid #e2e8f0;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+  
+  .center-view { display: flex; align-items: center; justify-content: center; min-height: 70vh; }
 
-        .app {
-            width: 100%;
-            max-width: 1200px;
-            display: flex;
-            flex-direction: column;
-            gap: 24px;
-            animation: fadeIn 0.8s ease-out;
-        }
+  /* --- Forms & Inputs --- */
+  label { display: block; font-size: 13px; font-weight: 500; color: var(--muted); margin-bottom: 6px; }
+  input, select, textarea { 
+    width: 100%; padding: 10px 12px; border-radius: 8px; border: 1px solid #cbd5e1; 
+    font-size: 14px; background: #fff; transition: border-color 0.2s, box-shadow 0.2s;
+  }
+  input:focus, select:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(37,99,235,0.1); }
 
-        @keyframes fadeIn { 
-            from { opacity: 0; transform: translateY(20px); } 
-            to { opacity: 1; transform: translateY(0); } 
-        }
+  button { 
+    padding: 10px 16px; border-radius: 8px; border: none; cursor: pointer; 
+    font-weight: 600; font-size: 14px; transition: all 0.2s ease; display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+  }
+  button:active { transform: scale(0.98); }
+  button.primary { background: var(--primary); color: white; }
+  button.primary:hover { background: var(--primary-hover); box-shadow: 0 4px 12px rgba(37,99,235,0.2); }
+  button.ghost { background: transparent; border: 1px solid #cbd5e1; color: var(--muted); }
+  button.ghost:hover { background: var(--bg-2); color: var(--text); border-color: #94a3b8; }
+  button.danger { background: #fee2e2; color: var(--danger); }
+  button.danger:hover { background: var(--danger); color: white; }
 
-        /* --- AUTHENTICATION STYLES --- */
-        .auth-overlay {
-            position: fixed; 
-            top: 0; 
-            left: 0; 
-            width: 100%; 
-            height: 100%;
-            background: rgba(255, 255, 255, 0.95); 
-            backdrop-filter: blur(20px);
-            z-index: 9999; 
-            display: flex; 
-            align-items: center; 
-            justify-content: center;
-            padding: 20px;
-        }
+  /* --- Grid System --- */
+  .grid { display: grid; grid-template-columns: 1fr 320px; gap: 20px; } 
+  @media (max-width: 900px){ .grid{ grid-template-columns: 1fr; } }
 
-        .auth-box {
-            background: var(--card); 
-            width: 100%; 
-            max-width: 450px;
-            padding: 48px; 
-            border-radius: var(--radius); 
-            box-shadow: var(--shadow-xl);
-            border: 1px solid rgba(148, 163, 184, 0.1);
-            animation: slideUp 0.5s ease-out;
-        }
+  /* --- Tabs --- */
+  .tabs { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 16px; border-bottom: 1px solid #e2e8f0; padding-bottom: 12px; } 
+  .tabs button { background: transparent; color: var(--muted); border: none; border-radius: 6px; padding: 8px 12px; font-weight: 500; } 
+  .tabs button:hover { background: var(--bg-2); color: var(--text); }
+  .tabs button.active { background: var(--primary); color: white; box-shadow: 0 2px 8px rgba(37,99,235,0.25); }
 
-        @keyframes slideUp { 
-            from { opacity: 0; transform: translateY(30px); } 
-            to { opacity: 1; transform: translateY(0); } 
-        }
+  /* --- Tables --- */
+  .table-container { overflow-x: auto; -webkit-overflow-scrolling: touch; border-radius: 8px; border: 1px solid #e2e8f0; }
+  table { width: 100%; border-collapse: collapse; font-size: 14px; min-width: 600px; } /* Ensure min width for scrolling */
+  th, td { padding: 12px 16px; border-bottom: 1px solid #e2e8f0; text-align: left; }
+  th { background: #f8fafc; color: var(--muted); font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
+  tr:last-child td { border-bottom: none; }
+  
+  /* Mobile Table View (Cards) */
+  @media (max-width: 600px){
+    table, thead, tbody, th, td, tr { display: block; width: 100%; }
+    thead { display: none; }
+    .table-container { border: none; overflow: visible; }
+    tr { background: var(--card); margin-bottom: 12px; border: 1px solid #e2e8f0; border-radius: 8px; padding: 12px; box-shadow: var(--shadow); }
+    td { padding: 8px 0; border: none; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px dashed #e2e8f0; }
+    td:last-child { border-bottom: none; }
+    td::before { content: attr(data-label); font-weight: 600; color: var(--muted); font-size: 13px; margin-right: 12px; }
+  }
 
-        .auth-logo { 
-            width: 80px; 
-            height: 80px; 
-            margin: 0 auto 24px; 
-            display: block; 
-            border-radius: var(--radius-sm); 
-            box-shadow: var(--shadow);
-        }
+  /* --- Components --- */
+  .pill { display: inline-flex; align-items: center; background: #f1f5f9; padding: 4px 10px; border-radius: 99px; font-size: 12px; color: var(--text); font-weight: 500; }
+  .hr { height: 1px; background: #e2e8f0; margin: 16px 0; width: 100%; }
+  .row { display: flex; gap: 12px; flex-wrap: wrap; } 
+  .col { flex: 1; min-width: 200px; }
 
-        .auth-box h2 {
-            text-align: center;
-            margin-bottom: 8px;
-            font-weight: 800;
-            font-size: 28px;
-            color: var(--primary);
-        }
+  /* --- Avatars --- */
+  .avatar { width: 120px; height: 120px; object-fit: cover; border: 4px solid white; box-shadow: 0 4px 12px rgba(0,0,0,0.1); border-radius: 4px; display: block; margin: 0 auto 10px auto; background: #e2e8f0; }
+  .avatar-placeholder { width: 120px; height: 120px; display: flex; align-items: center; justify-content: center; background: #e0e7ff; color: var(--primary); font-weight: 700; font-size: 32px; border: 4px solid white; box-shadow: 0 4px 12px rgba(0,0,0,0.1); margin: 0 auto 10px auto; border-radius: 4px; }
+  .thumb { width: 32px; height: 32px; border-radius: 4px; object-fit: cover; vertical-align: middle; margin-right: 8px; background: #cbd5e1; }
 
-        .auth-box p {
-            text-align: center;
-            color: var(--muted);
-            font-size: 14px;
-            margin-bottom: 32px;
-        }
+  /* --- Animation --- */
+  .fade-in { animation: fadeIn 0.4s ease-out forwards; opacity: 0; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* --- HEADER --- */
-        .app-header {
-            display: flex; 
-            align-items: center; 
-            justify-content: space-between;
-            background: rgba(255, 255, 255, 0.9); 
-            backdrop-filter: blur(20px);
-            padding: 20px 32px; 
-            border-radius: var(--radius); 
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            box-shadow: var(--shadow-lg);
-            transition: var(--transition);
-        }
-
-        .app-header:hover {
-            box-shadow: var(--shadow-xl);
-        }
-
-        .header-brand { 
-            display: flex; 
-            align-items: center; 
-            gap: 16px; 
-        }
-        
-        .header-brand img {
-            width: 48px;
-            height: 48px;
-            border-radius: var(--radius-sm);
-            box-shadow: var(--shadow);
-        }
-        
-        .header-brand h1 { 
-            font-size: 24px; 
-            margin: 0; 
-            font-weight: 900; 
-            letter-spacing: -0.5px;
-            background: linear-gradient(135deg, var(--primary), var(--accent));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        .header-user {
-            display: flex;
-            align-items: center;
-            gap: 16px;
-        }
-
-        .header-user b {
-            font-size: 16px;
-            font-weight: 600;
-            color: var(--primary);
-        }
-
-        /* --- MAIN GRID (The 2-Column Layout) --- */
-        .main-grid {
-            display: grid;
-            grid-template-columns: 1fr 360px; /* Sidebar on the RIGHT as provided */
-            gap: 24px;
-        }
-
-        @media (max-width: 1024px) {
-            .main-grid { grid-template-columns: 1fr; }
-            .sidebar { order: -1; } /* Profile moves to top on mobile */
-        }
-
-        /* --- SIDEBAR COMPONENTS --- */
-        .sidebar { 
-            display: flex; 
-            flex-direction: column; 
-            gap: 24px; 
-        }
-        
-        .card {
-            background: var(--card); 
-            border-radius: var(--radius); 
-            padding: 32px;
-            box-shadow: var(--shadow); 
-            border: 1px solid rgba(148, 163, 184, 0.1);
-            transition: var(--transition);
-        }
-
-        .card:hover {
-            box-shadow: var(--shadow-lg);
-            transform: translateY(-2px);
-        }
-
-        /* The SQUARE avatar from your file */
-        .avatar-square {
-            width: 140px; 
-            height: 140px; 
-            background: linear-gradient(135deg, #f1f5f9, #e2e8f0); 
-            border-radius: var(--radius);
-            margin: 0 auto 24px; 
-            overflow: hidden; 
-            border: 4px solid #ffffff;
-            display: flex; 
-            align-items: center; 
-            justify-content: center;
-            box-shadow: var(--shadow-lg);
-            transition: var(--transition);
-        }
-        
-        .avatar-square:hover {
-            transform: scale(1.05);
-        }
-        
-        .avatar-square img { 
-            width: 100%; 
-            height: 100%; 
-            object-fit: cover; 
-        }
-        
-        .avatar-square i { 
-            font-size: 60px; 
-            color: var(--primary); 
-        }
-
-        .profile-name { 
-            font-size: 22px; 
-            font-weight: 800; 
-            text-align: center; 
-            margin: 0; 
-            color: var(--primary);
-        }
-        
-        .profile-id { 
-            font-family: 'JetBrains Mono'; 
-            font-size: 13px; 
-            color: var(--accent); 
-            text-align: center; 
-            display: block; 
-            margin-top: 8px; 
-            font-weight: 600; 
-            letter-spacing: 0.5px;
-        }
-
-        .stat-row { 
-            display: grid; 
-            grid-template-columns: 1fr 1fr; 
-            gap: 16px; 
-            margin-top: 24px; 
-        }
-        
-        .stat-item { 
-            background: linear-gradient(135deg, #f8fafc, #f1f5f9); 
-            padding: 16px; 
-            border-radius: var(--radius-sm); 
-            text-align: center; 
-            border: 1px solid rgba(148, 163, 184, 0.1);
-            transition: var(--transition);
-        }
-        
-        .stat-item:hover {
-            background: linear-gradient(135deg, #f1f5f9, #e2e8f0);
-        }
-        
-        .stat-item label { 
-            font-size: 11px; 
-            font-weight: 800; 
-            color: var(--muted); 
-            text-transform: uppercase; 
-            display: block; 
-            letter-spacing: 0.5px;
-        }
-        
-        .stat-item span { 
-            font-size: 20px; 
-            font-weight: 900; 
-            color: var(--primary); 
-        }
-
-        .status-section {
-            margin-top: 32px; 
-            border-top: 1px solid #e2e8f0; 
-            padding-top: 24px;
-        }
-
-        .status-section label {
-            font-size: 12px;
-            font-weight: 700;
-            color: var(--muted);
-            display: block;
-            margin-bottom: 8px;
-        }
-
-        .status-indicator {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .status-dot {
-            width: 12px;
-            height: 12px;
-            border-radius: 50%;
-            background: var(--success);
-            box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.2);
-        }
-
-        .status-text {
-            font-size: 14px;
-            font-weight: 700;
-            color: var(--success);
-        }
-
-        /* --- TABS & CONTENT --- */
-        .tab-nav { 
-            display: flex; 
-            gap: 12px; 
-            margin-bottom: 24px; 
-            overflow-x: auto; 
-            padding-bottom: 8px;
-            scrollbar-width: none;
-            -ms-overflow-style: none;
-        }
-        
-        .tab-nav::-webkit-scrollbar {
-            display: none;
-        }
-        
-        .tab-btn {
-            padding: 14px 24px; 
-            border-radius: var(--radius-sm); 
-            border: 2px solid transparent;
-            background: #f1f5f9;
-            color: var(--primary); 
-            font-weight: 700; 
-            font-size: 14px; 
-            cursor: pointer;
-            white-space: nowrap; 
-            transition: var(--transition);
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .tab-btn::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-            transition: left 0.5s;
-        }
-        
-        .tab-btn:hover::before {
-            left: 100%;
-        }
-        
-        .tab-btn.active { 
-            background: linear-gradient(135deg, var(--primary), var(--primary-light)); 
-            color: #ffffff; 
-            box-shadow: 0 4px 15px rgba(30, 64, 175, 0.3);
-            border-color: var(--primary);
-        }
-
-        /* --- SCHEDULE DESIGN --- */
-        .schedule-table { 
-            width: 100%; 
-            border-collapse: collapse; 
-            border-radius: var(--radius-sm);
-            overflow: hidden;
-            box-shadow: var(--shadow);
-        }
-        
-        .schedule-table th { 
-            text-align: left; 
-            font-size: 12px; 
-            text-transform: uppercase; 
-            color: var(--muted); 
-            padding: 16px; 
-            border-bottom: 2px solid #e2e8f0;
-            background: #f8fafc;
-            font-weight: 800;
-            letter-spacing: 0.5px;
-        }
-        
-        .schedule-table td { 
-            padding: 16px; 
-            border-bottom: 1px solid #f1f5f9; 
-            font-size: 14px;
-            transition: background-color 0.2s;
-        }
-        
-        .schedule-table tr:hover td {
-            background-color: #f8fafc;
-        }
-        
-        .day-badge { 
-            background: linear-gradient(135deg, #eef2ff, #e0e7ff); 
-            color: var(--primary); 
-            padding: 6px 12px; 
-            border-radius: var(--radius-sm); 
-            font-weight: 800; 
-            font-size: 11px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        /* --- INPUTS & BUTTONS --- */
-        .form-group { 
-            margin-bottom: 20px; 
-        }
-        
-        label { 
-            font-size: 13px; 
-            font-weight: 700; 
-            color: var(--muted); 
-            display: block; 
-            margin-bottom: 8px;
-            letter-spacing: 0.3px;
-        }
-        
-        input, select {
-            width: 100%; 
-            height: 52px; 
-            padding: 0 16px; 
-            border-radius: var(--radius-sm);
-            border: 2px solid #e2e8f0; 
-            background: #ffffff; 
-            font-size: 16px; 
-            transition: var(--transition);
-            font-family: inherit;
-        }
-        
-        input:focus, select:focus { 
-            border-color: var(--primary); 
-            outline: none; 
-            background: #ffffff; 
-            box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
-        }
-        
-        .btn-main {
-            width: 100%; 
-            height: 52px; 
-            background: linear-gradient(135deg, var(--primary), var(--primary-light)); 
-            color: #ffffff; 
-            border: none;
-            border-radius: var(--radius-sm); 
-            font-weight: 800; 
-            cursor: pointer; 
-            transition: var(--transition);
-            font-size: 16px;
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .btn-main::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-            transition: left 0.5s;
-        }
-        
-        .btn-main:hover::before {
-            left: 100%;
-        }
-        
-        .btn-main:hover { 
-            background: linear-gradient(135deg, var(--accent), var(--accent-light)); 
-            transform: translateY(-2px);
-            box-shadow: var(--shadow-lg);
-        }
-
-        .btn-secondary {
-            background: #f1f5f9;
-            color: var(--primary);
-            border: 2px solid #e2e8f0;
-        }
-
-        .btn-secondary:hover {
-            background: #e2e8f0;
-            border-color: var(--primary);
-        }
-
-        .toast {
-            position: fixed; 
-            bottom: 30px; 
-            left: 50%; 
-            transform: translateX(-50%);
-            background: linear-gradient(135deg, #1e293b, #334155); 
-            color: #ffffff; 
-            padding: 16px 32px; 
-            border-radius: 50px;
-            font-weight: 600; 
-            font-size: 14px; 
-            opacity: 0; 
-            transition: var(--transition); 
-            z-index: 10000;
-            box-shadow: var(--shadow-xl);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-        
-        .toast.show { 
-            opacity: 1; 
-            bottom: 50px; 
-        }
-
-        /* --- ADDITIONAL PROFESSIONAL TOUCHES --- */
-        .card h3, .card h4 {
-            margin: 0 0 16px 0;
-            font-weight: 800;
-            color: var(--primary);
-            font-size: 20px;
-        }
-
-        .card hr {
-            border: 0;
-            border-top: 1px solid #e2e8f0;
-            margin: 24px 0;
-        }
-
-        .mini-schedule-item {
-            font-size: 13px;
-            margin-bottom: 12px;
-            padding: 8px;
-            background: #f8fafc;
-            border-radius: var(--radius-sm);
-            border-left: 4px solid var(--primary);
-        }
-
-                .mini-schedule-item b {
-            color: var(--primary);
-        }
-
-        .mini-schedule-item span {
-            color: var(--muted);
-        }
-
-        /* Responsive adjustments */
-        @media (max-width: 768px) {
-            .app-header {
-                padding: 16px 20px;
-                flex-direction: column;
-                gap: 16px;
-            }
-
-            .header-brand h1 {
-                font-size: 20px;
-            }
-
-            .auth-box {
-                padding: 32px 24px;
-                max-width: 100%;
-            }
-
-            .card {
-                padding: 24px;
-            }
-
-            .avatar-square {
-                width: 120px;
-                height: 120px;
-            }
-
-            .stat-row {
-                grid-template-columns: 1fr;
-                gap: 12px;
-            }
-
-            .tab-nav {
-                flex-wrap: wrap;
-            }
-
-            .tab-btn {
-                padding: 12px 16px;
-                font-size: 13px;
-            }
-        }
-    </style>
+  /* --- Status Colors --- */
+  .text-danger { color: var(--danger); font-weight: 600; }
+  .text-success { color: var(--success); font-weight: 600; }
+  .text-muted { color: var(--muted); }
+</style>
 </head>
 <body>
 
-<div id="vAuth" class="auth-overlay">
-    <div class="auth-box" id="loginBox">
-        <img src="acshslogo.jpg" class="auth-logo" alt="ACSHS Logo">
-        <h2>Portal Login</h2>
-        <p>Antipolo City Senior High School</p>
-        
-        <div class="form-group">
-            <label>Role</label>
-            <select id="lRole">
-                <option value="student">Student</option>
-                <option value="admin">Administrator</option>
-            </select>
-        </div>
-        <div class="form-group">
-            <label>Student ID</label>
-            <input type="text" id="lId" placeholder="2024-XXXX-XXX">
-        </div>
-        <div class="form-group">
-            <label>Password</label>
-            <input type="password" id="lPass" placeholder="••••••••">
-        </div>
-        <button class="btn-main" onclick="sys.login()">LOGIN</button>
-        <div style="margin-top:20px; text-align:center; font-size:13px">
-            <span style="color:var(--primary); cursor:pointer; font-weight:700" onclick="ui.swapAuth('forgotBox')">Forgot Password?</span>
-            <span style="margin:0 10px; color:#cbd5e1">|</span>
-            <span style="color:var(--primary); cursor:pointer; font-weight:700" onclick="ui.swapAuth('regBox')">Register</span>
-        </div>
+<div class="app">
+  <header class="app-header">
+    <div class="brand">
+      <div class="logo">AC</div> <div>
+        <div class="title">myACSHS</div>
+        <div class="subtitle">Student Information System</div>
+      </div>
     </div>
-
-    <div class="auth-box" id="regBox" style="display:none">
-        <h2>New Student</h2>
-        <div class="form-group">
-            <label>Full Name</label>
-            <input type="text" id="rName" placeholder="Enter your full name">
-        </div>
-        <div class="form-group">
-            <label>Student ID</label>
-            <input type="text" id="rId" placeholder="2024-XXXX-XXX">
-        </div>
-        <div class="form-group">
-            <label>Slip Code (112233)</label>
-            <input type="text" id="rSlip" placeholder="Enter slip code">
-        </div>
-        <div class="form-group">
-            <label>Password</label>
-            <input type="password" id="rPass" placeholder="Create a password">
-        </div>
-        <button class="btn-main" onclick="sys.register()">CREATE ACCOUNT</button>
-        <p style="text-align:center; margin-top:15px; cursor:pointer; font-size:13px" onclick="ui.swapAuth('loginBox')">Cancel</p>
-    </div>
-
-    <div class="auth-box" id="forgotBox" style="display:none">
-        <h2>Recover Account</h2>
-        <div class="form-group">
-            <label>Student ID</label>
-            <input type="text" id="fId" placeholder="2024-XXXX-XXX">
-        </div>
-        <div class="form-group">
-            <label>Registry Slip Code</label>
-            <input type="text" id="fSlip" placeholder="Enter slip code">
-        </div>
-        <div class="form-group">
-            <label>New Password</label>
-            <input type="password" id="fPass" placeholder="New password">
-        </div>
-        <button class="btn-main" onclick="sys.reset()">RESET PASSWORD</button>
-        <p style="text-align:center; margin-top:15px; cursor:pointer; font-size:13px" onclick="ui.swapAuth('loginBox')">Back to Login</p>
-    </div>
-</div>
-
-<div class="app" id="vApp" style="display:none">
-    <header class="app-header">
-        <div class="header-brand">
-            <img src="acshslogo.jpg" alt="ACSHS Logo">
-            <h1>myACSHS <span>Portal</span></h1>
-        </div>
-        <div class="header-user">
-            <b id="topUser">User Name</b>
-            <button class="btn-main" style="width:90px; height:35px; background:var(--danger); font-size:12px" onclick="sys.logout()">LOGOUT</button>
-        </div>
     </header>
 
-    <div class="main-grid">
-        <div class="main-content">
-            <div class="tab-nav" id="tabArea"></div>
-            <div id="viewArea"></div>
-        </div>
+  <main id="loginView" class="center-view fade-in">
+    <div class="card" style="width: 100%; max-width: 400px;">
+      <h2 style="margin: 0 0 8px 0; text-align: center;">Welcome Back</h2>
+      <p style="text-align: center; color: var(--muted); font-size: 14px; margin-bottom: 24px;">Sign in to access your dashboard</p>
 
-        <aside class="sidebar">
-            <div class="card">
-                <div class="avatar-square" id="sideAvatar"></div>
-                <h3 class="profile-name" id="sideName">Dela Cruz, Juan</h3>
-                <span class="profile-id" id="sideId">2024-1234-567</span>
-                
-                <div class="stat-row">
-                    <div class="stat-item">
-                        <label>Gen Ave</label>
-                        <span id="statAve">92.4</span>
-                    </div>
-                    <div class="stat-item">
-                        <label>Absences</label>
-                        <span id="statAbs">0</span>
-                    </div>
-                </div>
+      <label>Role</label>
+      <select id="loginRole" style="margin-bottom: 16px;">
+        <option value="student">Student</option>
+        <option value="admin">Administrator</option>
+      </select>
 
-                <div class="status-section">
-                    <label>Current Status</label>
-                    <div class="status-indicator">
-                        <div class="status-dot"></div>
-                        <span class="status-text">Enrolled (Regular)</span>
-                    </div>
-                </div>
-            </div>
+      <label>ID / Username</label>
+      <input id="loginId" type="text" placeholder="e.g. 12-1234-567" style="margin-bottom: 16px;">
 
-            <div class="card">
-                <h4>Today's Subjects</h4>
-                <div id="todayMiniSched"></div>
-            </div>
-        </aside>
+      <label>Password</label>
+      <input id="loginPass" type="password" placeholder="••••••••" style="margin-bottom: 24px;">
+
+      <button class="primary" onclick="login()" style="width: 100%;">Sign In</button>
+      
+      <div style="margin-top: 16px; font-size: 12px; color: var(--muted); text-align: center; background: var(--bg-1); padding: 8px; border-radius: 6px;">
+        Default Admin: <strong>admin</strong> / <strong>admin123</strong><br>
+        Student Pass: ID-MMDD (e.g. 12-1234-0531)
+      </div>
     </div>
+  </main>
+
+  <section id="dashboardView" style="display:none" class="fade-in">
+    <div class="grid">
+      <div style="min-width: 0;"> <div class="card">
+          <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap: wrap; gap: 10px; margin-bottom: 16px;">
+            <div>
+              <div id="userTitle" style="font-weight:700; font-size:20px;">Welcome</div>
+              <div id="userMeta" class="subtitle">Dashboard</div>
+            </div>
+            <button class="danger ghost" onclick="logout()" style="border: 1px solid #fee2e2;">Logout</button>
+          </div>
+
+          <div id="tabsArea" class="tabs"></div>
+          <div id="mainArea" class="fade-in"></div>
+        </div>
+      </div>
+
+      <aside>
+        <div class="card" id="rightCard">
+          <div class="subtitle" style="text-transform: uppercase; letter-spacing: 0.5px; font-weight: 700;">Overview</div>
+          <div style="font-weight:600; font-size: 16px; margin: 6px 0;" id="todayDate"></div>
+          <div class="hr"></div>
+          <div id="quickPills" style="display:flex; gap:8px; flex-wrap:wrap"></div>
+          <div style="margin-top:16px; font-size: 13px; line-height: 1.5;" id="rightShort"></div>
+        </div>
+      </aside>
+    </div>
+  </section>
 </div>
 
-<div id="toast" class="toast">Action Successful</div>
-
 <script>
-    /* --- ENTERPRISE CORE ENGINE --- */
-    const CONFIG = {
-        SLIPS: ["112233"],
-        SUBJECTS: ["Media & Info Literacy", "JAVA (Enterprise)", "Inquiries & Immersion", "Work Immersion", "PE & Health"],
-        // FULL SCHEDULE MON-FRI
-        SCHEDULE: {
-            "Monday": [
-                { time: "06:15-07:15", sub: "Homeroom Guidance", prof: "Adviser" },
-                { time: "07:15-08:15", sub: "JAVA (Enterprise)", prof: "Espiritu" },
-                { time: "08:35-09:35", sub: "PE & Health", prof: "Jordan" },
-                { time: "09:35-10:35", sub: "Inquiries & Immersion", prof: "Inocian" },
-                { time: "10:35-11:35", sub: "Work Immersion", prof: "Espiritu" }
-            ],
-            "Tuesday": [
-                { time: "06:15-07:15", sub: "Media & Info Literacy", prof: "Sofia" },
-                { time: "07:15-08:15", sub: "JAVA (Enterprise)", prof: "Espiritu" },
-                { time: "08:35-09:35", sub: "JAVA (Enterprise)", prof: "Espiritu" },
-                { time: "09:35-10:35", sub: "Inquiries & Immersion", prof: "Inocian" }
-            ],
-            "Wednesday": [
-                { time: "06:15-07:15", sub: "Media & Info Literacy", prof: "Sofia" },
-                { time: "07:15-08:15", sub: "JAVA (Enterprise)", prof: "Espiritu" },
-                { time: "08:35-09:35", sub: "Inquiries & Immersion", prof: "Inocian" },
-                { time: "09:35-10:35", sub: "Work Immersion", prof: "Espiritu" }
-            ],
-            "Thursday": [
-                { time: "06:15-07:15", sub: "Media & Info Literacy", prof: "Sofia" },
-                { time: "07:15-08:15", sub: "JAVA (Enterprise)", prof: "Espiritu" },
-                { time: "08:35-09:35", sub: "JAVA (Enterprise)", prof: "Espiritu" },
-                { time: "09:35-10:35", sub: "Inquiries & Immersion", prof: "Inocian" }
-            ],
-            "Friday": [
-                { time: "06:15-07:15", sub: "Media & Info Literacy", prof: "Sofia" },
-                { time: "07:15-08:15", sub: "JAVA (Enterprise)", prof: "Espiritu" },
-                { time: "08:35-09:35", sub: "Work Immersion", prof: "Espiritu" },
-                { time: "09:35-10:35", sub: "Student Review", prof: "Staff" }
-            ]
-        }
+/* myACSHS - Clean Single File Implementation
+   Data Storage: LocalStorage
+*/
+
+/* --- Constants & Config --- */
+const LS = { USERS:'csr_users_clean', ATT:'csr_attendance_clean', GRADES:'csr_grades_clean', SCHED:'csr_schedule_clean' };
+const ADMIN = { username:'admin', password:'admin123' };
+
+/* --- Data Access Layer --- */
+function read(key){ 
+  try { return JSON.parse(localStorage.getItem(key)) || []; } 
+  catch(e){ return []; } 
+}
+function write(key, val){ 
+  localStorage.setItem(key, JSON.stringify(val)); 
+}
+function formatMMDDFromBirth(birth){ 
+  if(!birth) return ''; 
+  const p = birth.split('-'); 
+  // Expecting YYYY-MM-DD
+  return p.length === 3 ? p[1].padStart(2,'0') + p[2].padStart(2,'0') : ''; 
+}
+function fullName(u){ return `${u.firstName} ${u.lastName}`; }
+
+/* --- Initialization --- */
+// Ensure storage keys exist to prevent null errors
+(function initDB(){
+  if(localStorage.getItem(LS.USERS) === null) write(LS.USERS, []);
+  if(localStorage.getItem(LS.ATT) === null) write(LS.ATT, []);
+  if(localStorage.getItem(LS.GRADES) === null) write(LS.GRADES, []);
+  if(localStorage.getItem(LS.SCHED) === null) write(LS.SCHED, []);
+})();
+
+/* --- State --- */
+let state = { role: null, user: null };
+
+/* --- DOM References --- */
+const loginView = document.getElementById('loginView');
+const dashboardView = document.getElementById('dashboardView');
+const loginRole = document.getElementById('loginRole');
+const loginId = document.getElementById('loginId');
+const loginPass = document.getElementById('loginPass');
+const userTitle = document.getElementById('userTitle');
+const userMeta = document.getElementById('userMeta');
+const tabsArea = document.getElementById('tabsArea');
+const mainArea = document.getElementById('mainArea');
+const todayDateEl = document.getElementById('todayDate');
+const quickPills = document.getElementById('quickPills');
+const rightShort = document.getElementById('rightShort');
+
+todayDateEl.innerText = new Date().toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+
+/* --- Authentication --- */
+function login(){
+  const role = loginRole.value;
+  const id = loginId.value.trim();
+  const pass = loginPass.value.trim();
+
+  if(!id || !pass) { alert('Please enter credentials.'); return; }
+
+  // Admin Login
+  if(role === 'admin'){
+    if(id === ADMIN.username && pass === ADMIN.password){
+      state.role = 'admin'; 
+      state.user = { username: ADMIN.username };
+      openDashboard(); 
+    } else { 
+      alert('Invalid admin credentials.'); 
+    }
+    return;
+  }
+
+  // Student Login
+  const users = read(LS.USERS);
+  const u = users.find(x => x.id === id);
+  
+  if(!u){ 
+    alert('Student ID not found in database.'); 
+    return; 
+  }
+  
+  // Password Logic: ID-MMDD
+  const mmdd = formatMMDDFromBirth(u.birth);
+  const expected = `${u.id}-${mmdd}`;
+  
+  if(pass === expected){ 
+    state.role = 'student'; 
+    state.user = u; 
+    openDashboard(); 
+  } else { 
+    alert('Invalid password.\nDefault is ID-MMDD (e.g., 12-1234-0531)'); 
+  }
+}
+
+function logout(){ 
+  state = { role:null, user:null }; 
+  dashboardView.style.display = 'none'; 
+  loginView.style.display = 'flex'; 
+  loginId.value = ''; 
+  loginPass.value = '';
+  // Reset views
+  mainArea.innerHTML = ''; 
+  tabsArea.innerHTML = ''; 
+}
+
+/* --- Dashboard Logic --- */
+function openDashboard(){
+  loginView.style.display = 'none'; 
+  dashboardView.style.display = 'block';
+  
+  // Re-trigger animation
+  dashboardView.classList.remove('fade-in');
+  void dashboardView.offsetWidth; // trigger reflow
+  dashboardView.classList.add('fade-in');
+
+  if(state.role === 'admin'){ 
+    userTitle.innerText = 'Administrator'; 
+    userMeta.innerText = 'System Management'; 
+    buildAdminTabs(); 
+  } else { 
+    userTitle.innerText = fullName(state.user); 
+    userMeta.innerText = `${state.user.id} • ${state.user.track}`; 
+    buildStudentTabs(); 
+  }
+  renderRightSummary();
+}
+
+function renderRightSummary(){
+  quickPills.innerHTML = ''; rightShort.innerHTML = '';
+  if(state.role === 'admin'){
+    const users = read(LS.USERS); const att = read(LS.ATT); const grades = read(LS.GRADES);
+    quickPills.innerHTML = `
+      <div class="pill">${users.length} Students</div>
+      <div class="pill">${att.length} Att. Records</div>
+      <div class="pill">${grades.length} Grade Records</div>
+    `;
+    rightShort.innerHTML = `<span class="text-muted">Use the tabs above to manage students, attendance, grades, and class schedules.</span>`;
+  } else {
+    const uid = state.user.id; 
+    const att = read(LS.ATT).filter(a => a.userId === uid && a.status !== 'Present'); 
+    const grades = read(LS.GRADES).filter(g => g.userId === uid);
+    quickPills.innerHTML = `
+      <div class="pill" style="background:${att.length > 0 ? '#fee2e2' : '#dcfce7'}">${att.length} Absences/Late</div>
+      <div class="pill">${grades.length} Grades Posted</div>
+    `;
+    rightShort.innerHTML = `<span class="text-muted">Check your schedule regularly for room changes.</span>`;
+  }
+}
+
+/* --- Tab System --- */
+function clearTabs(){ tabsArea.innerHTML = ''; }
+function addTab(label, active=false, onClick=null){
+  const btn = document.createElement('button'); 
+  btn.innerText = label; 
+  btn.className = active ? 'active' : ''; 
+  btn.onclick = () => {
+    Array.from(tabsArea.children).forEach(c => c.classList.remove('active')); 
+    btn.classList.add('active'); 
+    if(onClick) {
+      mainArea.innerHTML = ''; // Clear content before render
+      onClick();
+    }
+  }; 
+  tabsArea.appendChild(btn); 
+  if(active && onClick) onClick();
+}
+
+function buildStudentTabs(){ 
+  clearTabs(); 
+  addTab('Profile', true, renderStudentMain); 
+  addTab('Schedule', false, renderStudentSchedule); 
+  addTab('Attendance', false, renderStudentAttendance); 
+  addTab('Grades', false, renderStudentGrades); 
+}
+function buildAdminTabs(){ 
+  clearTabs(); 
+  addTab('Home', true, renderAdminHome); 
+  addTab('Students', false, renderManageStudents); 
+  addTab('Attendance', false, renderAdminAttendance); 
+  addTab('Grades', false, renderAdminGrades); 
+  addTab('Schedule', false, renderAdminSchedule); 
+}
+function openTabByName(name){ 
+  const btn = Array.from(tabsArea.children).find(b => b.innerText === name); 
+  if(btn) btn.click(); 
+}
+
+/* ================= STUDENT VIEWS ================= */
+
+function renderStudentMain(){
+  const u = state.user;
+  const avatarHtml = u.avatar 
+    ? `<img src="${u.avatar}" alt="avatar" class="avatar">` 
+    : `<div class="avatar-placeholder">${(u.firstName||'')[0]}${(u.lastName||'')[0]}</div>`;
+  
+  mainArea.innerHTML = `
+    <div class="fade-in">
+      <div class="row" style="align-items:center;">
+        <div style="text-align:center; min-width:140px;">${avatarHtml}</div>
+        <div class="col">
+          <div class="subtitle">Student Profile</div>
+          <h2 style="margin: 4px 0 8px 0;">${fullName(u)}</h2>
+          <div class="text-muted" style="margin-bottom:12px;">ID: ${u.id} &nbsp;|&nbsp; Track: ${u.track}</div>
+          <div class="hr"></div>
+          <div class="row">
+            <div class="col">
+              <label>Birth Date</label>
+              <div style="font-weight:600">${u.birth}</div>
+            </div>
+            <div class="col">
+              <label>Status</label>
+              <div class="pill text-success">Active</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+function renderStudentSchedule(){
+  const sched = read(LS.SCHED);
+  const rows = sched.map(s => 
+    `<tr>
+      <td data-label="Subject"><strong>${s.subject}</strong></td>
+      <td data-label="Time">${s.time}</td>
+      <td data-label="Days"><span class="pill">${s.days}</span></td>
+      <td data-label="Room">${s.room}</td>
+      <td data-label="Teacher">${s.teacher}</td>
+    </tr>`
+  ).join('') || '<tr><td colspan="5" class="text-muted" style="text-align:center; padding: 20px;">No schedule available.</td></tr>';
+  
+  mainArea.innerHTML = `
+    <div class="fade-in">
+      <h3 style="margin-top:0">My Schedule</h3>
+      <div class="table-container">
+        <table>
+          <thead><tr><th>Subject</th><th>Time</th><th>Days</th><th>Room</th><th>Teacher</th></tr></thead>
+          <tbody>${rows}</tbody>
+        </table>
+      </div>
+    </div>`;
+}
+
+function renderStudentAttendance(){
+  const uid = state.user.id;
+  const att = read(LS.ATT).filter(a => a.userId === uid).sort((a,b) => b.date.localeCompare(a.date));
+  
+  const rows = att.map(a => {
+    let colorClass = a.status === 'Absent' ? 'text-danger' : (a.status === 'Tardy' ? 'text-warning' : 'text-success');
+    return `<li style="padding:12px; border-bottom:1px solid #f1f5f9; display:flex; justify-content:space-between; align-items:center;">
+      <span style="font-weight:500;">${a.date}</span>
+      <span class="${colorClass}">${a.status}</span>
+    </li>`;
+  }).join('') || '<li class="text-muted" style="padding:12px">No attendance records found.</li>';
+  
+  mainArea.innerHTML = `
+    <div class="fade-in">
+      <h3 style="margin-top:0">Attendance History</h3>
+      <ul style="list-style:none; padding:0; border:1px solid #e2e8f0; border-radius:8px;">${rows}</ul>
+    </div>`;
+}
+
+function renderStudentGrades(){
+  const uid = state.user.id;
+  const gradesAll = read(LS.GRADES).filter(g => g.userId === uid);
+  const schoolYears = Array.from(new Set(gradesAll.map(g => g.schoolYear))).sort().reverse();
+  const syOptions = schoolYears.length ? schoolYears.map(s => `<option>${s}</option>`).join('') : `<option>2024-2025</option>`;
+  
+  mainArea.innerHTML = `
+    <div class="fade-in">
+      <h3 style="margin-top:0">Academic Grades</h3>
+      <div class="row" style="margin-bottom:16px">
+        <div class="col">
+          <label>School Year</label>
+          <select id="studentSelSY">${syOptions}</select>
+        </div>
+        <div class="col">
+          <label>Semester</label>
+          <select id="studentSelSem"><option>1st Semester</option><option>2nd Semester</option></select>
+        </div>
+      </div>
+      <div class="table-container">
+        <table>
+          <thead><tr><th>Subject</th><th>Grade</th></tr></thead>
+          <tbody id="studentGradesTable"></tbody>
+        </table>
+      </div>
+    </div>`;
+  
+  const sySel = document.getElementById('studentSelSY');
+  const semSel = document.getElementById('studentSelSem');
+  
+  const refresh = () => {
+    const filtered = gradesAll.filter(g => g.schoolYear === sySel.value && g.semester === semSel.value);
+    const rows = filtered.map(g => 
+      `<tr><td data-label="Subject"><strong>${g.subject}</strong></td><td data-label="Grade" style="font-weight:700">${g.grade}</td></tr>`
+    ).join('') || '<tr><td colspan="2" class="text-muted" style="text-align:center; padding:20px">No grades posted for this period.</td></tr>';
+    document.getElementById('studentGradesTable').innerHTML = rows;
+  };
+  
+  sySel.addEventListener('change', refresh);
+  semSel.addEventListener('change', refresh);
+  refresh();
+}
+
+/* ================= ADMIN VIEWS ================= */
+
+function renderAdminHome(){
+  const users = read(LS.USERS); const att = read(LS.ATT); const grades = read(LS.GRADES); const sched = read(LS.SCHED);
+  mainArea.innerHTML = `
+    <div class="fade-in">
+      <h3 style="margin-top:0">Admin Dashboard</h3>
+      <div class="row" style="margin-bottom:20px;">
+         <div class="col"><div class="card" style="text-align:center; padding:15px; background:#eff6ff;"><div style="font-size:24px; font-weight:800; color:var(--primary)">${users.length}</div><div class="subtitle">Students</div></div></div>
+         <div class="col"><div class="card" style="text-align:center; padding:15px; background:#f0fdf4;"><div style="font-size:24px; font-weight:800; color:var(--success)">${sched.length}</div><div class="subtitle">Classes</div></div></div>
+         <div class="col"><div class="card" style="text-align:center; padding:15px; background:#fff7ed;"><div style="font-size:24px; font-weight:800; color:var(--warning)">${att.length}</div><div class="subtitle">Att. Logs</div></div></div>
+      </div>
+      <div class="hr"></div>
+      <label>Quick Actions</label>
+      <div class="row">
+        <button class="primary" onclick="openTabByName('Students')">+ Add Student</button>
+        <button class="ghost" onclick="openTabByName('Attendance')">Record Attendance</button>
+        <button class="ghost" onclick="openTabByName('Schedule')">Update Schedule</button>
+      </div>
+    </div>`;
+}
+
+function renderManageStudents(){
+  const users = read(LS.USERS);
+  const rows = users.map((u,i) => `
+    <tr>
+      <td data-label="ID">
+        <div style="display:flex;align-items:center">
+          ${u.avatar ? `<img src="${u.avatar}" class="thumb">` : '<div class="thumb" style="display:flex;align-items:center;justify-content:center;font-size:10px;color:white;background:#cbd5e1">?</div>'}
+          <strong>${u.id}</strong>
+        </div>
+      </td>
+      <td data-label="Name">${fullName(u)}</td>
+      <td data-label="Track"><span class="pill">${u.track}</span></td>
+      <td data-label="Actions">
+        <div style="display:flex; gap:6px; flex-wrap:wrap">
+          <button class="ghost" style="padding:6px 10px; font-size:12px" onclick="uploadStudentPhoto(${i})">Photo</button>
+          <button class="ghost" style="padding:6px 10px; font-size:12px" onclick="editStudent(${i})">Edit</button>
+          <button class="danger" style="padding:6px 10px; font-size:12px" onclick="deleteStudent(${i})">Del</button>
+        </div>
+      </td>
+    </tr>`).join('') || `<tr><td class="text-muted" colspan="4" style="text-align:center; padding:20px">No students found. Add one above.</td></tr>`;
+
+  mainArea.innerHTML = `
+    <div class="fade-in">
+      <h3 style="margin-top:0">Manage Students</h3>
+      
+      <div style="background:var(--bg-1); padding:16px; border-radius:8px; margin-bottom:20px; border:1px solid #e2e8f0;">
+        <div class="subtitle" style="margin-bottom:8px">Register New Student</div>
+        <div class="row">
+          <div class="col"><input id="newId" placeholder="ID (e.g. 12-3456-789)" /></div>
+          <div class="col"><input id="newFirst" placeholder="First Name" /></div>
+        </div>
+        <div class="row" style="margin-top:10px">
+          <div class="col"><input id="newLast" placeholder="Last Name" /></div>
+          <div class="col"><input id="newTrack" placeholder="Track (e.g. ICT, STEM)" /></div>
+        </div>
+        <div class="row" style="margin-top:10px">
+          <div class="col">
+            <label style="margin-bottom:2px">Birth Date</label>
+            <input id="newBirth" type="date" />
+          </div>
+          <div class="col" style="display:flex; align-items:flex-end;">
+            <button class="primary" onclick="addStudent()" style="width:100%">Create Student</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="table-container">
+        <table>
+          <thead><tr><th>ID</th><th>Name</th><th>Track</th><th>Actions</th></tr></thead>
+          <tbody>${rows}</tbody>
+        </table>
+      </div>
+    </div>`;
+}
+
+function renderAdminAttendance(){
+  const att = read(LS.ATT); const users = read(LS.USERS);
+  
+  // Sort by date descending
+  att.sort((a,b) => b.date.localeCompare(a.date));
+
+  const rows = att.map((a,i) => `
+    <tr>
+      <td data-label="Student"><strong>${a.userId}</strong></td>
+      <td data-label="Date">${a.date}</td>
+      <td data-label="Status">
+        <span class="${a.status==='Absent'?'text-danger':a.status==='Tardy'?'text-warning':'text-success'}">${a.status}</span>
+      </td>
+      <td data-label="Action"><button class="danger" style="padding:4px 8px; font-size:12px" onclick="deleteAttendance(${i})">Remove</button></td>
+    </tr>`).join('') || `<tr><td class="text-muted" colspan="4" style="text-align:center; padding:20px">No records.</td></tr>`;
+  
+  mainArea.innerHTML = `
+    <div class="fade-in">
+      <h3 style="margin-top:0">Attendance Log</h3>
+      
+      <div style="background:var(--bg-1); padding:16px; border-radius:8px; margin-bottom:20px; border:1px solid #e2e8f0;">
+        <div class="subtitle" style="margin-bottom:8px">Log Entry</div>
+        <div class="row">
+          <div class="col">
+            <select id="attUser">
+              ${users.length ? users.map(u=>`<option value="${u.id}">${u.id} - ${u.firstName} ${u.lastName}</option>`).join('') : '<option>No students</option>'}
+            </select>
+          </div>
+          <div class="col"><input id="attDate" type="date" value="${new Date().toISOString().slice(0,10)}"/></div>
+          <div class="col">
+            <select id="attStatus">
+              <option>Present</option><option>Absent</option><option>Tardy</option>
+            </select>
+          </div>
+          <div class="col" style="flex:0 0 auto"><button class="primary" onclick="addAttendance()">Add</button></div>
+        </div>
+      </div>
+
+      <div class="table-container">
+        <table>
+          <thead><tr><th>Student ID</th><th>Date</th><th>Status</th><th>Action</th></tr></thead>
+          <tbody>${rows}</tbody>
+        </table>
+      </div>
+    </div>`;
+}
+
+function renderAdminGrades(){
+  const grades = read(LS.GRADES); const users = read(LS.USERS);
+  const rows = grades.map((g,i) => `
+    <tr>
+      <td data-label="Student"><strong>${g.userId}</strong></td>
+      <td data-label="Context"><div style="font-size:12px; color:#666">${g.schoolYear}<br>${g.semester}</div></td>
+      <td data-label="Subject">${g.subject}</td>
+      <td data-label="Grade"><input type="number" value="${g.grade}" onchange="editGrade(${i}, this.value)" style="width:60px; padding:4px;"/></td>
+      <td data-label="Action"><button class="danger" style="padding:4px 8px; font-size:12px" onclick="deleteGrade(${i})">X</button></td>
+    </tr>`).join('') || `<tr><td class="text-muted" colspan="5" style="text-align:center; padding:20px">No grades recorded.</td></tr>`;
+
+  mainArea.innerHTML = `
+    <div class="fade-in">
+      <h3 style="margin-top:0">Grades Management</h3>
+      
+      <div style="background:var(--bg-1); padding:16px; border-radius:8px; margin-bottom:20px; border:1px solid #e2e8f0;">
+        <div class="subtitle" style="margin-bottom:8px">Add Grade</div>
+        <div class="row">
+          <div class="col">
+             <select id="gUser">${users.length ? users.map(u=>`<option value="${u.id}">${u.firstName} ${u.lastName}</option>`).join('') : '<option>No students</option>'}</select>
+          </div>
+          <div class="col"><input id="gSY" value="2024-2025" placeholder="Year" /></div>
+        </div>
+        <div class="row" style="margin-top:10px">
+          <div class="col"><select id="gSem"><option>1st Semester</option><option>2nd Semester</option></select></div>
+          <div class="col"><input id="gSubject" placeholder="Subject" /></div>
+          <div class="col"><input id="gValue" type="number" placeholder="Grade" /></div>
+          <div class="col" style="flex:0 0 auto"><button class="primary" onclick="addGrade()">Add</button></div>
+        </div>
+      </div>
+
+      <div class="table-container">
+        <table>
+          <thead><tr><th>Student</th><th>Term</th><th>Subject</th><th>Grade</th><th>Action</th></tr></thead>
+          <tbody>${rows}</tbody>
+        </table>
+      </div>
+    </div>`;
+}
+
+function renderAdminSchedule(){
+  const sched = read(LS.SCHED);
+  const rows = sched.map((s,i) => `
+    <tr>
+      <td data-label="Subject"><strong>${s.subject}</strong></td>
+      <td data-label="Details"><span style="font-size:12px; display:block">${s.days}</span><span style="font-size:12px; color:#666">${s.time}</span></td>
+      <td data-label="Room">${s.room}</td>
+      <td data-label="Teacher">${s.teacher}</td>
+      <td data-label="Action"><button class="danger" style="padding:4px 8px; font-size:12px" onclick="deleteSchedule(${i})">X</button></td>
+    </tr>`).join('') || `<tr><td class="text-muted" colspan="5" style="text-align:center; padding:20px">No classes scheduled.</td></tr>`;
+
+  mainArea.innerHTML = `
+    <div class="fade-in">
+      <h3 style="margin-top:0">Class Schedule</h3>
+      
+      <div style="background:var(--bg-1); padding:16px; border-radius:8px; margin-bottom:20px; border:1px solid #e2e8f0;">
+        <div class="subtitle" style="margin-bottom:8px">Add Class</div>
+        <div class="row">
+          <div class="col"><input id="sSubject" placeholder="Subject" /></div>
+          <div class="col"><input id="sTime" placeholder="Time (e.g. 8:00-9:00)" /></div>
+        </div>
+        <div class="row" style="margin-top:10px">
+          <div class="col"><input id="sDays" placeholder="Days (e.g. Mon, Wed)" /></div>
+          <div class="col"><input id="sRoom" placeholder="Room" /></div>
+          <div class="col"><input id="sTeacher" placeholder="Teacher" /></div>
+        </div>
+        <div style="margin-top:10px; text-align:right">
+          <button class="primary" onclick="addSchedule()">Add Class to Schedule</button>
+        </div>
+      </div>
+
+      <div class="table-container">
+        <table>
+          <thead><tr><th>Subject</th><th>Details</th><th>Room</th><th>Teacher</th><th>Action</th></tr></thead>
+          <tbody>${rows}</tbody>
+        </table>
+      </div>
+    </div>`;
+}
+
+/* ================= ACTIONS ================= */
+
+function addStudent(){
+  const id = document.getElementById('newId').value.trim();
+  const first = document.getElementById('newFirst').value.trim();
+  const last = document.getElementById('newLast').value.trim();
+  const track = document.getElementById('newTrack').value.trim() || 'ICT';
+  const birth = document.getElementById('newBirth').value;
+
+  if(!id || !first || !last || !birth){ alert('Please fill in all fields.'); return; }
+  
+  const users = read(LS.USERS);
+  if(users.some(u => u.id === id)){ alert('Student ID already exists.'); return; }
+  
+  users.push({ id, firstName:first, lastName:last, track, birth, avatar:null });
+  write(LS.USERS, users);
+  
+  alert('Student created successfully.');
+  openTabByName('Students'); 
+  renderRightSummary();
+}
+
+function editStudent(i){
+  const users = read(LS.USERS);
+  const u = users[i];
+  const first = prompt('First Name:', u.firstName); if(first===null) return;
+  const last = prompt('Last Name:', u.lastName); if(last===null) return;
+  const track = prompt('Track:', u.track); if(track===null) return;
+  const birth = prompt('Birth Date (YYYY-MM-DD):', u.birth); if(birth===null) return;
+  
+  users[i] = { ...u, firstName:first, lastName:last, track:track, birth:birth };
+  write(LS.USERS, users);
+  openTabByName('Students');
+}
+
+function deleteStudent(i){
+  if(!confirm('Are you sure? This will delete the student and their records.')) return;
+  const users = read(LS.USERS);
+  const targetId = users[i].id;
+  users.splice(i, 1);
+  write(LS.USERS, users);
+  
+  // Cleanup orphan data
+  write(LS.ATT, read(LS.ATT).filter(a => a.userId !== targetId));
+  write(LS.GRADES, read(LS.GRADES).filter(g => g.userId !== targetId));
+  
+  openTabByName('Students');
+  renderRightSummary();
+}
+
+function uploadStudentPhoto(index){
+  const input = document.createElement('input');
+  input.type = 'file'; 
+  input.accept = 'image/*';
+  input.onchange = (e) => {
+    const file = e.target.files[0];
+    if(!file) return;
+    
+    // File size check (approx 2MB limit for localStorage safety)
+    if(file.size > 2000000) { alert('Image too large. Please use an image under 2MB.'); return; }
+
+    const reader = new FileReader();
+    reader.onload = (ev) => {
+      const users = read(LS.USERS);
+      users[index].avatar = ev.target.result;
+      write(LS.USERS, users);
+      openTabByName('Students');
     };
+    reader.readAsDataURL(file);
+  };
+  input.click();
+}
 
-    const INITIAL_USERS = [
-        { id: "2024-0001", name: "Dela Cruz, Juan", pass: "123", grades: {"Media & Info Literacy":92, "JAVA (Enterprise)":94, "Inquiries & Immersion":89, "Work Immersion":91, "PE & Health":90}, pic: null, abs: 0 }
-    ];
+function addAttendance(){
+  const userId = document.getElementById('attUser').value;
+  const date = document.getElementById('attDate').value;
+  const status = document.getElementById('attStatus').value;
+  
+  if(!userId || userId === 'No students') { alert('No student selected'); return; }
+  
+  const arr = read(LS.ATT);
+  arr.push({ userId, date, status });
+  write(LS.ATT, arr);
+  openTabByName('Attendance');
+  renderRightSummary();
+}
 
-    const db = {
-        k: 'ACSHS_V7_PRO',
-        save: (d) => localStorage.setItem(db.k, JSON.stringify(d)),
-        load: () => JSON.parse(localStorage.getItem(db.k) || JSON.stringify(INITIAL_USERS)),
-        sessSet: (u) => localStorage.setItem(db.k+'_sess', JSON.stringify(u)),
-        sessGet: () => JSON.parse(localStorage.getItem(db.k+'_sess'))
-    };
+function deleteAttendance(i){
+  if(!confirm('Delete this record?')) return;
+  const arr = read(LS.ATT);
+  // Re-sort to match display index? No, we need to match original array or filter.
+  // The display is sorted. To delete correctly, we must find the item or sort the source array first.
+  // Simplification for this demo: We sort the source array in memory before delete to match display.
+  arr.sort((a,b) => b.date.localeCompare(a.date));
+  arr.splice(i, 1);
+  write(LS.ATT, arr);
+  openTabByName('Attendance');
+  renderRightSummary();
+}
 
-    const sys = {
-        user: null, tab: 'Dashboard',
-        init() {
-            const s = db.sessGet();
-            if(s) { this.user = s; this.launch(); }
-        },
-        login() {
-            const r = lRole.value, id = lId.value.trim(), p = lPass.value;
-            if(r === 'admin' && id === 'admin' && p === 'admin123') {
-                this.user = { role:'admin', name:'Registrar Admin', id:'FAC-001' };
-            } else {
-                const u = db.load().find(x => x.id === id && x.pass === p);
-                if(!u) return ui.notify("Invalid Account Credentials", true);
-                this.user = { role:'student', ...u };
-            }
-            db.sessSet(this.user); this.launch();
-        },
-        register() {
-            if(!CONFIG.SLIPS.includes(rSlip.value)) return ui.notify("Invalid Slip Code", true);
-            let u = db.load();
-            if(u.some(x => x.id === rId.value)) return ui.notify("ID Already Exists", true);
-            u.push({ id: rId.value, name: rName.value, pass: rPass.value, grades: CONFIG.SUBJECTS.reduce((a,s)=>({...a,[s]:0}),{}), pic:null, abs:0 });
-            db.save(u); ui.notify("Account Created!"); ui.swapAuth('loginBox');
-        },
-        reset() {
-            if(!CONFIG.SLIPS.includes(fSlip.value)) return ui.notify("Verification Failed", true);
-            let u = db.load();
-            const i = u.findIndex(x => x.id === fId.value);
-            if(i === -1) return ui.notify("ID Not Found", true);
-            u[i].pass = fPass.value; db.save(u); ui.notify("Password Reset Success!"); ui.swapAuth('loginBox');
-        },
-        logout() { localStorage.removeItem(db.k+'_sess'); location.reload(); },
-        launch() {
-            vAuth.style.display = 'none'; vApp.style.display = 'flex';
-            topUser.innerText = this.user.name; sideName.innerText = this.user.name; sideId.innerText = this.user.id;
-            this.updateProfile(); ui.initTabs();
-        },
-        updateProfile() {
-            sideAvatar.innerHTML = this.user.pic ? `<img src="${this.user.pic}">` : `<i class="fa-solid fa-user-tie"></i>`;
-            if(this.user.role === 'student') {
-                const g = Object.values(this.user.grades);
-                statAve.innerText = (g.reduce((a,b)=>a+b,0)/g.length).toFixed(1);
-                statAbs.innerText = this.user.abs;
-            }
-            const day = new Date().toLocaleDateString('en-US', { weekday:'Long' });
-            const list = CONFIG.SCHEDULE[day] || CONFIG.SCHEDULE["Monday"];
-            let h = "";
-            list.slice(0, 3).forEach(x => h += `<div class="mini-schedule-item"><b>${x.time}</b><br><span>${x.sub}</span></div>`);
-            todayMiniSched.innerHTML = h;
-        }
-    };
+function addGrade(){
+  const userId = document.getElementById('gUser').value;
+  const sy = document.getElementById('gSY').value || '2024-2025';
+  const sem = document.getElementById('gSem').value;
+  const subject = document.getElementById('gSubject').value;
+  const grade = parseInt(document.getElementById('gValue').value);
+  
+  if(!userId || !subject || isNaN(grade)){ alert('Missing info'); return; }
+  
+  const arr = read(LS.GRADES);
+  arr.push({ userId, schoolYear:sy, semester:sem, subject, grade });
+  write(LS.GRADES, arr);
+  openTabByName('Grades');
+  renderRightSummary();
+}
 
-    const ui = {
-        swapAuth: (id) => { ['loginBox','regBox','forgotBox'].forEach(b=>document.getElementById(b).style.display=b===id?'block':'none'); },
-        notify: (m, e=false) => { toast.innerText=m; toast.style.background=e? 'var(--danger)':'#1e293b'; toast.classList.add('show'); setTimeout(()=>toast.classList.remove('show'), 3000); },
-        initTabs() {
-            const menu = sys.user.role === 'admin' ? ['Admin Control', 'Students List', 'Reports'] : ['Dashboard', 'Weekly Schedule', 'Grade Records'];
-            tabArea.innerHTML = "";
-            menu.forEach(m => {
-                const b = document.createElement('button');
-                b.className = `tab-btn ${m === sys.tab ? 'active' : ''}`;
-                b.innerText = m;
-                b.onclick = () => { 
-                    document.querySelectorAll('.tab-btn').forEach(btn=>btn.classList.remove('active'));
-                    b.classList.add('active'); ui.renderView(m); 
-                };
-                tabArea.appendChild(b);
-            });
-            ui.renderView(menu[0]);
-        },
-        renderView(v) {
-            let h = `<div class="card"><h3>${v}</h3><hr>`;
-            
-            if(v === 'Dashboard') {
-                h += `<p style="color:var(--muted)">System status: <span style="color:var(--success); font-weight:800">Operational</span></p>
-                      <div class="stat-row">
-                        <div class="card" style="background:#f0f7ff; border:none"><b>SY 2025-2026</b><br><small>Active Term</small></div>
-                        <div class="card" style="background:#f0fff4; border:none"><b>Registry</b><br><small>Verified</small></div>
-                      </div>`;
-            }
-            else if(v === 'Weekly Schedule') {
-                h += `<div style="overflow-x:auto"><table class="schedule-table"><thead><tr><th>Day</th><th>Time</th><th>Subject</th><th>Instructor</th></tr></thead><tbody>`;
-                Object.entries(CONFIG.SCHEDULE).forEach(([day, sessions]) => {
-                    sessions.forEach(s => {
-                        h += `<tr><td><span class="day-badge">${day}</span></td><td><b>${s.time}</b></td><td>${s.sub}</td><td>${s.prof}</td></tr>`;
-                    });
-                });
-                h += `</tbody></table></div>`;
-            }
-            else if(v === 'Grade Records') {
-                h += `<table class="schedule-table"><thead><tr><th>Subject</th><th>Final</th><th>Status</th></tr></thead><tbody>`;
-                Object.entries(sys.user.grades).forEach(([s,g]) => {
-                    h += `<tr><td>${s}</td><td><b>${g}</b></td><td><span style="color:${g>=75? 'var(--success)':'var(--danger)'}; font-weight:800">${g>=75?'PASSED':'FAILED'}</span></td></tr>`;
-                });
-                h += `</tbody></table><button class="btn-main" style="margin-top:20px; width:180px" onclick="window.print()">PRINT GRADE SLIP</button>`;
-            }
-            else if(v === 'Students List') {
-                const u = db.load();
-                h += `<table class="schedule-table"><thead><tr><th>Student</th><th>ID</th><th>Action</th></tr></thead><tbody>`;
-                u.forEach((x, i) => {
-                    h += `<tr><td><b>${x.name}</b></td><td>${x.id}</td><td><button class="tab-btn" style="padding:5px 10px; font-size:11px" onclick="ui.editGrades(${i})">Manage</button></td></tr>`;
-                });
-                h += `</tbody></table>`;
-            }
-            else if(v === 'Admin Control') {
-                h += `<div class="stat-row">
-                        <div class="card" style="background:#fef3c7; border:none"><b>Total Students</b><br><span style="font-size:24px">${db.load().length}</span></div>
-                        <div class="card" style="background:#dbeafe; border:none"><b>Active Subjects</b><br><span style="font-size:24px">${CONFIG.SUBJECTS.length}</span></div>
-                      </div>
-                      <p style="margin-top:20px; color:var(--muted)">Welcome to the Administrator Control Panel. Use the tabs above to manage students and view reports.</p>`;
-            }
-            else if(v === 'Reports') {
-                h += `<div style="display:grid; gap:16px">
-                        <div class="card" style="background:#f0f7ff; border:none; cursor:pointer">
-                            <h4 style="margin:0 0 8px 0">Academic Performance Report</h4>
-                            <p style="margin:0; color:var(--muted); font-size:13px">View comprehensive grade analysis and statistics</p>
-                        </div>
-                        <div class="card" style="background:#f0fff4; border:none; cursor:pointer">
-                            <h4 style="margin:0 0 8px 0">Attendance Summary</h4>
-                            <p style="margin:0; color:var(--muted); font-size:13px">Monitor student attendance and absence records</p>
-                        </div>
-                        <div class="card" style="background:#fef2f2; border:none; cursor:pointer">
-                            <h4 style="margin:0 0 8px 0">Export Data</h4>
-                            <p style="margin:0; color:var(--muted); font-size:13px">Download student records and grades in CSV format</p>
-                        </div>
-                      </div>`;
-            }
+function editGrade(i, val){
+  const arr = read(LS.GRADES);
+  arr[i].grade = val;
+  write(LS.GRADES, arr);
+}
 
-            h += `</div><div id="subZone"></div>`;
-            viewArea.innerHTML = h;
-        },
-        editGrades(idx) {
-            const x = db.load()[idx];
-            let h = `<div class="card"><h4>Grading Interface: ${x.name}</h4><div style="display:grid; grid-template-columns: 1fr 1fr; gap:15px; margin-top:20px">`;
-            Object.entries(x.grades).forEach(([s,g]) => {
-                h += `<div class="form-group"><label>${s}</label><input type="number" class="g-inp" data-s="${s}" value="${g}" min="0" max="100"></div>`;
-            });
-            h += `</div><button class="btn-main" onclick="ui.saveGrades(${idx})">SYNC DATA</button></div>`;
-            subZone.innerHTML = h;
-            subZone.scrollIntoView({ behavior: 'smooth' });
-        },
-        saveGrades(idx) {
-            let u = db.load();
-            document.querySelectorAll('.g-inp').forEach(i => u[idx].grades[i.dataset.s] = parseInt(i.value));
-            db.save(u); ui.notify("Database Synchronized"); ui.renderView('Students List');
-        }
-    };
+function deleteGrade(i){
+  if(!confirm('Delete grade?')) return;
+  const arr = read(LS.GRADES);
+  arr.splice(i, 1);
+  write(LS.GRADES, arr);
+  openTabByName('Grades');
+  renderRightSummary();
+}
 
-    // Initialize the system
-    sys.init();
+function addSchedule(){
+  const subject = document.getElementById('sSubject').value;
+  const time = document.getElementById('sTime').value;
+  const days = document.getElementById('sDays').value;
+  const room = document.getElementById('sRoom').value;
+  const teacher = document.getElementById('sTeacher').value;
+  
+  if(!subject || !time) { alert('Subject and Time are required'); return; }
+  
+  const arr = read(LS.SCHED);
+  arr.push({ subject, time, days, room, teacher });
+  write(LS.SCHED, arr);
+  openTabByName('Schedule');
+  renderRightSummary();
+}
+
+function deleteSchedule(i){
+  if(!confirm('Delete class?')) return;
+  const arr = read(LS.SCHED);
+  arr.splice(i, 1);
+  write(LS.SCHED, arr);
+  openTabByName('Schedule');
+  renderRightSummary();
+}
+
 </script>
-
 </body>
 </html>
