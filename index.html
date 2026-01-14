@@ -3,307 +3,669 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-    <title>myACSHS | Enterprise SIS v37.0</title>
+    <title>myACSHS | Enterprise SIS v41.0 - Premium Edition</title>
     
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
+        /* --- DESIGN SYSTEM (LINES 15-150) --- */
         :root {
-            --navy: #003366;
-            --blue: #0056b3;
+            --navy-primary: #002d5a;
+            --navy-dark: #001a35;
+            --blue-accent: #0061f2;
+            --blue-light: #e0e9f8;
             --white: #ffffff;
-            --danger: #dc3545;
-            --success: #28a745;
-            --bg: #f4f7f9;
-            --border: #d1d9e0;
+            --bg-canvas: #f0f4f8;
+            --text-heading: #1e293b;
+            --text-body: #475569;
+            --border-ui: #cbd5e1;
+            --danger: #ef4444;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+            --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1);
+            --radius-sm: 6px;
+            --radius-md: 12px;
+            --radius-lg: 20px;
         }
 
-        * { box-sizing: border-box; -webkit-font-smoothing: antialiased; margin: 0; padding: 0; }
-        body { font-family: 'Inter', sans-serif; background-color: var(--bg); color: #1a1a1a; }
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-font-smoothing: antialiased; }
 
-        /* HEADER & LOGO */
-        header { 
-            background: var(--navy); 
-            color: #fff; 
-            padding: 10px 20px; 
-            display: flex; 
-            justify-content: space-between; 
-            align-items: center; 
-            position: sticky; 
-            top: 0; 
-            z-index: 1000; 
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: var(--bg-canvas);
+            color: var(--text-body);
+            line-height: 1.6;
+            overflow-x: hidden;
         }
-        .brand-box { display: flex; align-items: center; gap: 12px; }
-        .site-logo { 
-            width: 45px; 
-            height: 45px; 
-            background: #fff; 
-            border-radius: 50%; 
-            display: flex; 
-            align-items: center; 
-            justify-content: center; 
-            border: 2px solid var(--white);
-            overflow: hidden;
-        }
-        .site-logo img { width: 100%; height: 100%; object-fit: cover; }
 
-        /* ENROLLMENT COUNTER STAT */
-        .enrollment-stat {
-            background: #fff;
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            padding: 20px;
-            margin-bottom: 20px;
+        /* Scrollbar Styling */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #f1f1f1; }
+        ::-webkit-scrollbar-thumb { background: var(--navy-primary); border-radius: 10px; }
+
+        /* Typography */
+        h1, h2, h3, h4 { color: var(--text-heading); font-weight: 800; letter-spacing: -0.025em; }
+        
+        /* Layout Helpers */
+        .flex-center { display: flex; align-items: center; justify-content: center; }
+        .glass-panel { background: rgba(255, 255, 255, 0.9); backdrop-filter: blur(10px); border: 1px solid var(--white); }
+
+        /* Header Navigation */
+        header {
+            background: var(--navy-primary);
+            color: var(--white);
+            padding: 0 24px;
+            height: 72px;
             display: flex;
+            justify-content: space-between;
             align-items: center;
-            gap: 20px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.02);
-        }
-        .stat-circle {
-            width: 55px; height: 55px; background: var(--navy); color: #fff;
-            border-radius: 50%; display: flex; align-items: center; justify-content: center;
-            font-weight: 900; font-size: 20px; border: 3px solid var(--blue);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: var(--shadow-md);
         }
 
-        /* AUTH UI */
+        .brand-identity { display: flex; align-items: center; gap: 12px; text-decoration: none; color: inherit; }
+        .school-logo-frame {
+            width: 48px; height: 48px;
+            background: var(--white);
+            border-radius: 50%;
+            padding: 2px;
+            overflow: hidden;
+            border: 2px solid var(--blue-accent);
+            box-shadow: 0 0 12px rgba(0, 97, 242, 0.3);
+        }
+        .school-logo-frame img { width: 100%; height: 100%; object-fit: cover; }
+        .brand-text { font-size: 20px; font-weight: 800; letter-spacing: -0.5px; }
+
+        /* Authentication UI */
+        .auth-viewport {
+            min-height: calc(100vh - 72px);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 20px;
+            background: radial-gradient(circle at top right, #e0e9f8, #f0f4f8);
+        }
+
         .auth-card {
-            width: 100%; max-width: 420px; background: var(--white); border-radius: 12px;
-            padding: 40px; margin: 60px auto; box-shadow: 0 10px 30px rgba(0, 51, 102, 0.1); border: 1px solid var(--border);
+            width: 100%;
+            max-width: 460px;
+            background: var(--white);
+            border-radius: var(--radius-lg);
+            padding: 48px;
+            box-shadow: var(--shadow-lg);
+            border: 1px solid var(--border-ui);
             text-align: center;
+            transition: transform 0.3s ease;
         }
-        .auth-logo { width: 90px; height: 90px; margin: 0 auto 20px; border-radius: 50%; border: 2px solid var(--navy); }
-        .field { margin-bottom: 20px; text-align: left; }
-        .field label { display: block; font-size: 11px; font-weight: 800; color: var(--navy); margin-bottom: 8px; text-transform: uppercase; }
-        .field input, .field select { width: 100%; height: 48px; padding: 0 15px; border: 2px solid #e2e8f0; border-radius: 8px; outline: none; }
 
-        /* TABS */
-        .tabs { display: flex; background: #fff; border-bottom: 1px solid var(--border); overflow-x: auto; }
-        .tab { flex: 1; padding: 15px; text-align: center; cursor: pointer; font-weight: 800; font-size: 10px; color: #94a3b8; text-transform: uppercase; min-width: 110px; }
-        .tab.active { color: var(--navy); border-bottom: 4px solid var(--navy); }
+        .auth-card:hover { transform: translateY(-5px); }
 
-        .container { max-width: 600px; margin: 25px auto; padding: 0 15px 100px; }
-        .widget { background: #fff; border-radius: 12px; padding: 25px; border: 1px solid var(--border); margin-bottom: 20px; }
-        .row { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid #f1f5f9; }
+        .auth-header img { width: 110px; height: 110px; border-radius: 50%; margin-bottom: 24px; border: 4px solid var(--blue-light); }
 
+        .form-control { margin-bottom: 24px; text-align: left; position: relative; }
+        .form-control label {
+            display: block;
+            font-size: 11px;
+            font-weight: 800;
+            text-transform: uppercase;
+            color: var(--navy-primary);
+            margin-bottom: 8px;
+            letter-spacing: 0.05em;
+        }
+
+        .form-control input, .form-control select {
+            width: 100%;
+            height: 54px;
+            padding: 0 18px;
+            border: 2px solid #e2e8f0;
+            border-radius: var(--radius-md);
+            font-size: 15px;
+            font-weight: 500;
+            outline: none;
+            transition: all 0.2s ease;
+            background: #f8fafc;
+        }
+
+        .form-control input:focus {
+            border-color: var(--blue-accent);
+            background: var(--white);
+            box-shadow: 0 0 0 4px rgba(0, 97, 242, 0.1);
+        }
+
+        .toggle-password {
+            position: absolute;
+            right: 18px;
+            top: 42px;
+            cursor: pointer;
+            color: var(--text-muted);
+            font-size: 18px;
+            padding: 5px;
+            transition: color 0.2s;
+        }
+        .toggle-password:hover { color: var(--blue-accent); }
+
+        /* Navigation Tabs */
+        .app-tabs {
+            display: flex;
+            background: var(--white);
+            border-bottom: 1px solid var(--border-ui);
+            position: sticky;
+            top: 72px;
+            z-index: 999;
+        }
+
+        .app-tab {
+            flex: 1;
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+            font-weight: 800;
+            font-size: 12px;
+            color: var(--text-body);
+            text-transform: uppercase;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            border-bottom: 4px solid transparent;
+        }
+
+        .app-tab.active {
+            color: var(--navy-primary);
+            border-bottom-color: var(--navy-primary);
+            background: #f8fafc;
+        }
+
+        /* Dashboard Components */
+        .app-container { max-width: 900px; margin: 32px auto; padding: 0 24px 120px; }
+
+        .profile-hero {
+            background: var(--white);
+            border-radius: var(--radius-lg);
+            padding: 40px;
+            text-align: center;
+            margin-bottom: 32px;
+            border: 1px solid var(--border-ui);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .profile-avatar-wrapper {
+            width: 120px;
+            height: 120px;
+            margin: 0 auto 20px;
+            position: relative;
+        }
+
+        .profile-avatar {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            border: 5px solid var(--blue-light);
+            overflow: hidden;
+            background: #f1f5f9;
+        }
+
+        .profile-avatar img { width: 100%; height: 100%; object-fit: cover; }
+
+        .status-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 800;
+            background: var(--blue-light);
+            color: var(--blue-accent);
+            text-transform: uppercase;
+            margin-top: 8px;
+        }
+
+        /* --- CONTENT CARDS --- */
+        .content-card {
+            background: var(--white);
+            border-radius: var(--radius-md);
+            padding: 30px;
+            border: 1px solid var(--border-ui);
+            margin-bottom: 24px;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #f1f5f9;
+        }
+
+        /* Schedule Timeline */
+        .timeline { position: relative; padding-left: 20px; }
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 5px;
+            bottom: 5px;
+            width: 3px;
+            background: var(--blue-light);
+        }
+
+        .timeline-item {
+            position: relative;
+            margin-bottom: 24px;
+            padding-left: 25px;
+        }
+
+        .timeline-item::after {
+            content: '';
+            position: absolute;
+            left: -5.5px;
+            top: 5px;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: var(--blue-accent);
+            border: 3px solid var(--white);
+        }
+
+        .time-label { font-size: 11px; font-weight: 800; color: var(--blue-accent); display: block; }
+        .subject-title { font-size: 16px; font-weight: 700; color: var(--navy-primary); }
+        .instructor-name { font-size: 13px; color: var(--text-body); font-style: italic; }
+
+        /* GRADE EDITOR PANEL UI */
+        .editor-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            background: #f8fafc;
+            padding: 24px;
+            border-radius: var(--radius-md);
+            border: 1px solid var(--border-ui);
+            margin-top: 20px;
+        }
+
+        .editor-header {
+            background: var(--navy-primary);
+            color: white;
+            padding: 15px 20px;
+            border-radius: var(--radius-md) var(--radius-md) 0 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        /* Buttons */
         .btn {
-            width: 100%; height: 50px; background: var(--navy); color: #fff; border: none; 
-            border-radius: 8px; font-weight: 800; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            height: 50px;
+            padding: 0 24px;
+            border-radius: 8px;
+            font-weight: 800;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border: none;
+            width: 100%;
         }
 
-        /* MODAL */
-        #modal { position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 2000; display: none; align-items: center; justify-content: center; padding: 20px; }
-        .modal-body { background: #fff; width: 100%; max-width: 400px; border-radius: 12px; padding: 25px; }
+        .btn-navy { background: var(--navy-primary); color: white; }
+        .btn-navy:hover { background: var(--navy-dark); transform: scale(1.02); }
 
+        /* Print styling */
         @media print {
-            body * { visibility: hidden; }
-            #printArea, #printArea * { visibility: visible; }
-            #printArea { position: absolute; left: 0; top: 0; width: 100%; padding: 40px; }
+            body { background: white; }
+            .app-tabs, header, .btn { display: none !important; }
+            .app-container { margin: 0; padding: 0; max-width: 100%; }
+            #printOutput { display: block !important; }
         }
     </style>
 </head>
 <body>
 
-<div id="modal">
-    <div class="modal-body">
-        <h3 id="mTitle" style="color:var(--navy); margin-bottom:15px">Grade Editor</h3>
-        <div id="mContent"></div>
-        <div style="display:flex; gap:10px; margin-top:20px">
-            <button class="btn" id="mSave">UPDATE GRADES</button>
-            <button class="btn" style="background:#94a3b8" onclick="modal.style.display='none'">CANCEL</button>
+<header id="mainHeader" style="display:none">
+    <div class="brand-identity">
+        <div class="school-logo-frame"><img src="acshslogo.jpg"></div>
+        <span class="brand-text">myACSHS</span>
+    </div>
+    <div style="display:flex; align-items:center; gap:20px">
+        <span id="sessionName" style="font-size:12px; font-weight:700; opacity:0.8"></span>
+        <i class="fa-solid fa-right-from-bracket" onclick="portal.logout()" style="cursor:pointer; font-size:20px"></i>
+    </div>
+</header>
+
+<nav class="app-tabs" id="mainNav" style="display:none">
+    <div class="app-tab active" onclick="ui.renderView('home', this)">Schedule</div>
+    <div class="app-tab" onclick="ui.renderView('academics', this)">Performance</div>
+    <div id="adminTab" class="app-tab" style="display:none" onclick="ui.renderView('management', this)">Registrar</div>
+</nav>
+
+<div id="vAuth" class="auth-viewport">
+    <div class="auth-card" id="loginFrame">
+        <div class="auth-header">
+            <img src="acshslogo.jpg" alt="Logo">
+            <h1>Portal Login</h1>
+            <p style="font-size:14px; color:var(--text-body); margin-top:8px">Antipolo City Senior High School</p>
+        </div>
+        
+        <div style="margin-top:32px">
+            <div class="form-control">
+                <label>User Role</label>
+                <select id="lRole">
+                    <option value="student">Student Account</option>
+                    <option value="admin">Faculty Administrator</option>
+                </select>
+            </div>
+            
+            <div class="form-control">
+                <label>Identification Number</label>
+                <input type="text" id="lId" placeholder="e.g., 20240001">
+            </div>
+            
+            <div class="form-control">
+                <label>Access Password</label>
+                <input type="password" id="lPass" placeholder="••••••••">
+                <i class="fa-solid fa-eye toggle-password" onclick="ui.togglePass('lPass')"></i>
+            </div>
+            
+            <button class="btn btn-navy" onclick="portal.login()">AUTHENTICATE SESSION</button>
+            <p style="margin-top:24px; font-size:13px; font-weight:700; color:var(--navy-primary); cursor:pointer" onclick="ui.swapAuth('regFrame')">New Enrollee? Create Account</p>
         </div>
     </div>
-</div>
 
-<div id="vAuth">
-    <div class="auth-card" id="boxL">
-        <img src="input_file_0.png" class="auth-logo">
-        <h2 style="color:var(--navy); margin-bottom:25px">Portal Login</h2>
-        <div class="field"><label>Account Type</label><select id="lRole"><option value="student">Student</option><option value="admin">Administrator</option></select></div>
-        <div class="field"><label>ID Number</label><input type="text" id="lId" placeholder="e.g. 20240001"></div>
-        <div class="field"><label>Password</label><input type="password" id="lPass"></div>
-        <button class="btn" onclick="app.login()">SIGN IN</button>
-        <p onclick="app.swap('boxR')" style="margin-top:15px; font-size:12px; cursor:pointer; font-weight:700; color:var(--navy)">New Student? Register</p>
-    </div>
-    <div class="auth-card" id="boxR" style="display:none">
-        <img src="input_file_0.png" class="auth-logo">
-        <h2 style="color:var(--navy); margin-bottom:25px">Registration</h2>
-        <div class="field"><label>Full Name</label><input type="text" id="rName"></div>
-        <div class="field"><label>Student ID</label><input type="number" id="rId"></div>
-        <div class="field"><label>Slip Code (112233)</label><input type="number" id="rSlip"></div>
-        <div class="field"><label>Track/Section</label><input type="text" id="rTrack"></div>
-        <div class="field"><label>Password</label><input type="password" id="rPass"></div>
-        <button class="btn" onclick="app.register()">SUBMIT</button>
-        <p onclick="app.swap('boxL')" style="margin-top:15px; font-size:12px; cursor:pointer; font-weight:700; color:var(--navy)">Back to Login</p>
+    <div class="auth-card" id="regFrame" style="display:none">
+        <h1>Registration</h1>
+        <div style="margin-top:24px">
+            <div class="form-control"><label>Full Legal Name</label><input type="text" id="rName"></div>
+            <div class="form-control"><label>Student ID</label><input type="text" id="rId"></div>
+            <div class="form-control"><label>Verification Code (112233)</label><input type="text" id="rSlip"></div>
+            <div class="form-control"><label>Section / Strand</label><input type="text" id="rTrack"></div>
+            <div class="form-control">
+                <label>Password</label>
+                <input type="password" id="rPass">
+                <i class="fa-solid fa-eye toggle-password" onclick="ui.togglePass('rPass')"></i>
+            </div>
+            <button class="btn btn-navy" onclick="portal.register()">SUBMIT REGISTRATION</button>
+            <p style="margin-top:20px; font-size:13px; font-weight:700; cursor:pointer" onclick="ui.swapAuth('loginFrame')">Already have an account?</p>
+        </div>
     </div>
 </div>
 
 <div id="vPortal" style="display:none">
-    <header>
-        <div class="brand-box">
-            <div class="site-logo"><img src="input_file_0.png"></div>
-            <div style="font-weight:900; font-size:18px">myACSHS</div>
-        </div>
-        <i class="fa-solid fa-power-off" onclick="app.logout()" style="cursor:pointer"></i>
-    </header>
-    <nav class="tabs">
-        <div class="tab active" onclick="app.nav('home', this)">Schedule</div>
-        <div class="tab" onclick="app.nav('acads', this)">Grades</div>
-        <div id="tabA" class="tab" style="display:none" onclick="app.nav('admin', this)">Management</div>
-    </nav>
-    <main class="container">
-        <div id="adminStat" style="display:none" class="enrollment-stat">
-            <div class="stat-circle" id="totalCount">0</div>
-            <div>
-                <div style="font-weight:800; color:var(--navy)">Total Enrolled Students</div>
-                <div style="font-size:11px; color:#888">Verified student accounts in system</div>
+    <main class="app-container">
+        <div class="profile-hero">
+            <div class="profile-avatar-wrapper">
+                <div class="profile-avatar" id="avatarDisplay"></div>
             </div>
+            <h2 id="dispName">...</h2>
+            <div class="status-badge" id="dispMeta"></div>
         </div>
-        <div class="widget" style="text-align:center">
-            <div id="dPic" style="width:90px; height:90px; border-radius:50%; border:3px solid var(--navy); margin:0 auto 10px; overflow:hidden; background:#eee; display:flex; align-items:center; justify-content:center"></div>
-            <h2 id="dName" style="color:var(--navy)">...</h2>
-            <p id="dMeta" style="font-size:11px; font-weight:700; color:#888"></p>
-        </div>
-        <div id="render"></div>
+
+        <div id="viewRender"></div>
     </main>
 </div>
 
-<div id="printArea" style="display:none"></div>
+<div id="printOutput" style="display:none"></div>
 
 <script>
-    const CONFIG = { SLIPS:["112233"], SUBS:["Mathematics", "Science", "Programming", "Communication"] };
-    
-    // PRE-LOADED EXAMPLE DATA
-    const INITIAL_STUDENTS = [
-        { id: "20240001", name: "John Doe", pass: "password123", track: "STEM - 12A", pic: null, grades: {Mathematics:88, Science:92, Programming:95, Communication:85} },
-        { id: "20240002", name: "Jane Smith", pass: "password123", track: "ICT - 11B", pic: null, grades: {Mathematics:90, Science:85, Programming:98, Communication:92} }
-    ];
-
-    const db = {
-        save: (k,v) => localStorage.setItem('sis_v37_'+k, JSON.stringify(v)),
-        get: (k) => {
-            const data = localStorage.getItem('sis_v37_'+k);
-            if(!data && k==='u') return INITIAL_STUDENTS; 
-            return JSON.parse(data || '[]');
-        },
-        sess: (v) => v ? localStorage.setItem('sis_v37_s', JSON.stringify(v)) : JSON.parse(localStorage.getItem('sis_v37_s'))
+    /* --- DATA LAYER (375-450) --- */
+    const CONFIG = {
+        SLIPS: ["112233"],
+        SUBJECTS: [
+            "Media & Information Literacy", 
+            "JAVA (Programming)", 
+            "Inquiries, Investigations, Immersion", 
+            "Work Immersion", 
+            "PE & Health"
+        ],
+        // REAL SCHEDULE FROM ICT 1202 IMAGE
+        SCHEDULE: {
+            "Monday": [
+                { t: "6:15-7:15", s: "Homeroom Guidance", i: "Adviser" },
+                { t: "7:15-8:15", s: "JAVA", i: "Espiritu" },
+                { t: "8:35-9:35", s: "PE & Health", i: "Jordan" },
+                { t: "9:35-10:35", s: "Inquiries, Investigations, Immersion", i: "Inocian" },
+                { t: "10:35-11:35", s: "Work Immersion", i: "Espiritu" }
+            ],
+            "Tuesday": [
+                { t: "6:15-7:15", s: "Media & Information Literacy", i: "Sofia" },
+                { t: "7:15-8:15", s: "JAVA", i: "Espiritu" },
+                { t: "8:35-9:35", s: "JAVA", i: "Espiritu" },
+                { t: "9:35-10:35", s: "Inquiries, Investigations, Immersion", i: "Inocian" }
+            ],
+            "Wednesday": [
+                { t: "6:15-7:15", s: "Media & Information Literacy", i: "Sofia" },
+                { t: "7:15-8:15", s: "JAVA", i: "Espiritu" },
+                { t: "8:35-9:35", s: "Inquiries, Investigations, Immersion", i: "Inocian" },
+                { t: "9:35-10:35", s: "Work Immersion", i: "Espiritu" }
+            ],
+            "Thursday": [
+                { t: "6:15-7:15", s: "Media & Information Literacy", i: "Sofia" },
+                { t: "7:15-8:15", s: "JAVA", i: "Espiritu" },
+                { t: "8:35-9:35", s: "JAVA", i: "Espiritu" },
+                { t: "9:35-10:35", s: "Inquiries, Investigations, Immersion", i: "Inocian" }
+            ],
+            "Friday": [
+                { t: "6:15-7:15", s: "Media & Information Literacy", i: "Sofia" },
+                { t: "7:15-8:15", s: "JAVA", i: "Espiritu" },
+                { t: "8:35-9:35", s: "JAVA", i: "Espiritu" },
+                { t: "9:35-10:35", s: "Work Immersion", i: "Espiritu" }
+            ]
+        }
     };
 
-    const app = {
-        user: null, curIdx: null,
-        init: () => { 
-            if(!localStorage.getItem('sis_v37_u')) db.save('u', INITIAL_STUDENTS);
-            const s = db.sess(); if(s) { app.user = s; app.launch(); } 
+    const INITIAL_USERS = [
+        { id: "20240001", name: "John Doe", pass: "123", track: "ICT 1202", pic: null, grades: {"Media & Information Literacy":88, "JAVA (Programming)":92, "Inquiries, Investigations, Immersion":90, "Work Immersion":95, "PE & Health":85} },
+        { id: "20240002", name: "Jane Smith", pass: "123", track: "ICT 1202", pic: null, grades: {"Media & Information Literacy":90, "JAVA (Programming)":85, "Inquiries, Investigations, Immersion":92, "Work Immersion":88, "PE & Health":94} },
+        { id: "20240003", name: "Mark Wilson", pass: "123", track: "ICT 1201", pic: null, grades: {"Media & Information Literacy":78, "JAVA (Programming)":82, "Inquiries, Investigations, Immersion":80, "Work Immersion":85, "PE & Health":88} }
+    ];
+
+    /* --- DB ENGINE (455-480) --- */
+    const db = {
+        key: 'ACSHS_DATA_V41',
+        save: (data) => localStorage.setItem(db.key, JSON.stringify(data)),
+        load: () => {
+            const data = localStorage.getItem(db.key);
+            if(!data) { db.save(INITIAL_USERS); return INITIAL_USERS; }
+            return JSON.parse(data);
         },
-        swap: (id) => { boxL.style.display = id==='boxL'?'block':'none'; boxR.style.display = id==='boxR'?'block':'none'; },
-        
-        login: () => {
-            const r = lRole.value, id = lId.value.trim(), p = lPass.value.trim();
-            if(r==='admin' && id === 'admin' && p === 'admin123') app.user = { role:'admin', name:'Registrar Office', id:'STAFF-01' };
-            else {
-                const u = db.get('u').find(x => x.id === id && x.pass === p);
-                if(!u) return alert("Invalid ID or Password");
-                app.user = { role:'student', ...u };
+        session: (u) => u ? localStorage.setItem('ACSHS_SESS', JSON.stringify(u)) : JSON.parse(localStorage.getItem('ACSHS_SESS'))
+    };
+
+    /* --- PORTAL LOGIC (485-530) --- */
+    const portal = {
+        currentUser: null,
+        init() {
+            const s = db.session();
+            if(s) { this.currentUser = s; this.launch(); }
+        },
+        login() {
+            const role = lRole.value, id = lId.value.trim(), pass = lPass.value.trim();
+            if(role === 'admin' && id === 'admin' && pass === 'admin123') {
+                this.currentUser = { role: 'admin', name: 'Registrar Admin', id: 'FACULTY-ROOT' };
+            } else {
+                const users = db.load();
+                const u = users.find(x => x.id === id && x.pass === pass);
+                if(!u) return alert("System Access Denied: Credentials Error");
+                this.currentUser = { role: 'student', ...u };
             }
-            db.sess(app.user); app.launch();
+            db.session(this.currentUser);
+            this.launch();
         },
-
-        register: () => {
-            if(!CONFIG.SLIPS.includes(rSlip.value)) return alert("Invalid Enrollment Slip");
-            let u = db.get('u');
-            u.push({ id: rId.value, name: rName.value, pass: rPass.value, track: rTrack.value, pic: null, grades: {Mathematics:75, Science:75, Programming:75, Communication:75} });
-            db.save('u', u); alert("Student Registered"); app.swap('boxL');
+        register() {
+            if(!CONFIG.SLIPS.includes(rSlip.value)) return alert("Verification Failed");
+            let users = db.load();
+            if(users.some(x => x.id === rId.value)) return alert("ID Already Taken");
+            
+            const freshGrades = {};
+            CONFIG.SUBJECTS.forEach(s => freshGrades[s] = 75);
+            
+            users.push({ id: rId.value, name: rName.value, pass: rPass.value, track: rTrack.value, pic: null, grades: freshGrades });
+            db.save(users);
+            alert("Record Created Successfully");
+            ui.swapAuth('loginFrame');
         },
-
-        launch: () => {
-            vAuth.style.display='none'; vPortal.style.display='block';
-            dName.innerText = app.user.name; dMeta.innerText = app.user.role==='admin'?'FACULTY SYSTEM ACCESS':`${app.user.id} | ${app.user.track}`;
-            app.updateAvatar();
-            if(app.user.role==='admin') {
-                tabA.style.display='block';
-                adminStat.style.display='flex';
-                totalCount.innerText = db.get('u').length;
-            }
-            app.nav('home', document.querySelector('.tab'));
+        logout() {
+            localStorage.removeItem('ACSHS_SESS');
+            location.reload();
         },
+        launch() {
+            vAuth.style.display = 'none';
+            vPortal.style.display = 'block';
+            mainHeader.style.display = 'flex';
+            mainNav.style.display = 'flex';
+            
+            dispName.innerText = this.currentUser.name;
+            sessionName.innerText = this.currentUser.name;
+            dispMeta.innerText = this.currentUser.role === 'admin' ? 'SYSTEM ROOT' : `ID: ${this.currentUser.id} | ${this.currentUser.track}`;
+            
+            if(this.currentUser.role === 'admin') adminTab.style.display = 'block';
+            ui.updateAvatar();
+            ui.renderView('home', document.querySelector('.app-tab'));
+        }
+    };
 
+    /* --- UI INTERFACE (535-650+) --- */
+    const ui = {
+        togglePass: (id) => {
+            const el = document.getElementById(id);
+            el.type = el.type === 'password' ? 'text' : 'password';
+        },
+        swapAuth: (frame) => {
+            loginFrame.style.display = frame === 'loginFrame' ? 'block' : 'none';
+            regFrame.style.display = frame === 'regFrame' ? 'block' : 'none';
+        },
         updateAvatar: () => {
-            dPic.innerHTML = app.user.pic ? `<img src="${app.user.pic}" style="width:100%;height:100%;object-fit:cover">` : `<i class="fa-solid fa-user-circle" style="font-size:40px; color:#ddd"></i>`;
+            avatarDisplay.innerHTML = portal.currentUser.pic 
+                ? `<img src="${portal.currentUser.pic}">` 
+                : `<i class="fa-solid fa-user-shield" style="font-size:50px; color:#cbd5e1; margin-top:30px"></i>`;
         },
+        renderView(view, tabEl) {
+            document.querySelectorAll('.app-tab').forEach(t => t.classList.remove('active'));
+            tabEl.classList.add('active');
+            let html = "";
 
-        nav: (v, el) => {
-            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active')); el.classList.add('active');
-            let h = "";
-            if(v==='home') h = `<div class="widget"><h3>Daily Schedule</h3><div class="row"><span>07:30 AM</span><b>Flag Ceremony</b></div><div class="row"><span>08:00 AM</span><b>Core Subject</b></div></div>`;
-            if(v==='acads') {
-                h = `<div class="widget"><h3>Grades Report</h3>`;
-                Object.entries(app.user.grades || {}).forEach(([k,v]) => h += `<div class="row"><span>${k}</span><b style="color:var(--blue)">${v}</b></div>`);
-                h += `<button class="btn" style="margin-top:15px; height:40px" onclick="app.exportPDF()"><i class="fa-solid fa-file-pdf"></i> Export Record</button></div>`;
+            if(view === 'home') {
+                const today = new Date().toLocaleDateString('en-US', { weekday: 'Long' });
+                const sched = CONFIG.SCHEDULE[today] || CONFIG.SCHEDULE["Monday"];
+                html = `<div class="content-card">
+                    <div class="card-header"><h3>Current Schedule (${today})</h3><i class="fa-solid fa-clock"></i></div>
+                    <div class="timeline">`;
+                sched.forEach(item => {
+                    html += `<div class="timeline-item">
+                        <span class="time-label">${item.t}</span>
+                        <div class="subject-title">${item.s}</div>
+                        <div class="instructor-name">Instructor: ${item.i}</div>
+                    </div>`;
+                });
+                html += `</div></div>`;
             }
-            if(v==='admin') {
-                h = `<div class="widget"><h3>Student Directory</h3>`;
-                db.get('u').forEach((u,i) => h += `
-                    <div class="row">
-                        <div><b>${u.name}</b><br><small style="color:#888">${u.id}</small></div>
-                        <div style="display:flex; gap:12px; font-size:18px">
-                            <i class="fa-solid fa-camera" title="Admin Photo Tool" style="color:var(--navy); cursor:pointer" onclick="app.adminPhoto(${i})"></i>
-                            <i class="fa-solid fa-pen-to-square" title="Open Grade Editor" style="color:var(--blue); cursor:pointer" onclick="app.adminGrades(${i})"></i>
-                            <i class="fa-solid fa-file-pdf" title="Export PDF" style="color:var(--danger); cursor:pointer" onclick="app.exportPDF(${i})"></i>
+
+            else if(view === 'academics') {
+                html = `<div class="content-card">
+                    <div class="card-header"><h3>Scholastic Record</h3><i class="fa-solid fa-award"></i></div>`;
+                Object.entries(portal.currentUser.grades || {}).forEach(([k,v]) => {
+                    html += `<div style="display:flex; justify-content:space-between; padding:12px 0; border-bottom:1px solid #f1f5f9">
+                        <span style="font-weight:600">${k}</span>
+                        <b style="color:var(--blue-accent)">${v}</b>
+                    </div>`;
+                });
+                html += `<button class="btn btn-navy" style="margin-top:20px" onclick="ui.exportPDF()"><i class="fa-solid fa-file-pdf"></i> GENERATE OFFICIAL PDF</button></div>`;
+            }
+
+            else if(view === 'management') {
+                const users = db.load();
+                html = `<div class="content-card">
+                    <div class="card-header"><h3>Registrar Panel</h3><i class="fa-solid fa-database"></i></div>
+                    <p style="font-size:12px; color:var(--text-body); margin-bottom:20px">Total Enrolled: ${users.length}</p>`;
+                
+                users.forEach((u, idx) => {
+                    html += `<div style="display:flex; justify-content:space-between; align-items:center; padding:15px; background:#f8fafc; border-radius:8px; margin-bottom:10px">
+                        <div><b>${u.name}</b><br><small>${u.id}</small></div>
+                        <div style="display:flex; gap:15px; font-size:18px">
+                            <i class="fa-solid fa-pen-to-square" style="color:var(--blue-accent); cursor:pointer" onclick="ui.openGradeEditor(${idx})"></i>
+                            <i class="fa-solid fa-camera" style="color:var(--navy-primary); cursor:pointer" onclick="ui.adminUploadPhoto(${idx})"></i>
+                            <i class="fa-solid fa-trash" style="color:var(--danger); cursor:pointer" onclick="ui.adminDelete(${idx})"></i>
                         </div>
-                    </div>`);
-                h += `</div>`;
+                    </div>`;
+                });
+                html += `<div id="editorSpace"></div></div>`;
             }
-            render.innerHTML = h;
+
+            viewRender.innerHTML = html;
         },
 
-        adminPhoto: (idx) => {
+        openGradeEditor(idx) {
+            const users = db.load();
+            const u = users[idx];
+            let h = `<div class="editor-header"><span>Editing: ${u.name}</span><i class="fa-solid fa-xmark" style="cursor:pointer" onclick="this.parentElement.parentElement.remove()"></i></div>
+                    <div class="editor-grid">`;
+            Object.entries(u.grades).forEach(([k,v]) => {
+                h += `<div class="form-control"><label>${k}</label><input type="number" class="eGrade" data-k="${k}" value="${v}"></div>`;
+            });
+            h += `</div><button class="btn btn-navy" onclick="ui.saveGrades(${idx})">UPDATE DATABASE</button>`;
+            const container = document.getElementById('editorSpace');
+            container.innerHTML = h;
+            container.scrollIntoView({ behavior: 'smooth' });
+        },
+
+        saveGrades(idx) {
+            let users = db.load();
+            document.querySelectorAll('.eGrade').forEach(input => {
+                users[idx].grades[input.dataset.k] = parseInt(input.value);
+            });
+            db.save(users);
+            alert("Database Synced Successfully");
+            this.renderView('management', document.querySelector('.app-tab:last-child'));
+        },
+
+        adminUploadPhoto(idx) {
             const inp = document.createElement('input'); inp.type = 'file';
             inp.onchange = e => {
                 const reader = new FileReader();
                 reader.onload = ev => {
-                    let u = db.get('u'); u[idx].pic = ev.target.result; db.save('u', u);
-                    if(app.user.id === u[idx].id) { app.user.pic = ev.target.result; db.sess(app.user); app.updateAvatar(); }
-                    app.nav('admin', document.querySelector('.tab:last-child'));
+                    let u = db.load(); u[idx].pic = ev.target.result; db.save(u);
+                    if(portal.currentUser.id === u[idx].id) { portal.currentUser.pic = ev.target.result; db.session(portal.currentUser); this.updateAvatar(); }
+                    this.renderView('management', document.querySelector('.app-tab:last-child'));
                 };
                 reader.readAsDataURL(e.target.files[0]);
             }; inp.click();
         },
 
-        adminGrades: (idx) => {
-            app.curIdx = idx; const u = db.get('u')[idx];
-            mTitle.innerText = `Editing Grades: ${u.name}`;
-            let html = "";
-            CONFIG.SUBS.forEach(s => html += `<div class="field"><label>${s}</label><input type="number" class="gi" data-s="${s}" value="${u.grades[s]}"></div>`);
-            mContent.innerHTML = html;
-            mSave.onclick = () => {
-                let users = db.get('u');
-                document.querySelectorAll('.gi').forEach(i => users[app.curIdx].grades[i.dataset.s] = i.value);
-                db.save('u', users); modal.style.display='none'; app.nav('admin', document.querySelector('.tab:last-child'));
-            };
-            modal.style.display='flex';
+        adminDelete(idx) {
+            if(confirm("Confirm permanent deletion of record?")) {
+                let u = db.load(); u.splice(idx, 1); db.save(u);
+                this.renderView('management', document.querySelector('.app-tab:last-child'));
+            }
         },
 
-        exportPDF: (idx = null) => {
-            const target = (idx !== null) ? db.get('u')[idx] : app.user;
-            let html = `<div style="text-align:center; border-bottom:3px solid #003366; padding-bottom:20px; margin-bottom:20px">
-                <img src="input_file_0.png" style="width:80px; margin-bottom:10px">
-                <h1 style="color:#003366; margin-top:0">ACSHS OFFICIAL REPORT</h1>
-                <p><strong>Name:</strong> ${target.name} | <strong>Student ID:</strong> ${target.id}</p>
-                <p><strong>Section:</strong> ${target.track}</p>
-            </div><table style="width:100%; border-collapse:collapse; font-size:18px">`;
-            Object.entries(target.grades).forEach(([k,v]) => {
-                html += `<tr style="border-bottom:1px solid #eee"><td style="padding:15px">${k}</td><td style="text-align:right; font-weight:900">${v}</td></tr>`;
+        exportPDF() {
+            const u = portal.currentUser;
+            let h = `<div style="text-align:center; padding:40px; border:10px double var(--navy-primary)">
+                <img src="acshslogo.jpg" style="width:100px; border-radius:50%">
+                <h1 style="color:var(--navy-primary); margin-top:20px">OFFICIAL GRADE REPORT</h1>
+                <p>Antipolo City Senior High School</p>
+                <hr style="margin:20px 0">
+                <div style="text-align:left; font-size:18px">
+                    <p><b>Name:</b> ${u.name}</p><p><b>ID:</b> ${u.id}</p><p><b>Section:</b> ${u.track}</p>
+                </div>
+                <table style="width:100%; margin-top:30px; border-collapse:collapse">
+                    <tr style="background:var(--navy-primary); color:white"><th style="padding:10px">Subject</th><th style="padding:10px">Rating</th></tr>`;
+            Object.entries(u.grades).forEach(([k,v]) => {
+                h += `<tr style="border-bottom:1px solid #ddd"><td style="padding:10px">${k}</td><td style="padding:10px; text-align:center"><b>${v}</b></td></tr>`;
             });
-            html += `</table><div style="margin-top:60px; text-align:right"><p>_______________________</p><p>Authorized Registrar</p></div>`;
-            printArea.innerHTML = html;
+            h += `</table><div style="margin-top:100px; text-align:right"><b>School Registrar Office</b></div></div>`;
+            printOutput.innerHTML = h;
             window.print();
-        },
-
-        logout: () => { localStorage.removeItem('sis_v37_s'); location.reload(); }
+        }
     };
 
-    window.onload = app.init;
+    portal.init();
 </script>
 </body>
 </html>
