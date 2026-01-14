@@ -3,260 +3,244 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no" />
-    <title>myACSHS | Enterprise SIS v14.0</title>
+    <title>myACSHS | Secure SIS v17.0</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     
     <style>
-        /* * DESIGN SYSTEM & THEME ENGINE
-         * Optimized for High-Density Mobile Displays
+        /** * 1. DESIGN SYSTEM
+         * Modern Educational Platform UI
          */
         :root {
-            --primary: #000000;
-            --secondary: #64748b;
-            --accent: #2563eb;
-            --surface: #f8fafc;
-            --border: #e2e8f0;
-            --radius-lg: 16px;
-            --radius-md: 10px;
-            --p-photo: 110px; /* 4x4 Aspect Ratio */
-            --shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            --primary: #1877f2;
+            --bg: #f0f2f5;
+            --surface: #ffffff;
+            --error: #f02849;
+            --text-main: #050505;
+            --text-sub: #65676b;
+            --border: #dddfe2;
+            --radius: 8px;
         }
 
-        /* RESET & BASE STYLES */
         * { box-sizing: border-box; -webkit-font-smoothing: antialiased; margin: 0; padding: 0; }
-        body { 
-            font-family: 'Inter', sans-serif; 
-            background: #ffffff; 
-            color: var(--primary); 
-            line-height: 1.6;
-            min-height: 100vh;
-        }
-
-        .container { 
-            width: 100%; 
-            max-width: 480px; 
-            margin: 0 auto; 
-            padding: 20px; 
-            transition: all 0.3s ease;
-        }
-
-        /* LOADING COMPONENT */
-        #loader-overlay {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(255,255,255,0.95); z-index: 1000;
-            display: none; align-items: center; justify-content: center;
-            flex-direction: column; gap: 15px;
-        }
-        .loader-spin { width: 40px; height: 40px; border: 4px solid var(--border); border-top-color: var(--primary); border-radius: 50%; animation: spin 0.8s linear infinite; }
-        @keyframes spin { to { transform: rotate(360deg); } }
-
-        /* HEADER & NAVIGATION */
-        header {
-            display: flex; justify-content: space-between; align-items: center;
-            padding: 10px 0 20px; border-bottom: 2px solid var(--primary); margin-bottom: 30px;
-        }
-        .logo-area { display: flex; align-items: center; gap: 12px; }
-        .logo-area img { width: 40px; height: 40px; border-radius: 8px; object-fit: cover; }
-        .logo-area h2 { font-weight: 800; font-size: 24px; letter-spacing: -0.5px; }
+        body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text-main); overflow-x: hidden; }
 
         /* PANEL SYSTEM */
-        .panel { display: none; width: 100%; animation: slideIn 0.4s cubic-bezier(0.16, 1, 0.3, 1); }
+        .panel { display: none; width: 100%; animation: panelSlide 0.4s cubic-bezier(0.1, 0.7, 0.1, 1); }
         .panel.active { display: block; }
-        @keyframes slideIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes panelSlide { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-        .title-block { text-align: center; margin-bottom: 35px; }
-        .title-block h1 { font-size: 32px; font-weight: 800; margin-bottom: 8px; }
-        .title-block p { color: var(--secondary); font-size: 15px; }
-
-        /* FORM CONTROLS */
-        .form-group { margin-bottom: 20px; position: relative; }
-        .form-group label { display: block; font-size: 11px; font-weight: 700; color: var(--secondary); text-transform: uppercase; margin-bottom: 8px; }
+        /* HEADER & NAVIGATION */
+        header { 
+            background: var(--surface); padding: 10px 20px; 
+            display: flex; justify-content: space-between; align-items: center; 
+            border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 1000;
+        }
+        .brand { display: flex; align-items: center; gap: 8px; font-weight: 800; font-size: 20px; }
         
-        input, select, textarea {
-            width: 100%; height: 54px; padding: 0 16px; border-radius: var(--radius-md);
-            border: 2px solid var(--border); font-size: 16px; background: var(--surface);
-            transition: 0.3s; outline: none;
+        .nav-actions { display: flex; gap: 18px; align-items: center; }
+        .notif-bell { position: relative; font-size: 20px; color: var(--text-sub); cursor: pointer; }
+        .badge { 
+            position: absolute; top: -5px; right: -8px; background: var(--error); 
+            color: #fff; font-size: 10px; padding: 2px 5px; border-radius: 10px; 
+            font-weight: 800; border: 2px solid #fff; display: none;
         }
-        input:focus { border-color: var(--primary); background: #fff; box-shadow: var(--shadow); }
 
-        .password-toggle { position: absolute; right: 16px; top: 38px; color: var(--secondary); cursor: pointer; padding: 5px; }
+        /* TAB SYSTEM */
+        .tab-bar { display: flex; background: var(--surface); border-bottom: 1px solid var(--border); }
+        .tab { flex: 1; padding: 15px; text-align: center; color: var(--text-sub); cursor: pointer; border-bottom: 3px solid transparent; transition: 0.2s; }
+        .tab.active { color: var(--primary); border-bottom-color: var(--primary); }
 
-        /* ACTION BUTTONS */
-        .btn-main {
-            width: 100%; height: 56px; border-radius: var(--radius-md); border: none;
-            font-weight: 800; font-size: 16px; cursor: pointer; transition: 0.2s;
-            background: var(--primary); color: #fff; display: flex; align-items: center; justify-content: center; gap: 12px;
+        /* AUTHENTICATION STYLING (Facebook-Style) */
+        .auth-card { 
+            max-width: 400px; margin: 50px auto; background: var(--surface); 
+            padding: 25px; border-radius: var(--radius); 
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1); text-align: center;
         }
-        .btn-main:active { transform: scale(0.97); }
-        .btn-sub { background: none; border: none; color: var(--secondary); font-size: 14px; text-decoration: underline; margin-top: 15px; width: 100%; cursor: pointer; }
-
-        /* DASHBOARD ELEMENTS */
-        .user-hero { display: flex; flex-direction: column; align-items: center; text-align: center; margin-bottom: 35px; }
-        .photo-box { 
-            width: var(--p-photo); height: var(--p-photo); border-radius: 24px; 
-            background: var(--surface); border: 2.5px solid var(--primary); overflow: hidden; 
-            display: flex; align-items: center; justify-content: center; margin-bottom: 15px;
-            box-shadow: var(--shadow);
+        .field-group { margin-bottom: 12px; text-align: left; }
+        input, select { 
+            width: 100%; height: 50px; padding: 12px; border: 1px solid var(--border); 
+            border-radius: 6px; font-size: 16px; outline: none; transition: 0.2s; 
         }
-        .photo-box img { width: 100%; height: 100%; object-fit: cover; }
-        .photo-box i { font-size: 44px; color: #cbd5e1; }
+        .field-group.error input { border: 1px solid var(--error); background: #fff9f9; animation: shake 0.2s 2; }
+        .error-msg { color: var(--error); font-size: 12px; margin-top: 4px; display: none; font-weight: 600; }
+        .field-group.error .error-msg { display: block; }
 
-        .user-info h3 { font-size: 26px; font-weight: 800; }
-        .user-info p { color: var(--secondary); font-size: 14px; }
+        @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-6px); } 75% { transform: translateX(6px); } }
 
-        /* TABBED CONTENT */
-        .tab-nav { display: flex; gap: 20px; border-bottom: 2px solid var(--surface); margin-bottom: 25px; overflow-x: auto; }
-        .tab-nav button {
-            padding: 12px 0; border: none; background: none; font-weight: 700; font-size: 14px; color: var(--secondary);
-            border-bottom: 3px solid transparent; cursor: pointer; white-space: nowrap;
+        .btn-blue { width: 100%; height: 48px; background: var(--primary); color: #fff; border: none; border-radius: 6px; font-weight: 700; font-size: 17px; cursor: pointer; }
+        .btn-green { background: #42b72a; color: #fff; border: none; padding: 12px 20px; border-radius: 6px; font-weight: 700; cursor: pointer; margin-top: 20px; }
+
+        /* DASHBOARD CONTENT */
+        .content { padding: 15px; max-width: 500px; margin: 0 auto; }
+        .card { background: var(--surface); border-radius: var(--radius); padding: 18px; margin-bottom: 15px; border: 1px solid var(--border); }
+        
+        .profile-hero { text-align: center; margin-bottom: 20px; }
+        .avatar { 
+            width: 110px; height: 110px; border-radius: 50%; margin: 0 auto 12px; 
+            border: 4px solid #fff; background: #e4e6eb; overflow: hidden; 
+            display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 8px rgba(0,0,0,0.1);
         }
-        .tab-nav button.active { color: var(--primary); border-bottom-color: var(--primary); }
+        .avatar img { width: 100%; height: 100%; object-fit: cover; }
+        .avatar i { font-size: 48px; color: #8a8d91; }
 
-        /* SCHEDULE VISUALS */
-        .day-picker { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 12px; margin-bottom: 20px; scrollbar-width: none; }
-        .day-picker::-webkit-scrollbar { display: none; }
-        .day-btn { padding: 10px 18px; border-radius: 20px; border: 1.5px solid var(--border); background: #fff; font-size: 12px; font-weight: 700; color: var(--secondary); cursor: pointer; white-space: nowrap; }
-        .day-btn.active { background: var(--primary); color: #fff; border-color: var(--primary); }
+        /* NOTIFICATION LIST */
+        .notif-item { display: flex; gap: 12px; padding: 12px; border-radius: 8px; margin-bottom: 8px; cursor: pointer; transition: 0.2s; position: relative; }
+        .notif-item.unread { background: #e7f3ff; }
+        .notif-item:active { background: #f0f2f5; }
+        .notif-icon { width: 40px; height: 40px; border-radius: 50%; background: var(--primary); color: #fff; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+        .notif-dot { width: 8px; height: 8px; background: var(--primary); border-radius: 50%; position: absolute; right: 15px; top: 20px; }
 
-        .sched-card {
-            background: var(--surface); padding: 18px; border-radius: var(--radius-md); margin-bottom: 12px;
-            display: flex; align-items: center; gap: 15px; border: 1px solid transparent;
-            animation: fadeIn 0.3s ease;
-        }
-        .time-box { background: #fff; padding: 8px; border-radius: 10px; min-width: 90px; text-align: center; border: 1px solid var(--border); }
-        .time-box small { display: block; font-size: 9px; font-weight: 800; color: var(--secondary); text-transform: uppercase; }
-        .time-box b { font-size: 11px; }
+        /* SCHEDULE & GRADES */
+        .day-bar { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 10px; margin-bottom: 15px; }
+        .day-btn { padding: 8px 16px; border-radius: 20px; background: #e4e6eb; border: none; font-weight: 600; font-size: 13px; white-space: nowrap; cursor: pointer; }
+        .day-btn.active { background: #e7f3ff; color: var(--primary); }
 
-        /* ADMIN DATA TABLE */
-        .search-bar { width: 100%; padding: 14px; border: 2px solid var(--surface); border-radius: 10px; margin-bottom: 15px; font-size: 14px; outline: none; }
-        .table-wrap { border: 1px solid var(--border); border-radius: 12px; overflow: hidden; background: #fff; }
-        table { width: 100%; border-collapse: collapse; }
-        th { text-align: left; padding: 12px; background: #fafafa; font-size: 10px; color: var(--secondary); text-transform: uppercase; }
-        td { padding: 12px; border-bottom: 1px solid var(--surface); font-size: 13px; }
-        .action-btn { background: var(--primary); color: #fff; border: none; padding: 6px 12px; border-radius: 6px; font-size: 11px; font-weight: 700; cursor: pointer; }
+        .list-row { display: flex; align-items: center; gap: 15px; padding: 12px 0; border-bottom: 1px solid #f0f2f5; }
+        .tag { background: #f0f2f5; padding: 5px 10px; border-radius: 5px; font-size: 11px; font-weight: 700; }
 
-        /* GRADE CARDS */
-        .grade-item { display: flex; justify-content: space-between; padding: 15px 0; border-bottom: 1px solid var(--surface); }
-        .grade-item:last-child { border-bottom: none; }
-        .grade-tag { font-weight: 800; color: var(--accent); }
-
-        .exit-btn { background: none; border: 2px solid var(--border); padding: 8px; border-radius: 8px; cursor: pointer; }
+        #loader { position: fixed; inset: 0; background: rgba(255,255,255,0.9); display: none; align-items: center; justify-content: center; z-index: 2000; }
+        .spinner { width: 35px; height: 35px; border: 4px solid #dddfe2; border-top-color: var(--primary); border-radius: 50%; animation: spin 0.8s linear infinite; }
+        @keyframes spin { to { transform: rotate(360deg); } }
     </style>
 </head>
 <body>
 
-<div id="loader-overlay"><div class="loader-spin"></div><p style="margin-top:10px">Secure Data Link...</p></div>
+<div id="loader"><div class="spinner"></div></div>
 
-<div class="container">
-    <header>
-        <div class="logo-area">
-            <img src="acshslogo.jpg" alt="Logo">
-            <h2>myACSHS</h2>
+<header id="portalHeader" style="display:none">
+    <div class="brand"><img src="acshslogo.jpg" width="30"> myACSHS</div>
+    <div class="nav-actions">
+        <div class="notif-bell" onclick="app.tab('notif', document.getElementById('notifTabIcon'))">
+            <i class="fa-solid fa-bell"></i>
+            <span id="notifBadge" class="badge">0</span>
         </div>
-        <button id="navExit" class="exit-btn" style="display:none" onclick="app.logout()"><i class="fa-solid fa-right-from-bracket"></i></button>
-    </header>
+        <i class="fa-solid fa-right-from-bracket" style="color:var(--text-sub); cursor:pointer" onclick="app.logout()"></i>
+    </div>
+</header>
 
-    <div id="pLogin" class="panel active">
-        <div class="title-block"><h1>Login</h1><p>Student Information System</p></div>
-        <div class="form-group">
-            <label>Login Mode</label>
-            <select id="lRole">
-                <option value="student">Student Account</option>
-                <option value="admin">Faculty Administrator</option>
-            </select>
+<div id="mainView">
+    
+    <div id="pAuth" class="panel active">
+        <div class="auth-card">
+            <h1 style="color:var(--primary); font-size:32px; margin-bottom:20px; letter-spacing:-1px">myACSHS</h1>
+            
+            <div id="vLogin">
+                <div class="field-group" id="errId">
+                    <input type="text" id="liId" placeholder="Student ID or Username">
+                    <div class="error-msg">The ID you entered isn't connected to an account.</div>
+                </div>
+                <div class="field-group" id="errPass">
+                    <input type="password" id="liPass" placeholder="Password">
+                    <div class="error-msg">The password you've entered is incorrect.</div>
+                </div>
+                <div class="field-group">
+                    <select id="liRole">
+                        <option value="student">Student Account</option>
+                        <option value="admin">Administrator</option>
+                    </select>
+                </div>
+                <button class="btn-blue" onclick="app.login()">Log In</button>
+                <p style="margin-top:15px; color:var(--primary); font-size:14px; cursor:pointer">Forgotten password?</p>
+                <div style="margin:20px 0; border-top:1px solid var(--border)"></div>
+                <button class="btn-green" onclick="ui.subAuth('vReg')">Create New Account</button>
+            </div>
+
+            <div id="vReg" style="display:none">
+                <h3 style="margin-bottom:15px">Join myACSHS</h3>
+                <div class="field-group"><input type="text" id="rgF" placeholder="First Name"></div>
+                <div class="field-group"><input type="text" id="rgL" placeholder="Surname"></div>
+                <div class="field-group"><input type="number" id="rgId" placeholder="8-Digit Student ID"></div>
+                <div class="field-group"><input type="number" id="rgSlip" placeholder="6-Digit Slip Code"></div>
+                <div class="field-group"><input type="text" id="rgTrack" placeholder="Track/Section (e.g. ICT 1202)"></div>
+                <div class="field-group"><input type="password" id="rgPass" placeholder="Create Password"></div>
+                <button class="btn-green" style="width:100%" onclick="app.register()">Sign Up</button>
+                <p style="margin-top:15px; color:var(--primary); cursor:pointer" onclick="ui.subAuth('vLogin')">Already have an account?</p>
+            </div>
         </div>
-        <div class="form-group">
-            <label>Identification Number</label>
-            <input type="text" id="lId" placeholder="ID Number">
-        </div>
-        <div class="form-group">
-            <label>Password</label>
-            <input type="password" id="lPass" placeholder="••••••••">
-            <i class="fa-solid fa-eye-slash password-toggle" onclick="ui.togglePass('lPass', this)"></i>
-        </div>
-        <button class="btn-main" onclick="app.login()">
-            <i class="fa-solid fa-fingerprint"></i> Sign In
-        </button>
-        <button class="btn-sub" onclick="ui.go('pReg')">New Student Enrollment</button>
-        <button class="btn-sub" style="margin-top:0" onclick="ui.go('pForgot')">Account Recovery</button>
     </div>
 
-    <div id="pReg" class="panel">
-        <div class="title-block"><h1>Register</h1><p>Identity Verification</p></div>
-        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:12px">
-            <div class="form-group"><label>First Name</label><input type="text" id="rF"></div>
-            <div class="form-group"><label>Last Name</label><input type="text" id="rL"></div>
+    <div id="pPortal" class="panel">
+        <nav class="tab-bar">
+            <div class="tab active" onclick="app.tab('home', this)"><i class="fa-solid fa-house"></i></div>
+            <div class="tab" onclick="app.tab('grades', this)"><i class="fa-solid fa-graduation-cap"></i></div>
+            <div class="tab" id="notifTabIcon" onclick="app.tab('notif', this)"><i class="fa-solid fa-bell"></i></div>
+            <div class="tab" id="adminTab" style="display:none" onclick="app.tab('admin', this)"><i class="fa-solid fa-user-shield"></i></div>
+            <div class="tab" onclick="app.tab('menu', this)"><i class="fa-solid fa-bars"></i></div>
+        </nav>
+
+        <div class="content">
+            <div id="tabHome" class="tab-content">
+                <div class="card profile-hero">
+                    <div id="uPic" class="avatar"></div>
+                    <h2 id="uName">...</h2>
+                    <p id="uMeta" style="color:var(--text-sub); font-size:14px">...</p>
+                </div>
+                <div class="card">
+                    <h4 style="margin-bottom:12px">Your Schedule</h4>
+                    <div class="day-bar" id="dayBar"></div>
+                    <div id="schedList"></div>
+                </div>
+            </div>
+
+            <div id="tabGrades" class="tab-content" style="display:none">
+                <div class="card">
+                    <h3>Academic Performance</h3>
+                    <p style="color:var(--text-sub); font-size:13px; margin-bottom:15px">1st Semester - Final Grades</p>
+                    <div id="gradeList"></div>
+                </div>
+            </div>
+
+            <div id="tabNotif" class="tab-content" style="display:none">
+                <div class="card">
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px">
+                        <h3>Notifications</h3>
+                        <small style="color:var(--primary); cursor:pointer" onclick="app.clearNotifs()">Mark all as read</small>
+                    </div>
+                    <div id="notifList"></div>
+                </div>
+            </div>
+
+            <div id="tabAdmin" class="tab-content" style="display:none">
+                <div class="card">
+                    <h3>Manage Students</h3>
+                    <input type="text" placeholder="Search ID or Name..." style="margin:10px 0; height:40px; border-radius:20px; background:var(--bg)" onkeyup="app.filter(this)">
+                    <div id="adminList"></div>
+                </div>
+            </div>
+
+            <div id="tabMenu" class="tab-content" style="display:none">
+                <div class="card">
+                    <div class="list-row" onclick="alert('v17.0.4 Enterprise')"><i class="fa-solid fa-info-circle"></i> Version Info</div>
+                    <div class="list-row" onclick="app.logout()"><i class="fa-solid fa-power-off"></i> Logout</div>
+                </div>
+            </div>
         </div>
-        <div class="form-group"><label>Student ID (8 Digits)</label><input type="number" id="rId" oninput="ui.limit(this, 8)"></div>
-        <div class="form-group"><label>Enrollment Slip (6 Digits)</label><input type="number" id="rSlip" oninput="ui.limit(this, 6)"></div>
-        <div class="form-group"><label>Strand/Section</label><input type="text" id="rT" placeholder="e.g. ICT 1202"></div>
-        <div class="form-group"><label>Access Password</label><input type="password" id="rP"></div>
-        <button class="btn-main" onclick="app.register()">Create Student Profile</button>
-        <button class="btn-sub" onclick="ui.go('pLogin')">Back to Login</button>
     </div>
 
-    <div id="pForgot" class="panel">
-        <div class="title-block"><h1>Recover</h1><p>Verify Enrollment Details</p></div>
-        <div class="form-group"><label>Account ID</label><input type="number" id="fId" oninput="ui.limit(this, 8)"></div>
-        <div class="form-group"><label>Enrollment Slip</label><input type="number" id="fSlip" oninput="ui.limit(this, 6)"></div>
-        <div class="form-group"><label>New Password</label><input type="password" id="fPass"></div>
-        <button class="btn-main" onclick="app.reset()">Update Access</button>
-        <button class="btn-sub" onclick="ui.go('pLogin')">Cancel</button>
-    </div>
-
-    <div id="pDash" class="panel">
-        <div class="user-hero">
-            <div id="dPic" class="photo-box"></div>
-            <div class="user-info"><h3 id="dName">...</h3><p id="dMeta">...</p></div>
-        </div>
-        <nav class="tab-nav" id="dTabs"></nav>
-        <div id="dContent"></div>
-    </div>
 </div>
 
 <script>
     /**
-     * @constant MASTER_SCHEDULE
-     * Mon-Fri Data specifically for the user's track (ICT 1202)
+     * @constant DATA_MASTER
      */
-    const MASTER_SCHEDULE = {
-        "Monday": [
-            { t: "6:15-7:15", s: "MIL / Homeroom", r: "R101" },
-            { t: "7:15-8:15", s: "JAVA Programming", r: "LAB A" },
-            { t: "8:35-11:35", s: "Work Immersion", r: "FIELD" }
-        ],
-        "Tuesday": [
-            { t: "6:15-7:15", s: "MIL / Homeroom", r: "R101" },
-            { t: "7:15-8:15", s: "JAVA Programming", r: "LAB A" },
-            { t: "8:35-11:35", s: "Work Immersion", r: "FIELD" }
-        ],
-        "Wednesday": [
-            { t: "6:15-8:15", s: "III (Research)", r: "LIB" },
-            { t: "8:35-11:35", s: "Work Immersion", r: "FIELD" }
-        ],
-        "Thursday": [
-            { t: "6:15-7:15", s: "MIL / Homeroom", r: "R101" },
-            { t: "7:15-8:15", s: "JAVA Programming", r: "LAB A" },
-            { t: "8:35-11:35", s: "Work Immersion", r: "FIELD" }
-        ],
-        "Friday": [
-            { t: "6:15-8:15", s: "Physical Health", r: "GYM" },
-            { t: "8:35-11:35", s: "Work Immersion", r: "FIELD" }
-        ]
-    };
-
+    const SLIPS = ["112233", "445566", "123456", "654321", "224466"];
     const DAYS = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"];
-    const SLIP_CODES = ["112233", "445566", "123456", "654321", "224466"];
+    const SCHEDULES = {
+        "Monday": [{t: "6:15 - 7:15", s: "MIL", r: "R101"}, {t: "7:15 - 8:15", s: "JAVA", r: "CL1"}, {t: "8:35 - 11:35", s: "Immersion", r: "Field"}],
+        "Tuesday": [{t: "6:15 - 7:15", s: "MIL", r: "R101"}, {t: "7:15 - 8:15", s: "JAVA", r: "CL1"}, {t: "8:35 - 11:35", s: "Immersion", r: "Field"}],
+        "Wednesday": [{t: "6:15 - 8:15", s: "Research", r: "Lib"}, {t: "8:35 - 11:35", s: "Immersion", r: "Field"}],
+        "Thursday": [{t: "6:15 - 8:15", s: "JAVA", r: "CL1"}, {t: "8:35 - 11:35", s: "Immersion", r: "Field"}],
+        "Friday": [{t: "6:15 - 8:15", s: "PE / Health", r: "Gym"}, {t: "8:35 - 11:35", s: "Immersion", r: "Field"}]
+    };
 
     /**
      * @module db
-     * LocalStorage Management
      */
     const db = {
-        save: (k,v) => localStorage.setItem('sis_v14_'+k, JSON.stringify(v)),
-        get: (k) => JSON.parse(localStorage.getItem('sis_v14_'+k) || '[]'),
+        save: (k,v) => localStorage.setItem('sis17_'+k, JSON.stringify(v)),
+        get: (k) => JSON.parse(localStorage.getItem('sis17_'+k) || '[]'),
         sess: {
             set: (u) => localStorage.setItem('sis_sess', JSON.stringify(u)),
             get: () => JSON.parse(localStorage.getItem('sis_sess')),
@@ -266,31 +250,26 @@
 
     /**
      * @module ui
-     * Interface Management
      */
     const ui = {
-        go: (id) => {
+        panel: (id) => {
             document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
             document.getElementById(id).classList.add('active');
-            window.scrollTo(0,0);
         },
-        limit: (el, m) => { if(el.value.length > m) el.value = el.value.slice(0, m); },
-        togglePass: (id, el) => {
-            const f = document.getElementById(id);
-            const isP = f.type === 'password';
-            f.type = isP ? 'text' : 'password';
-            el.className = `fa-solid fa-eye${isP ? '' : '-slash'} password-toggle`;
+        subAuth: (id) => {
+            vLogin.style.display = id === 'vLogin' ? 'block' : 'none';
+            vReg.style.display = id === 'vReg' ? 'block' : 'none';
         },
-        loading: (s) => document.getElementById('loader-overlay').style.display = s ? 'flex' : 'none'
+        loading: (s) => loader.style.display = s ? 'flex' : 'none'
     };
 
     /**
      * @module app
-     * Main Logic Engine
      */
     const app = {
         me: null,
         activeDay: DAYS[new Date().getDay() - 1] || "Monday",
+        notifs: [],
 
         init: () => {
             const s = db.sess.get();
@@ -298,149 +277,131 @@
         },
 
         login: () => {
-            const role = lRole.value;
-            const id = lId.value;
-            const pass = lPass.value;
+            const role = liRole.value, id = liId.value.trim(), pass = liPass.value.trim();
+            errId.classList.remove('error'); errPass.classList.remove('error');
 
             ui.loading(true);
             setTimeout(() => {
-                // EXPLICIT ADMIN CHECK
+                ui.loading(false);
                 if(role === 'admin') {
                     if(id === 'admin' && pass === 'admin123') {
-                        app.me = { role: 'admin', name: 'System Faculty', id: 'FACULTY-ROOT' };
+                        app.me = { role:'admin', name:'System Faculty', id:'ROOT-01' };
                     } else {
-                        ui.loading(false);
-                        return alert("Administrator Authentication Failed.");
+                        if(id !== 'admin') errId.classList.add('error'); else errPass.classList.add('error');
+                        return;
                     }
-                } 
-                // STUDENT DATABASE CHECK
-                else {
+                } else {
                     const users = db.get('u');
-                    const found = users.find(u => u.id === id && u.p === pass);
-                    if(!found) {
-                        ui.loading(false);
-                        return alert("Invalid Student ID or Password.");
-                    }
-                    app.me = { role: 'student', ...found, name: `${found.f} ${found.l}` };
+                    const u = users.find(x => x.id === id);
+                    if(!u) return errId.classList.add('error');
+                    if(u.pass !== pass) return errPass.classList.add('error');
+                    app.me = { role:'student', ...u, name: u.f+' '+u.l };
                 }
-
                 db.sess.set(app.me);
                 app.launch();
-                ui.loading(false);
             }, 800);
         },
 
         register: () => {
-            const id = rId.value, slip = rSlip.value;
-            if(id.length !== 8 || slip.length !== 6) return alert("Error: ID(8) and Slip(6) required.");
-            if(!SLIP_CODES.includes(slip)) return alert("Error: Invalid Enrollment Slip.");
-
+            const id = rgId.value, slip = rgSlip.value;
+            if(id.length !== 8 || slip.length !== 6 || !SLIPS.includes(slip)) return alert("Invalid Enrollment Data");
+            
             let users = db.get('u');
-            if(users.some(u => u.id === id)) return alert("Error: ID already exists.");
+            if(users.some(x => x.id === id)) return alert("ID already exists");
 
             ui.loading(true);
             setTimeout(() => {
                 users.push({
-                    id, slip, p: rP.value, f: rF.value, l: rL.value, t: rT.value, pic: null,
-                    grades: { MIL: 88, JAVA: 90, III: 92, Immersion: 95 }
+                    id, slip, f:rgF.value, l:rgL.value, pass:rgPass.value, t:rgTrack.value, pic:null,
+                    grades: { "MIL": 92, "JAVA": 89, "Research": 94, "Immersion": 98 }
                 });
                 db.save('u', users);
                 ui.loading(false);
-                alert("Student account verified and created.");
-                ui.go('pLogin');
+                alert("Account created!");
+                ui.subAuth('vLogin');
             }, 1000);
         },
 
-        reset: () => {
-            let users = db.get('u');
-            const idx = users.findIndex(u => u.id === fId.value && u.slip === fSlip.value);
-            if(idx === -1) return alert("Verification Failed.");
-            users[idx].p = fPass.value;
-            db.save('u', users);
-            alert("Security success: Password updated.");
-            ui.go('pLogin');
-        },
-
         launch: () => {
-            ui.go('pDash');
-            navExit.style.display = 'block';
-            dName.innerText = app.me.name;
-            dMeta.innerText = app.me.role === 'admin' ? 'Authorized Faculty Admin' : `ID: ${app.me.id} | ${app.me.t}`;
-            dPic.innerHTML = app.me.pic ? `<img src="${app.me.pic}">` : `<i class="fa-solid fa-user-tie"></i>`;
-            app.renderTabs();
-        },
-
-        renderTabs: () => {
-            const items = app.me.role === 'admin' 
-                ? [['Directory', app.viewRoster], ['Portal Settings', () => dContent.innerHTML = 'System Operational']]
-                : [['My Schedule', app.viewSched], ['Academic Grades', app.viewGrades]];
+            ui.panel('pPortal');
+            portalHeader.style.display = 'flex';
+            uName.innerText = app.me.name;
+            uMeta.innerText = app.me.role === 'admin' ? 'Faculty Admin' : `ID: ${app.me.id} • ${app.me.t}`;
+            uPic.innerHTML = app.me.pic ? `<img src="${app.me.pic}">` : `<i class="fa-solid fa-user"></i>`;
+            adminTab.style.display = app.me.role === 'admin' ? 'block' : 'none';
             
-            dTabs.innerHTML = '';
-            items.forEach(([label, action], i) => {
-                const b = document.createElement('button');
-                b.innerText = label;
-                if(i===0) { b.classList.add('active'); action(); }
-                b.onclick = (e) => {
-                    document.querySelectorAll('.tab-nav button').forEach(x => x.classList.remove('active'));
-                    e.target.classList.add('active');
-                    action();
-                };
-                dTabs.appendChild(b);
-            });
+            // Add Sample Notifs for Student
+            if(app.me.role === 'student' && app.notifs.length === 0) {
+                app.notifs = [
+                    { id: 1, title: "Grade Posted", desc: "Your final grade for JAVA is now available.", read: false, icon: "graduation-cap" },
+                    { id: 2, title: "System Update", desc: "The portal has been updated to v17.0.", read: false, icon: "shield-halved" }
+                ];
+            }
+            app.updateBadge();
+            app.tab('home', document.querySelector('.tab'));
         },
 
-        viewSched: () => {
-            dContent.innerHTML = `
-                <div class="day-picker">
-                    ${DAYS.map(d => `<button class="day-btn ${d===app.activeDay?'active':''}" onclick="app.setDay('${d}')">${d}</button>`).join('')}
-                </div>
-                <div id="sched-list"></div>
-            `;
-            app.renderSchedList();
+        tab: (name, el) => {
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            el.classList.add('active');
+            document.querySelectorAll('.tab-content').forEach(c => c.style.display = 'none');
+            document.getElementById('tab'+name.charAt(0).toUpperCase()+name.slice(1)).style.display = 'block';
+            
+            if(name === 'home') app.drawHome();
+            if(name === 'grades') app.drawGrades();
+            if(name === 'notif') app.drawNotifs();
+            if(name === 'admin') app.drawAdmin();
         },
 
-        renderSchedList: () => {
-            const list = MASTER_SCHEDULE[app.activeDay] || [];
-            document.getElementById('sched-list').innerHTML = list.map(i => `
-                <div class="sched-card">
-                    <div class="time-box"><small>Class Time</small><b>${i.t}</b></div>
-                    <div><p style="font-weight:700; font-size:15px">${i.s}</p><small style="color:var(--secondary)">Room: ${i.r}</small></div>
-                </div>
-            `).join('');
+        drawHome: () => {
+            dayBar.innerHTML = DAYS.map(d => `<button class="day-btn ${d===app.activeDay?'active':''}" onclick="app.setDay('${d}')">${d}</button>`).join('');
+            const list = SCHEDULES[app.activeDay] || [];
+            schedList.innerHTML = list.map(i => `<div class="list-row"><div class="tag">${i.t}</div><div><b>${i.s}</b><br><small>Room: ${i.r}</small></div></div>`).join('');
         },
 
-        setDay: (d) => { app.activeDay = d; app.viewSched(); },
+        setDay: (d) => { app.activeDay = d; app.drawHome(); },
 
-        viewGrades: () => {
+        drawGrades: () => {
             const g = app.me.grades || {};
-            dContent.innerHTML = `
-                <div style="background:var(--surface); padding:20px; border-radius:12px; border:1px solid var(--border)">
-                    <h4 style="margin-bottom:15px">Current Progress</h4>
-                    <div class="grade-item"><span>Media Info Lit</span><span class="grade-tag">${g.MIL}</span></div>
-                    <div class="grade-item"><span>JAVA Programming</span><span class="grade-tag">${g.JAVA}</span></div>
-                    <div class="grade-item"><span>Inquiries (III)</span><span class="grade-tag">${g.III}</span></div>
-                    <div class="grade-item"><span>Work Immersion</span><span class="grade-tag">${g.Immersion}</span></div>
+            gradeList.innerHTML = Object.entries(g).map(([s, v]) => `<div class="list-row" style="justify-content:space-between"><span>${s}</span><b style="color:var(--primary)">${v}</b></div>`).join('');
+        },
+
+        drawNotifs: () => {
+            notifList.innerHTML = app.notifs.length ? app.notifs.map(n => `
+                <div class="notif-item ${n.read?'':'unread'}" onclick="app.readNotif(${n.id})">
+                    <div class="notif-icon"><i class="fa-solid fa-${n.icon}"></i></div>
+                    <div><div style="font-weight:700">${n.title}</div><div style="font-size:12px; color:var(--text-sub)">${n.desc}</div></div>
+                    ${n.read ? '' : '<div class="notif-dot"></div>'}
                 </div>
-            `;
+            `).join('') : '<p style="text-align:center; padding:20px; color:var(--text-sub)">No notifications yet.</p>';
         },
 
-        viewRoster: () => {
+        readNotif: (id) => {
+            const n = app.notifs.find(x => x.id === id);
+            if(n) n.read = true;
+            app.updateBadge();
+            app.drawNotifs();
+        },
+
+        clearNotifs: () => {
+            app.notifs.forEach(n => n.read = true);
+            app.updateBadge();
+            app.drawNotifs();
+        },
+
+        updateBadge: () => {
+            const count = app.notifs.filter(n => !n.read).length;
+            notifBadge.innerText = count;
+            notifBadge.style.display = count > 0 ? 'block' : 'none';
+        },
+
+        drawAdmin: () => {
             const users = db.get('u');
-            dContent.innerHTML = `
-                <input type="text" class="search-bar" placeholder="Search by name or ID..." onkeyup="app.filter(this)">
-                <div class="table-wrap"><table id="rtbl"><thead><tr><th>Name</th><th>ID</th><th>Photo</th></tr></thead><tbody>` + 
-                users.map((u, i) => `<tr><td><b>${u.f} ${u.l}</b><br><small>${u.t}</small></td><td>${u.id}</td><td><button class="action-btn" onclick="app.adminPhoto(${i})">Edit</button></td></tr>`).join('') + `</tbody></table></div>`;
+            adminList.innerHTML = users.map((u, i) => `<div class="list-row" style="justify-content:space-between"><div><b>${u.f} ${u.l}</b><br><small>${u.id}</small></div><button onclick="app.photo(${i})" style="border:none; background:var(--bg); padding:5px 10px; border-radius:4px; font-size:11px">Photo</button></div>`).join('');
         },
 
-        filter: (el) => {
-            const q = el.value.toLowerCase();
-            document.querySelectorAll('#rtbl tbody tr').forEach(r => {
-                r.style.display = r.innerText.toLowerCase().includes(q) ? '' : 'none';
-            });
-        },
-
-        adminPhoto: (idx) => {
-            const f = document.createElement('input'); f.type = 'file'; f.accept = 'image/*';
+        photo: (idx) => {
+            const f = document.createElement('input'); f.type = 'file';
             f.onchange = e => {
                 const r = new FileReader();
                 r.onload = ev => {
@@ -453,10 +414,11 @@
             f.click();
         },
 
-        logout: () => { if(confirm("Sign out of SIS?")) { db.sess.kill(); location.reload(); } }
+        logout: () => { if(confirm("Sign out?")) { db.sess.kill(); location.reload(); } }
     };
 
     window.onload = app.init;
 </script>
+
 </body>
 </html>
