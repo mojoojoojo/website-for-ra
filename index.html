@@ -3,526 +3,460 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no" />
-    <title>myACSHS | Secure SIS Enterprise v12.0</title>
+    <title>myACSHS | Enterprise SIS v14.0</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     
     <style>
-        /* * DESIGN SYSTEM & THEME VARIABLES
-         * Optimized for high-density mobile displays.
+        /* * DESIGN SYSTEM & THEME ENGINE
+         * Optimized for High-Density Mobile Displays
          */
         :root {
             --primary: #000000;
             --secondary: #64748b;
-            --accent: #0ea5e9;
-            --success: #10b981;
-            --error: #ef4444;
-            --bg-canvas: #ffffff;
-            --bg-card: #f8fafc;
+            --accent: #2563eb;
+            --surface: #f8fafc;
             --border: #e2e8f0;
-            --radius-xl: 18px;
+            --radius-lg: 16px;
             --radius-md: 10px;
-            --shadow-sm: 0 1px 3px 0 rgb(0 0 0 / 0.1);
-            --p-ratio: 110px; /* Strict 4x4 Aspect Ratio */
+            --p-photo: 110px; /* 4x4 Aspect Ratio */
+            --shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
         }
 
-        /* RESET & BASE SETUP */
+        /* RESET & BASE STYLES */
         * { box-sizing: border-box; -webkit-font-smoothing: antialiased; margin: 0; padding: 0; }
         body { 
             font-family: 'Inter', sans-serif; 
-            background: var(--bg-canvas); 
+            background: #ffffff; 
             color: var(--primary); 
             line-height: 1.6;
             min-height: 100vh;
-            display: flex;
-            flex-direction: column;
         }
 
         .container { 
             width: 100%; 
-            max-width: 500px; 
+            max-width: 480px; 
             margin: 0 auto; 
             padding: 20px; 
-            flex: 1;
+            transition: all 0.3s ease;
         }
 
-        /* LOADING SYSTEM Overlay */
-        #sys-loader {
+        /* LOADING COMPONENT */
+        #loader-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(255,255,255,0.9); z-index: 1000;
+            background: rgba(255,255,255,0.95); z-index: 1000;
             display: none; align-items: center; justify-content: center;
-            flex-direction: column; gap: 12px;
+            flex-direction: column; gap: 15px;
         }
-        .spinner { width: 35px; height: 35px; border: 3px solid var(--border); border-top-color: var(--primary); border-radius: 50%; animation: spin 0.7s linear infinite; }
+        .loader-spin { width: 40px; height: 40px; border: 4px solid var(--border); border-top-color: var(--primary); border-radius: 50%; animation: spin 0.8s linear infinite; }
         @keyframes spin { to { transform: rotate(360deg); } }
 
-        /* HEADER NAVIGATION */
+        /* HEADER & NAVIGATION */
         header {
             display: flex; justify-content: space-between; align-items: center;
-            padding: 10px 0 25px; border-bottom: 1px solid var(--border); margin-bottom: 30px;
+            padding: 10px 0 20px; border-bottom: 2px solid var(--primary); margin-bottom: 30px;
         }
-        .brand { display: flex; align-items: center; gap: 10px; }
-        .brand img { width: 40px; height: 40px; border-radius: 8px; object-fit: cover; }
-        .brand h2 { font-weight: 800; font-size: 24px; letter-spacing: -1px; }
+        .logo-area { display: flex; align-items: center; gap: 12px; }
+        .logo-area img { width: 40px; height: 40px; border-radius: 8px; object-fit: cover; }
+        .logo-area h2 { font-weight: 800; font-size: 24px; letter-spacing: -0.5px; }
 
-        /* PANEL ARCHITECTURE */
-        .panel { display: none; width: 100%; animation: slideFade 0.4s ease-out; }
+        /* PANEL SYSTEM */
+        .panel { display: none; width: 100%; animation: slideIn 0.4s cubic-bezier(0.16, 1, 0.3, 1); }
         .panel.active { display: block; }
-        @keyframes slideFade { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes slideIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
 
-        .form-title { text-align: center; margin-bottom: 30px; }
-        .form-title h1 { font-size: 30px; font-weight: 800; margin-bottom: 6px; }
-        .form-title p { color: var(--secondary); font-size: 15px; }
+        .title-block { text-align: center; margin-bottom: 35px; }
+        .title-block h1 { font-size: 32px; font-weight: 800; margin-bottom: 8px; }
+        .title-block p { color: var(--secondary); font-size: 15px; }
 
         /* FORM CONTROLS */
-        .field { margin-bottom: 20px; position: relative; }
-        .field label { display: block; font-size: 11px; font-weight: 700; color: var(--secondary); text-transform: uppercase; margin-bottom: 8px; letter-spacing: 0.5px; }
+        .form-group { margin-bottom: 20px; position: relative; }
+        .form-group label { display: block; font-size: 11px; font-weight: 700; color: var(--secondary); text-transform: uppercase; margin-bottom: 8px; }
         
-        input, select {
+        input, select, textarea {
             width: 100%; height: 54px; padding: 0 16px; border-radius: var(--radius-md);
-            border: 1.5px solid var(--border); font-size: 16px; background: var(--bg-card);
-            transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1); outline: none;
+            border: 2px solid var(--border); font-size: 16px; background: var(--surface);
+            transition: 0.3s; outline: none;
         }
-        input:focus { border-color: var(--primary); background: #fff; box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
+        input:focus { border-color: var(--primary); background: #fff; box-shadow: var(--shadow); }
 
-        .pass-group { position: relative; }
-        .eye-btn { position: absolute; right: 18px; top: 16px; color: var(--secondary); cursor: pointer; padding: 4px; }
+        .password-toggle { position: absolute; right: 16px; top: 38px; color: var(--secondary); cursor: pointer; padding: 5px; }
 
-        /* BUTTONS */
-        .btn-primary {
-            width: 100%; height: 54px; border-radius: var(--radius-md); border: none;
-            font-weight: 700; font-size: 16px; cursor: pointer; transition: 0.2s;
-            background: var(--primary); color: #fff; display: flex; align-items: center; justify-content: center; gap: 10px;
+        /* ACTION BUTTONS */
+        .btn-main {
+            width: 100%; height: 56px; border-radius: var(--radius-md); border: none;
+            font-weight: 800; font-size: 16px; cursor: pointer; transition: 0.2s;
+            background: var(--primary); color: #fff; display: flex; align-items: center; justify-content: center; gap: 12px;
         }
-        .btn-primary:active { transform: scale(0.96); }
-        .btn-ghost { background: none; border: none; color: var(--secondary); font-size: 14px; text-decoration: underline; margin-top: 15px; width: 100%; cursor: pointer; }
+        .btn-main:active { transform: scale(0.97); }
+        .btn-sub { background: none; border: none; color: var(--secondary); font-size: 14px; text-decoration: underline; margin-top: 15px; width: 100%; cursor: pointer; }
 
-        /* DASHBOARD COMPONENTS */
-        .profile-card { display: flex; flex-direction: column; align-items: center; text-align: center; margin-bottom: 40px; }
-        .profile-photo { 
-            width: var(--p-ratio); height: var(--p-ratio); border-radius: 25px; 
-            background: var(--bg-card); border: 2.5px solid var(--border); overflow: hidden; 
+        /* DASHBOARD ELEMENTS */
+        .user-hero { display: flex; flex-direction: column; align-items: center; text-align: center; margin-bottom: 35px; }
+        .photo-box { 
+            width: var(--p-photo); height: var(--p-photo); border-radius: 24px; 
+            background: var(--surface); border: 2.5px solid var(--primary); overflow: hidden; 
             display: flex; align-items: center; justify-content: center; margin-bottom: 15px;
-            box-shadow: var(--shadow-sm);
+            box-shadow: var(--shadow);
         }
-        .profile-photo img { width: 100%; height: 100%; object-fit: cover; }
-        .profile-photo i { font-size: 45px; color: #cbd5e1; }
+        .photo-box img { width: 100%; height: 100%; object-fit: cover; }
+        .photo-box i { font-size: 44px; color: #cbd5e1; }
 
-        .profile-meta h3 { font-size: 26px; font-weight: 800; }
-        .profile-meta p { color: var(--secondary); font-size: 14px; }
+        .user-info h3 { font-size: 26px; font-weight: 800; }
+        .user-info p { color: var(--secondary); font-size: 14px; }
 
-        /* WEEKLY SCHEDULE CONTROLS */
-        .day-scroller { display: flex; gap: 10px; overflow-x: auto; padding-bottom: 15px; margin-bottom: 20px; scrollbar-width: none; }
-        .day-scroller::-webkit-scrollbar { display: none; }
-        .day-chip { 
-            padding: 10px 18px; border-radius: 25px; border: 1.5px solid var(--border); 
-            background: #fff; font-size: 13px; font-weight: 700; color: var(--secondary); 
-            cursor: pointer; white-space: nowrap; transition: 0.2s;
+        /* TABBED CONTENT */
+        .tab-nav { display: flex; gap: 20px; border-bottom: 2px solid var(--surface); margin-bottom: 25px; overflow-x: auto; }
+        .tab-nav button {
+            padding: 12px 0; border: none; background: none; font-weight: 700; font-size: 14px; color: var(--secondary);
+            border-bottom: 3px solid transparent; cursor: pointer; white-space: nowrap;
         }
-        .day-chip.active { background: var(--primary); color: #fff; border-color: var(--primary); }
+        .tab-nav button.active { color: var(--primary); border-bottom-color: var(--primary); }
 
-        /* LIST RENDERERS */
-        .card-item {
-            background: var(--bg-card); padding: 18px; border-radius: var(--radius-md); margin-bottom: 15px;
-            display: flex; align-items: center; gap: 16px; border: 1px solid transparent;
+        /* SCHEDULE VISUALS */
+        .day-picker { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 12px; margin-bottom: 20px; scrollbar-width: none; }
+        .day-picker::-webkit-scrollbar { display: none; }
+        .day-btn { padding: 10px 18px; border-radius: 20px; border: 1.5px solid var(--border); background: #fff; font-size: 12px; font-weight: 700; color: var(--secondary); cursor: pointer; white-space: nowrap; }
+        .day-btn.active { background: var(--primary); color: #fff; border-color: var(--primary); }
+
+        .sched-card {
+            background: var(--surface); padding: 18px; border-radius: var(--radius-md); margin-bottom: 12px;
+            display: flex; align-items: center; gap: 15px; border: 1px solid transparent;
+            animation: fadeIn 0.3s ease;
         }
-        .time-badge { background: #fff; padding: 10px; border-radius: 8px; min-width: 90px; text-align: center; border: 1px solid var(--border); }
-        .time-badge small { display: block; font-size: 9px; font-weight: 800; color: var(--secondary); text-transform: uppercase; }
-        .time-badge b { font-size: 12px; }
+        .time-box { background: #fff; padding: 8px; border-radius: 10px; min-width: 90px; text-align: center; border: 1px solid var(--border); }
+        .time-box small { display: block; font-size: 9px; font-weight: 800; color: var(--secondary); text-transform: uppercase; }
+        .time-box b { font-size: 11px; }
 
-        .info-pane b { display: block; font-size: 15px; font-weight: 700; }
-        .info-pane span { font-size: 12px; color: var(--secondary); }
-
-        /* ADMIN INTERFACE */
-        .data-table-wrap { border: 1px solid var(--border); border-radius: var(--radius-md); overflow: hidden; background: #fff; }
+        /* ADMIN DATA TABLE */
+        .search-bar { width: 100%; padding: 14px; border: 2px solid var(--surface); border-radius: 10px; margin-bottom: 15px; font-size: 14px; outline: none; }
+        .table-wrap { border: 1px solid var(--border); border-radius: 12px; overflow: hidden; background: #fff; }
         table { width: 100%; border-collapse: collapse; }
-        th { text-align: left; padding: 12px; background: #fafafa; font-size: 10px; color: var(--secondary); text-transform: uppercase; letter-spacing: 0.5px; }
-        td { padding: 14px 12px; border-bottom: 1px solid var(--bg-card); font-size: 14px; }
-        .admin-btn { background: var(--primary); color: #fff; border: none; padding: 8px 12px; border-radius: 6px; font-size: 11px; font-weight: 700; cursor: pointer; }
+        th { text-align: left; padding: 12px; background: #fafafa; font-size: 10px; color: var(--secondary); text-transform: uppercase; }
+        td { padding: 12px; border-bottom: 1px solid var(--surface); font-size: 13px; }
+        .action-btn { background: var(--primary); color: #fff; border: none; padding: 6px 12px; border-radius: 6px; font-size: 11px; font-weight: 700; cursor: pointer; }
 
-        /* FOOTER / LOGOUT */
-        .logout-pill { width: auto; background: #fff; color: var(--primary); border: 1.5px solid var(--border); padding: 8px 16px; border-radius: 30px; font-size: 12px; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 8px; }
+        /* GRADE CARDS */
+        .grade-item { display: flex; justify-content: space-between; padding: 15px 0; border-bottom: 1px solid var(--surface); }
+        .grade-item:last-child { border-bottom: none; }
+        .grade-tag { font-weight: 800; color: var(--accent); }
+
+        .exit-btn { background: none; border: 2px solid var(--border); padding: 8px; border-radius: 8px; cursor: pointer; }
     </style>
 </head>
 <body>
 
-<div id="sys-loader"><div class="spinner"></div><p>Synchronizing Database...</p></div>
+<div id="loader-overlay"><div class="loader-spin"></div><p style="margin-top:10px">Secure Data Link...</p></div>
 
 <div class="container">
     <header>
-        <div class="brand">
+        <div class="logo-area">
             <img src="acshslogo.jpg" alt="Logo">
             <h2>myACSHS</h2>
         </div>
-        <button id="navExit" class="logout-pill" style="display:none" onclick="core.logout()">
-            <i class="fa-solid fa-right-from-bracket"></i> Sign Out
-        </button>
+        <button id="navExit" class="exit-btn" style="display:none" onclick="app.logout()"><i class="fa-solid fa-right-from-bracket"></i></button>
     </header>
 
-    <div id="viewLogin" class="panel active">
-        <div class="form-title">
-            <h1>Login</h1>
-            <p>Access the SIS Portal</p>
-        </div>
-        <div class="field">
-            <label>Security Role</label>
-            <select id="li-role">
+    <div id="pLogin" class="panel active">
+        <div class="title-block"><h1>Login</h1><p>Student Information System</p></div>
+        <div class="form-group">
+            <label>Login Mode</label>
+            <select id="lRole">
                 <option value="student">Student Account</option>
                 <option value="admin">Faculty Administrator</option>
             </select>
         </div>
-        <div class="field">
-            <label>ID Number</label>
-            <input type="number" id="li-id" oninput="ui.enforce(this, 8)" placeholder="2024XXXX">
+        <div class="form-group">
+            <label>Identification Number</label>
+            <input type="text" id="lId" placeholder="ID Number">
         </div>
-        <div class="field">
+        <div class="form-group">
             <label>Password</label>
-            <div class="pass-group">
-                <input type="password" id="li-pass" placeholder="••••••••">
-                <i class="fa-solid fa-eye-slash eye-btn" onclick="ui.togglePass('li-pass', this)"></i>
-            </div>
+            <input type="password" id="lPass" placeholder="••••••••">
+            <i class="fa-solid fa-eye-slash password-toggle" onclick="ui.togglePass('lPass', this)"></i>
         </div>
-        <button class="btn-primary" onclick="core.handleLogin()">
-            <i class="fa-solid fa-fingerprint"></i> Authenticate
+        <button class="btn-main" onclick="app.login()">
+            <i class="fa-solid fa-fingerprint"></i> Sign In
         </button>
-        <button class="btn-ghost" onclick="ui.navigate('viewReg')">Register a new student account</button>
-        <button class="btn-ghost" style="margin-top:0" onclick="ui.navigate('viewForgot')">Forgot security credentials?</button>
+        <button class="btn-sub" onclick="ui.go('pReg')">New Student Enrollment</button>
+        <button class="btn-sub" style="margin-top:0" onclick="ui.go('pForgot')">Account Recovery</button>
     </div>
 
-    <div id="viewReg" class="panel">
-        <div class="form-title">
-            <h1>Register</h1>
-            <p>Identity Verification</p>
-        </div>
+    <div id="pReg" class="panel">
+        <div class="title-block"><h1>Register</h1><p>Identity Verification</p></div>
         <div style="display:grid; grid-template-columns: 1fr 1fr; gap:12px">
-            <div class="field"><label>First Name</label><input type="text" id="rg-f"></div>
-            <div class="field"><label>Last Name</label><input type="text" id="rg-l"></div>
+            <div class="form-group"><label>First Name</label><input type="text" id="rF"></div>
+            <div class="form-group"><label>Last Name</label><input type="text" id="rL"></div>
         </div>
-        <div class="field">
-            <label>Student ID (8 Digits)</label>
-            <input type="number" id="rg-id" oninput="ui.enforce(this, 8)">
-        </div>
-        <div class="field">
-            <label>Enrollment Slip (6 Digits)</label>
-            <input type="number" id="rg-slip" oninput="ui.enforce(this, 6)">
-        </div>
-        <div class="field">
-            <label>Track / Section</label>
-            <input type="text" id="rg-track" placeholder="ICT 1202">
-        </div>
-        <div class="field">
-            <label>Secure Password</label>
-            <div class="pass-group">
-                <input type="password" id="rg-pass">
-                <i class="fa-solid fa-eye-slash eye-btn" onclick="ui.togglePass('rg-pass', this)"></i>
-            </div>
-        </div>
-        <button class="btn-primary" onclick="core.handleRegister()">Submit to Database</button>
-        <button class="btn-ghost" onclick="ui.navigate('viewLogin')">Return to Login</button>
+        <div class="form-group"><label>Student ID (8 Digits)</label><input type="number" id="rId" oninput="ui.limit(this, 8)"></div>
+        <div class="form-group"><label>Enrollment Slip (6 Digits)</label><input type="number" id="rSlip" oninput="ui.limit(this, 6)"></div>
+        <div class="form-group"><label>Strand/Section</label><input type="text" id="rT" placeholder="e.g. ICT 1202"></div>
+        <div class="form-group"><label>Access Password</label><input type="password" id="rP"></div>
+        <button class="btn-main" onclick="app.register()">Create Student Profile</button>
+        <button class="btn-sub" onclick="ui.go('pLogin')">Back to Login</button>
     </div>
 
-    <div id="viewForgot" class="panel">
-        <div class="form-title">
-            <h1>Reset</h1>
-            <p>Verification via enrollment slip</p>
-        </div>
-        <div class="field">
-            <label>Student ID (8 Digits)</label>
-            <input type="number" id="f-id" oninput="ui.enforce(this, 8)">
-        </div>
-        <div class="field">
-            <label>Enrollment Slip (6 Digits)</label>
-            <input type="number" id="f-slip" oninput="ui.enforce(this, 6)">
-        </div>
-        <div class="field">
-            <label>New Security Password</label>
-            <input type="password" id="f-pass">
-        </div>
-        <button class="btn-primary" onclick="core.handleReset()">Reset Account</button>
-        <button class="btn-ghost" onclick="ui.navigate('viewLogin')">Cancel</button>
+    <div id="pForgot" class="panel">
+        <div class="title-block"><h1>Recover</h1><p>Verify Enrollment Details</p></div>
+        <div class="form-group"><label>Account ID</label><input type="number" id="fId" oninput="ui.limit(this, 8)"></div>
+        <div class="form-group"><label>Enrollment Slip</label><input type="number" id="fSlip" oninput="ui.limit(this, 6)"></div>
+        <div class="form-group"><label>New Password</label><input type="password" id="fPass"></div>
+        <button class="btn-main" onclick="app.reset()">Update Access</button>
+        <button class="btn-sub" onclick="ui.go('pLogin')">Cancel</button>
     </div>
 
-    <div id="viewDash" class="panel">
-        <div class="profile-card">
-            <div id="user-photo" class="profile-photo"></div>
-            <div class="profile-meta">
-                <h3 id="user-name">...</h3>
-                <p id="user-details">...</p>
-            </div>
+    <div id="pDash" class="panel">
+        <div class="user-hero">
+            <div id="dPic" class="photo-box"></div>
+            <div class="user-info"><h3 id="dName">...</h3><p id="dMeta">...</p></div>
         </div>
-
-        <div id="student-view" style="display:none">
-            <div class="day-scroller" id="day-picker"></div>
-            <div id="schedule-render"></div>
-        </div>
-
-        <div id="admin-view" style="display:none">
-            <div class="data-table-wrap">
-                <table id="directory-table">
-                    <thead><tr><th>Student</th><th>UID</th><th>Access</th></tr></thead>
-                    <tbody></tbody>
-                </table>
-            </div>
-        </div>
+        <nav class="tab-nav" id="dTabs"></nav>
+        <div id="dContent"></div>
     </div>
 </div>
 
 <script>
     /**
-     * @constant SECURITY_WHITELIST
-     * Approved Enrollment Slips for registration.
+     * @constant MASTER_SCHEDULE
+     * Mon-Fri Data specifically for the user's track (ICT 1202)
      */
-    const SECURITY_WHITELIST = ["112233", "445566", "123456", "654321", "202020", "101010"];
-
-    /**
-     * @constant ACADEMIC_CALENDAR
-     * Mon-Fri Schedule Data for ICT 1202.
-     */
-    const ACADEMIC_CALENDAR = {
+    const MASTER_SCHEDULE = {
         "Monday": [
-            { t: "6:15 - 7:15", s: "MIL / Homeroom", r: "R-101" },
-            { t: "7:15 - 8:15", s: "JAVA Programming", r: "Lab A" },
-            { t: "8:35 - 11:35", s: "Work Immersion", r: "Field" }
+            { t: "6:15-7:15", s: "MIL / Homeroom", r: "R101" },
+            { t: "7:15-8:15", s: "JAVA Programming", r: "LAB A" },
+            { t: "8:35-11:35", s: "Work Immersion", r: "FIELD" }
         ],
         "Tuesday": [
-            { t: "6:15 - 7:15", s: "MIL / Homeroom", r: "R-101" },
-            { t: "7:15 - 8:15", s: "JAVA Programming", r: "Lab A" },
-            { t: "8:35 - 11:35", s: "Work Immersion", r: "Field" }
+            { t: "6:15-7:15", s: "MIL / Homeroom", r: "R101" },
+            { t: "7:15-8:15", s: "JAVA Programming", r: "LAB A" },
+            { t: "8:35-11:35", s: "Work Immersion", r: "FIELD" }
         ],
         "Wednesday": [
-            { t: "6:15 - 8:15", s: "III (Research)", r: "Library" },
-            { t: "8:35 - 11:35", s: "Work Immersion", r: "Field" }
+            { t: "6:15-8:15", s: "III (Research)", r: "LIB" },
+            { t: "8:35-11:35", s: "Work Immersion", r: "FIELD" }
         ],
         "Thursday": [
-            { t: "6:15 - 7:15", s: "MIL / Homeroom", r: "R-101" },
-            { t: "7:15 - 8:15", s: "JAVA Programming", r: "Lab A" },
-            { t: "8:35 - 11:35", s: "Work Immersion", r: "Field" }
+            { t: "6:15-7:15", s: "MIL / Homeroom", r: "R101" },
+            { t: "7:15-8:15", s: "JAVA Programming", r: "LAB A" },
+            { t: "8:35-11:35", s: "Work Immersion", r: "FIELD" }
         ],
         "Friday": [
-            { t: "6:15 - 8:15", s: "Health / PE", r: "Gym" },
-            { t: "8:35 - 11:35", s: "Work Immersion", r: "Field" }
+            { t: "6:15-8:15", s: "Physical Health", r: "GYM" },
+            { t: "8:35-11:35", s: "Work Immersion", r: "FIELD" }
         ]
     };
 
     const DAYS = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"];
+    const SLIP_CODES = ["112233", "445566", "123456", "654321", "224466"];
 
     /**
-     * @module store
-     * LocalStorage Middleware
+     * @module db
+     * LocalStorage Management
      */
-    const store = {
-        key: 'acshs_v12_core_',
-        save: (k,v) => localStorage.setItem(store.key + k, JSON.stringify(v)),
-        get: (k) => JSON.parse(localStorage.getItem(store.key + k) || '[]'),
-        session: {
-            set: (u) => localStorage.setItem(store.key + 'sess', JSON.stringify(u)),
-            get: () => JSON.parse(localStorage.getItem(store.key + 'sess')),
-            kill: () => localStorage.removeItem(store.key + 'sess')
+    const db = {
+        save: (k,v) => localStorage.setItem('sis_v14_'+k, JSON.stringify(v)),
+        get: (k) => JSON.parse(localStorage.getItem('sis_v14_'+k) || '[]'),
+        sess: {
+            set: (u) => localStorage.setItem('sis_sess', JSON.stringify(u)),
+            get: () => JSON.parse(localStorage.getItem('sis_sess')),
+            kill: () => localStorage.removeItem('sis_sess')
         }
     };
 
     /**
      * @module ui
-     * Interface Engine
+     * Interface Management
      */
     const ui = {
-        navigate: (panelId) => {
+        go: (id) => {
             document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
-            document.getElementById(panelId).classList.add('active');
-            window.scrollTo({ top: 0, behavior: 'smooth' });
+            document.getElementById(id).classList.add('active');
+            window.scrollTo(0,0);
         },
+        limit: (el, m) => { if(el.value.length > m) el.value = el.value.slice(0, m); },
         togglePass: (id, el) => {
             const f = document.getElementById(id);
             const isP = f.type === 'password';
             f.type = isP ? 'text' : 'password';
-            el.className = `fa-solid fa-eye${isP ? '' : '-slash'} eye-btn`;
+            el.className = `fa-solid fa-eye${isP ? '' : '-slash'} password-toggle`;
         },
-        enforce: (el, max) => {
-            if(el.value.length > max) el.value = el.value.slice(0, max);
-        },
-        loading: (show) => {
-            document.getElementById('sys-loader').style.display = show ? 'flex' : 'none';
-        }
+        loading: (s) => document.getElementById('loader-overlay').style.display = s ? 'flex' : 'none'
     };
 
     /**
-     * @module core
-     * Application Logic
+     * @module app
+     * Main Logic Engine
      */
-    const core = {
-        user: null,
+    const app = {
+        me: null,
         activeDay: DAYS[new Date().getDay() - 1] || "Monday",
 
         init: () => {
-            const currentSess = store.session.get();
-            if(currentSess) {
-                core.user = currentSess;
-                core.launch();
-            }
+            const s = db.sess.get();
+            if(s) { app.me = s; app.launch(); }
         },
 
-        handleRegister: () => {
-            const id = document.getElementById('rg-id').value;
-            const slip = document.getElementById('rg-slip').value;
-            const pass = document.getElementById('rg-pass').value;
-
-            if(id.length !== 8) return alert("Validation Error: ID must be 8 digits.");
-            if(slip.length !== 6) return alert("Validation Error: Slip must be 6 digits.");
-            if(!SECURITY_WHITELIST.includes(slip)) return alert("Security Error: Slip not found in master records.");
-
-            let users = store.get('users');
-            if(users.some(u => u.id === id)) return alert("Conflict: ID already registered.");
+        login: () => {
+            const role = lRole.value;
+            const id = lId.value;
+            const pass = lPass.value;
 
             ui.loading(true);
             setTimeout(() => {
-                users.push({
-                    id, slip, pass,
-                    f: document.getElementById('rg-f').value,
-                    l: document.getElementById('rg-l').value,
-                    t: document.getElementById('rg-track').value,
-                    pic: null
-                });
-                store.save('users', users);
-                ui.loading(false);
-                alert("Account verified and created.");
-                ui.navigate('viewLogin');
-            }, 1000);
-        },
-
-        handleLogin: () => {
-            const role = document.getElementById('li-role').value;
-            const id = document.getElementById('li-id').value;
-            const pass = document.getElementById('li-pass').value;
-
-            ui.loading(true);
-            setTimeout(() => {
-                if(role === 'admin' && id === 'admin' && pass === 'admin123') {
-                    core.user = { role: 'admin', name: 'Faculty Admin', id: 'FACULTY-ROOT' };
-                } else {
-                    const found = store.get('users').find(u => u.id === id && u.pass === pass);
+                // EXPLICIT ADMIN CHECK
+                if(role === 'admin') {
+                    if(id === 'admin' && pass === 'admin123') {
+                        app.me = { role: 'admin', name: 'System Faculty', id: 'FACULTY-ROOT' };
+                    } else {
+                        ui.loading(false);
+                        return alert("Administrator Authentication Failed.");
+                    }
+                } 
+                // STUDENT DATABASE CHECK
+                else {
+                    const users = db.get('u');
+                    const found = users.find(u => u.id === id && u.p === pass);
                     if(!found) {
                         ui.loading(false);
-                        return alert("Access Denied: Incorrect credentials.");
+                        return alert("Invalid Student ID or Password.");
                     }
-                    core.user = { role: 'student', ...found, name: `${found.f} ${found.l}` };
+                    app.me = { role: 'student', ...found, name: `${found.f} ${found.l}` };
                 }
-                store.session.set(core.user);
-                core.launch();
+
+                db.sess.set(app.me);
+                app.launch();
                 ui.loading(false);
             }, 800);
         },
 
-        handleReset: () => {
-            const id = document.getElementById('f-id').value;
-            const slip = document.getElementById('f-slip').value;
-            let users = store.get('users');
-            const idx = users.findIndex(u => u.id === id && u.slip === slip);
+        register: () => {
+            const id = rId.value, slip = rSlip.value;
+            if(id.length !== 8 || slip.length !== 6) return alert("Error: ID(8) and Slip(6) required.");
+            if(!SLIP_CODES.includes(slip)) return alert("Error: Invalid Enrollment Slip.");
 
-            if(idx === -1) return alert("Verification Failed: Credentials do not match.");
+            let users = db.get('u');
+            if(users.some(u => u.id === id)) return alert("Error: ID already exists.");
 
-            users[idx].pass = document.getElementById('f-pass').value;
-            store.save('users', users);
-            alert("Security Update: Password changed.");
-            ui.navigate('viewLogin');
+            ui.loading(true);
+            setTimeout(() => {
+                users.push({
+                    id, slip, p: rP.value, f: rF.value, l: rL.value, t: rT.value, pic: null,
+                    grades: { MIL: 88, JAVA: 90, III: 92, Immersion: 95 }
+                });
+                db.save('u', users);
+                ui.loading(false);
+                alert("Student account verified and created.");
+                ui.go('pLogin');
+            }, 1000);
+        },
+
+        reset: () => {
+            let users = db.get('u');
+            const idx = users.findIndex(u => u.id === fId.value && u.slip === fSlip.value);
+            if(idx === -1) return alert("Verification Failed.");
+            users[idx].p = fPass.value;
+            db.save('u', users);
+            alert("Security success: Password updated.");
+            ui.go('pLogin');
         },
 
         launch: () => {
-            ui.navigate('viewDash');
-            document.getElementById('navExit').style.display = 'flex';
-            document.getElementById('user-name').innerText = core.user.name;
-            document.getElementById('user-details').innerText = core.user.role === 'admin' 
-                ? 'Authorized Personnel' 
-                : `Section: ${core.user.t} | ID: ${core.user.id}`;
-            
-            const photoDiv = document.getElementById('user-photo');
-            photoDiv.innerHTML = core.user.pic 
-                ? `<img src="${core.user.pic}">` 
-                : `<i class="fa-solid fa-user-shield"></i>`;
-
-            if(core.user.role === 'admin') core.renderAdmin();
-            else core.renderStudent();
+            ui.go('pDash');
+            navExit.style.display = 'block';
+            dName.innerText = app.me.name;
+            dMeta.innerText = app.me.role === 'admin' ? 'Authorized Faculty Admin' : `ID: ${app.me.id} | ${app.me.t}`;
+            dPic.innerHTML = app.me.pic ? `<img src="${app.me.pic}">` : `<i class="fa-solid fa-user-tie"></i>`;
+            app.renderTabs();
         },
 
-        renderStudent: () => {
-            document.getElementById('student-view').style.display = 'block';
-            document.getElementById('admin-view').style.display = 'none';
+        renderTabs: () => {
+            const items = app.me.role === 'admin' 
+                ? [['Directory', app.viewRoster], ['Portal Settings', () => dContent.innerHTML = 'System Operational']]
+                : [['My Schedule', app.viewSched], ['Academic Grades', app.viewGrades]];
+            
+            dTabs.innerHTML = '';
+            items.forEach(([label, action], i) => {
+                const b = document.createElement('button');
+                b.innerText = label;
+                if(i===0) { b.classList.add('active'); action(); }
+                b.onclick = (e) => {
+                    document.querySelectorAll('.tab-nav button').forEach(x => x.classList.remove('active'));
+                    e.target.classList.add('active');
+                    action();
+                };
+                dTabs.appendChild(b);
+            });
+        },
 
-            const picker = document.getElementById('day-picker');
-            picker.innerHTML = DAYS.map(d => `
-                <button class="day-chip ${d === core.activeDay ? 'active' : ''}" onclick="core.setDay('${d}')">
-                    ${d}
-                </button>
-            `).join('');
+        viewSched: () => {
+            dContent.innerHTML = `
+                <div class="day-picker">
+                    ${DAYS.map(d => `<button class="day-btn ${d===app.activeDay?'active':''}" onclick="app.setDay('${d}')">${d}</button>`).join('')}
+                </div>
+                <div id="sched-list"></div>
+            `;
+            app.renderSchedList();
+        },
 
-            const list = ACADEMIC_CALENDAR[core.activeDay] || [];
-            document.getElementById('schedule-render').innerHTML = list.map(item => `
-                <div class="card-item">
-                    <div class="time-badge"><small>Class Time</small><b>${item.t}</b></div>
-                    <div class="info-pane"><b>${item.s}</b><span>Room: ${item.r}</span></div>
+        renderSchedList: () => {
+            const list = MASTER_SCHEDULE[app.activeDay] || [];
+            document.getElementById('sched-list').innerHTML = list.map(i => `
+                <div class="sched-card">
+                    <div class="time-box"><small>Class Time</small><b>${i.t}</b></div>
+                    <div><p style="font-weight:700; font-size:15px">${i.s}</p><small style="color:var(--secondary)">Room: ${i.r}</small></div>
                 </div>
             `).join('');
         },
 
-        setDay: (day) => {
-            core.activeDay = day;
-            core.renderStudent();
+        setDay: (d) => { app.activeDay = d; app.viewSched(); },
+
+        viewGrades: () => {
+            const g = app.me.grades || {};
+            dContent.innerHTML = `
+                <div style="background:var(--surface); padding:20px; border-radius:12px; border:1px solid var(--border)">
+                    <h4 style="margin-bottom:15px">Current Progress</h4>
+                    <div class="grade-item"><span>Media Info Lit</span><span class="grade-tag">${g.MIL}</span></div>
+                    <div class="grade-item"><span>JAVA Programming</span><span class="grade-tag">${g.JAVA}</span></div>
+                    <div class="grade-item"><span>Inquiries (III)</span><span class="grade-tag">${g.III}</span></div>
+                    <div class="grade-item"><span>Work Immersion</span><span class="grade-tag">${g.Immersion}</span></div>
+                </div>
+            `;
         },
 
-        renderAdmin: () => {
-            document.getElementById('student-view').style.display = 'none';
-            document.getElementById('admin-view').style.display = 'block';
-
-            const users = store.get('users');
-            const tbody = document.querySelector('#directory-table tbody');
-            tbody.innerHTML = users.map((u, i) => `
-                <tr>
-                    <td><b>${u.f} ${u.l}</b><br><small>${u.t}</small></td>
-                    <td>${u.id}</td>
-                    <td><button class="admin-btn" onclick="core.adminPhoto(${i})">Photo</button></td>
-                </tr>
-            `).join('') || '<tr><td colspan="3" style="text-align:center">No students registered.</td></tr>';
+        viewRoster: () => {
+            const users = db.get('u');
+            dContent.innerHTML = `
+                <input type="text" class="search-bar" placeholder="Search by name or ID..." onkeyup="app.filter(this)">
+                <div class="table-wrap"><table id="rtbl"><thead><tr><th>Name</th><th>ID</th><th>Photo</th></tr></thead><tbody>` + 
+                users.map((u, i) => `<tr><td><b>${u.f} ${u.l}</b><br><small>${u.t}</small></td><td>${u.id}</td><td><button class="action-btn" onclick="app.adminPhoto(${i})">Edit</button></td></tr>`).join('') + `</tbody></table></div>`;
         },
 
-        adminPhoto: (index) => {
-            const input = document.createElement('input');
-            input.type = 'file';
-            input.accept = 'image/*';
-            input.onchange = (e) => {
-                const reader = new FileReader();
-                reader.onload = (ev) => {
-                    let users = store.get('users');
-                    users[index].pic = ev.target.result;
-                    store.save('users', users);
-                    
-                    if(core.user.id === users[index].id) {
-                        core.user.pic = ev.target.result;
-                        store.session.set(core.user);
-                    }
-                    alert("System: Student identity photo updated.");
-                    core.launch();
+        filter: (el) => {
+            const q = el.value.toLowerCase();
+            document.querySelectorAll('#rtbl tbody tr').forEach(r => {
+                r.style.display = r.innerText.toLowerCase().includes(q) ? '' : 'none';
+            });
+        },
+
+        adminPhoto: (idx) => {
+            const f = document.createElement('input'); f.type = 'file'; f.accept = 'image/*';
+            f.onchange = e => {
+                const r = new FileReader();
+                r.onload = ev => {
+                    let u = db.get('u'); u[idx].pic = ev.target.result; db.save('u', u);
+                    if(app.me.id === u[idx].id) { app.me.pic = ev.target.result; db.sess.set(app.me); }
+                    app.launch();
                 };
-                reader.readAsDataURL(e.target.files[0]);
+                r.readAsDataURL(e.target.files[0]);
             };
-            input.click();
+            f.click();
         },
 
-        logout: () => {
-            if(confirm("Sign Out?")) {
-                store.session.kill();
-                location.reload();
-            }
-        }
+        logout: () => { if(confirm("Sign out of SIS?")) { db.sess.kill(); location.reload(); } }
     };
 
-    // SYSTEM BOOTSTRAP
-    window.onload = core.init;
-
-    /*
-     * END OF ENTERPRISE SIS v12.0
-     * Built for myACSHS Portal
-     */
+    window.onload = app.init;
 </script>
-
 </body>
 </html>
