@@ -3,244 +3,199 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no" />
-    <title>myACSHS | Secure SIS v17.0</title>
+    <title>myACSHS | SIS v18.0</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     
     <style>
-        /** * 1. DESIGN SYSTEM
-         * Modern Educational Platform UI
+        /** * MINIMALIST DESIGN SYSTEM 
+         * Focus: High contrast, sharp edges, professional utility.
          */
         :root {
-            --primary: #1877f2;
-            --bg: #f0f2f5;
+            --primary: #000000;
+            --secondary: #64748b;
+            --error: #e11d48;
             --surface: #ffffff;
-            --error: #f02849;
-            --text-main: #050505;
-            --text-sub: #65676b;
-            --border: #dddfe2;
-            --radius: 8px;
+            --bg: #ffffff;
+            --border: #e2e8f0;
+            --radius: 0px; /* Sharp corners for minimalist look */
         }
 
         * { box-sizing: border-box; -webkit-font-smoothing: antialiased; margin: 0; padding: 0; }
-        body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text-main); overflow-x: hidden; }
+        body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--primary); }
 
-        /* PANEL SYSTEM */
-        .panel { display: none; width: 100%; animation: panelSlide 0.4s cubic-bezier(0.1, 0.7, 0.1, 1); }
+        /* SHARED UI COMPONENTS */
+        .container { max-width: 480px; margin: 0 auto; padding: 20px; }
+        .panel { display: none; width: 100%; animation: fadeIn 0.3s ease; }
         .panel.active { display: block; }
-        @keyframes panelSlide { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-        /* HEADER & NAVIGATION */
         header { 
-            background: var(--surface); padding: 10px 20px; 
             display: flex; justify-content: space-between; align-items: center; 
-            border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 1000;
+            padding: 20px 0; border-bottom: 2px solid var(--primary); margin-bottom: 40px;
         }
-        .brand { display: flex; align-items: center; gap: 8px; font-weight: 800; font-size: 20px; }
+        .logo h2 { font-weight: 800; font-size: 24px; letter-spacing: -1px; }
+
+        /* MINIMALIST LOGIN FORM */
+        .form-title { margin-bottom: 30px; }
+        .form-title h1 { font-size: 32px; font-weight: 800; }
+        .form-title p { color: var(--secondary); font-size: 14px; }
+
+        .form-group { margin-bottom: 20px; position: relative; }
+        .form-group label { display: block; font-size: 11px; font-weight: 800; text-transform: uppercase; margin-bottom: 8px; }
         
-        .nav-actions { display: flex; gap: 18px; align-items: center; }
-        .notif-bell { position: relative; font-size: 20px; color: var(--text-sub); cursor: pointer; }
-        .badge { 
-            position: absolute; top: -5px; right: -8px; background: var(--error); 
-            color: #fff; font-size: 10px; padding: 2px 5px; border-radius: 10px; 
-            font-weight: 800; border: 2px solid #fff; display: none;
+        input, select {
+            width: 100%; height: 54px; padding: 0 15px; border: 2px solid var(--border);
+            border-radius: var(--radius); font-size: 16px; outline: none; transition: 0.2s;
+            background: #fff;
+        }
+        input:focus { border-color: var(--primary); }
+
+        /* ERROR STATE (Facebook-logic in Minimalist style) */
+        .form-group.has-error input {
+            border-color: var(--error) !important;
+            background: #fffafa;
+            animation: shake 0.2s 2;
+        }
+        .error-note {
+            color: var(--error); font-size: 12px; font-weight: 600;
+            margin-top: 6px; display: none;
+        }
+        .form-group.has-error .error-note { display: block; }
+
+        @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-5px); } 75% { transform: translateX(5px); } }
+
+        /* BUTTONS */
+        .btn-black { 
+            width: 100%; height: 56px; background: var(--primary); color: #fff; 
+            border: none; font-weight: 800; font-size: 16px; cursor: pointer; transition: 0.2s;
+        }
+        .btn-black:active { transform: translateY(1px); opacity: 0.9; }
+        .btn-ghost { 
+            width: 100%; background: none; border: 2px solid var(--border); 
+            height: 50px; margin-top: 15px; font-weight: 700; cursor: pointer;
         }
 
-        /* TAB SYSTEM */
-        .tab-bar { display: flex; background: var(--surface); border-bottom: 1px solid var(--border); }
-        .tab { flex: 1; padding: 15px; text-align: center; color: var(--text-sub); cursor: pointer; border-bottom: 3px solid transparent; transition: 0.2s; }
+        /* DASHBOARD ELEMENTS */
+        .nav-tabs { display: flex; border-bottom: 2px solid var(--border); margin-bottom: 30px; }
+        .tab { 
+            flex: 1; padding: 15px; text-align: center; color: var(--secondary); 
+            cursor: pointer; font-weight: 700; border-bottom: 3px solid transparent;
+        }
         .tab.active { color: var(--primary); border-bottom-color: var(--primary); }
+        .tab i { font-size: 20px; }
 
-        /* AUTHENTICATION STYLING (Facebook-Style) */
-        .auth-card { 
-            max-width: 400px; margin: 50px auto; background: var(--surface); 
-            padding: 25px; border-radius: var(--radius); 
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1); text-align: center;
-        }
-        .field-group { margin-bottom: 12px; text-align: left; }
-        input, select { 
-            width: 100%; height: 50px; padding: 12px; border: 1px solid var(--border); 
-            border-radius: 6px; font-size: 16px; outline: none; transition: 0.2s; 
-        }
-        .field-group.error input { border: 1px solid var(--error); background: #fff9f9; animation: shake 0.2s 2; }
-        .error-msg { color: var(--error); font-size: 12px; margin-top: 4px; display: none; font-weight: 600; }
-        .field-group.error .error-msg { display: block; }
+        .pfp-wrap { width: 100px; height: 100px; border: 3px solid var(--primary); margin: 0 auto 15px; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+        .pfp-wrap img { width: 100%; height: 100%; object-fit: cover; }
+        .pfp-wrap i { font-size: 40px; color: var(--border); }
 
-        @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-6px); } 75% { transform: translateX(6px); } }
+        .data-card { border: 1px solid var(--border); padding: 15px; margin-bottom: 12px; }
+        .data-row { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid #f1f5f9; }
+        .data-row:last-child { border-bottom: none; }
+        .tag-time { background: var(--primary); color: #fff; padding: 4px 8px; font-size: 10px; font-weight: 700; }
 
-        .btn-blue { width: 100%; height: 48px; background: var(--primary); color: #fff; border: none; border-radius: 6px; font-weight: 700; font-size: 17px; cursor: pointer; }
-        .btn-green { background: #42b72a; color: #fff; border: none; padding: 12px 20px; border-radius: 6px; font-weight: 700; cursor: pointer; margin-top: 20px; }
+        /* NOTIFICATIONS */
+        .notif-pill { position: relative; }
+        .notif-dot { position: absolute; top: -2px; right: -2px; width: 8px; height: 8px; background: var(--error); border-radius: 50%; display: none; }
+        .notif-item { padding: 12px; border-left: 4px solid var(--border); margin-bottom: 10px; background: #f8fafc; cursor: pointer; }
+        .notif-item.unread { border-left-color: var(--primary); background: #fff; }
 
-        /* DASHBOARD CONTENT */
-        .content { padding: 15px; max-width: 500px; margin: 0 auto; }
-        .card { background: var(--surface); border-radius: var(--radius); padding: 18px; margin-bottom: 15px; border: 1px solid var(--border); }
-        
-        .profile-hero { text-align: center; margin-bottom: 20px; }
-        .avatar { 
-            width: 110px; height: 110px; border-radius: 50%; margin: 0 auto 12px; 
-            border: 4px solid #fff; background: #e4e6eb; overflow: hidden; 
-            display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-        }
-        .avatar img { width: 100%; height: 100%; object-fit: cover; }
-        .avatar i { font-size: 48px; color: #8a8d91; }
-
-        /* NOTIFICATION LIST */
-        .notif-item { display: flex; gap: 12px; padding: 12px; border-radius: 8px; margin-bottom: 8px; cursor: pointer; transition: 0.2s; position: relative; }
-        .notif-item.unread { background: #e7f3ff; }
-        .notif-item:active { background: #f0f2f5; }
-        .notif-icon { width: 40px; height: 40px; border-radius: 50%; background: var(--primary); color: #fff; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
-        .notif-dot { width: 8px; height: 8px; background: var(--primary); border-radius: 50%; position: absolute; right: 15px; top: 20px; }
-
-        /* SCHEDULE & GRADES */
-        .day-bar { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 10px; margin-bottom: 15px; }
-        .day-btn { padding: 8px 16px; border-radius: 20px; background: #e4e6eb; border: none; font-weight: 600; font-size: 13px; white-space: nowrap; cursor: pointer; }
-        .day-btn.active { background: #e7f3ff; color: var(--primary); }
-
-        .list-row { display: flex; align-items: center; gap: 15px; padding: 12px 0; border-bottom: 1px solid #f0f2f5; }
-        .tag { background: #f0f2f5; padding: 5px 10px; border-radius: 5px; font-size: 11px; font-weight: 700; }
-
-        #loader { position: fixed; inset: 0; background: rgba(255,255,255,0.9); display: none; align-items: center; justify-content: center; z-index: 2000; }
-        .spinner { width: 35px; height: 35px; border: 4px solid #dddfe2; border-top-color: var(--primary); border-radius: 50%; animation: spin 0.8s linear infinite; }
+        #spinner-overlay { position: fixed; inset: 0; background: rgba(255,255,255,0.9); display: none; align-items: center; justify-content: center; z-index: 1000; }
+        .spinner { width: 30px; height: 30px; border: 3px solid var(--border); border-top-color: var(--primary); border-radius: 50%; animation: spin 0.8s linear infinite; }
         @keyframes spin { to { transform: rotate(360deg); } }
     </style>
 </head>
 <body>
 
-<div id="loader"><div class="spinner"></div></div>
+<div id="spinner-overlay"><div class="spinner"></div></div>
 
-<header id="portalHeader" style="display:none">
-    <div class="brand"><img src="acshslogo.jpg" width="30"> myACSHS</div>
-    <div class="nav-actions">
-        <div class="notif-bell" onclick="app.tab('notif', document.getElementById('notifTabIcon'))">
-            <i class="fa-solid fa-bell"></i>
-            <span id="notifBadge" class="badge">0</span>
-        </div>
-        <i class="fa-solid fa-right-from-bracket" style="color:var(--text-sub); cursor:pointer" onclick="app.logout()"></i>
-    </div>
-</header>
-
-<div id="mainView">
+<div class="container">
     
-    <div id="pAuth" class="panel active">
-        <div class="auth-card">
-            <h1 style="color:var(--primary); font-size:32px; margin-bottom:20px; letter-spacing:-1px">myACSHS</h1>
-            
-            <div id="vLogin">
-                <div class="field-group" id="errId">
-                    <input type="text" id="liId" placeholder="Student ID or Username">
-                    <div class="error-msg">The ID you entered isn't connected to an account.</div>
-                </div>
-                <div class="field-group" id="errPass">
-                    <input type="password" id="liPass" placeholder="Password">
-                    <div class="error-msg">The password you've entered is incorrect.</div>
-                </div>
-                <div class="field-group">
-                    <select id="liRole">
-                        <option value="student">Student Account</option>
-                        <option value="admin">Administrator</option>
-                    </select>
-                </div>
-                <button class="btn-blue" onclick="app.login()">Log In</button>
-                <p style="margin-top:15px; color:var(--primary); font-size:14px; cursor:pointer">Forgotten password?</p>
-                <div style="margin:20px 0; border-top:1px solid var(--border)"></div>
-                <button class="btn-green" onclick="ui.subAuth('vReg')">Create New Account</button>
+    <header id="appHeader" style="visibility:hidden">
+        <div class="logo"><h2>myACSHS</h2></div>
+        <div style="display:flex; gap:20px; align-items:center">
+            <div class="notif-pill" onclick="app.tab('notif', document.getElementById('tabNotifIcon'))">
+                <i class="fa-solid fa-bell"></i>
+                <span id="badge" class="notif-dot"></span>
             </div>
+            <i class="fa-solid fa-power-off" onclick="app.logout()"></i>
+        </div>
+    </header>
 
-            <div id="vReg" style="display:none">
-                <h3 style="margin-bottom:15px">Join myACSHS</h3>
-                <div class="field-group"><input type="text" id="rgF" placeholder="First Name"></div>
-                <div class="field-group"><input type="text" id="rgL" placeholder="Surname"></div>
-                <div class="field-group"><input type="number" id="rgId" placeholder="8-Digit Student ID"></div>
-                <div class="field-group"><input type="number" id="rgSlip" placeholder="6-Digit Slip Code"></div>
-                <div class="field-group"><input type="text" id="rgTrack" placeholder="Track/Section (e.g. ICT 1202)"></div>
-                <div class="field-group"><input type="password" id="rgPass" placeholder="Create Password"></div>
-                <button class="btn-green" style="width:100%" onclick="app.register()">Sign Up</button>
-                <p style="margin-top:15px; color:var(--primary); cursor:pointer" onclick="ui.subAuth('vLogin')">Already have an account?</p>
+    <div id="pAuth" class="panel active">
+        <div id="vLogin">
+            <div class="form-title">
+                <h1>Login</h1>
+                <p>Student Information System</p>
             </div>
+            <div class="form-group" id="wrapRole">
+                <label>Access Role</label>
+                <select id="lRole">
+                    <option value="student">Student Account</option>
+                    <option value="admin">Administrator</option>
+                </select>
+            </div>
+            <div class="form-group" id="wrapId">
+                <label>Identification Number</label>
+                <input type="text" id="lId" placeholder="ID Number">
+                <div class="error-note">Wrong ID Number. Please try again.</div>
+            </div>
+            <div class="form-group" id="wrapPass">
+                <label>Password</label>
+                <input type="password" id="lPass" placeholder="••••••••">
+                <div class="error-note">Wrong Password. Please try again.</div>
+            </div>
+            <button class="btn-black" onclick="app.login()">Sign In</button>
+            <button class="btn-ghost" onclick="ui.subAuth('vReg')">Create Account</button>
+        </div>
+
+        <div id="vReg" style="display:none">
+            <div class="form-title"><h1>Register</h1><p>New Student Identity</p></div>
+            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px">
+                <div class="form-group"><label>First Name</label><input type="text" id="rF"></div>
+                <div class="form-group"><label>Last Name</label><input type="text" id="rL"></div>
+            </div>
+            <div class="form-group"><label>8-Digit ID</label><input type="number" id="rId"></div>
+            <div class="form-group"><label>6-Digit Slip</label><input type="number" id="rSlip"></div>
+            <div class="form-group"><label>Strand/Section</label><input type="text" id="rT" placeholder="e.g. ICT 1202"></div>
+            <div class="form-group"><label>Password</label><input type="password" id="rP"></div>
+            <button class="btn-black" onclick="app.register()">Create Profile</button>
+            <button class="btn-ghost" onclick="ui.subAuth('vLogin')">Back to Login</button>
         </div>
     </div>
 
-    <div id="pPortal" class="panel">
-        <nav class="tab-bar">
-            <div class="tab active" onclick="app.tab('home', this)"><i class="fa-solid fa-house"></i></div>
-            <div class="tab" onclick="app.tab('grades', this)"><i class="fa-solid fa-graduation-cap"></i></div>
-            <div class="tab" id="notifTabIcon" onclick="app.tab('notif', this)"><i class="fa-solid fa-bell"></i></div>
-            <div class="tab" id="adminTab" style="display:none" onclick="app.tab('admin', this)"><i class="fa-solid fa-user-shield"></i></div>
-            <div class="tab" onclick="app.tab('menu', this)"><i class="fa-solid fa-bars"></i></div>
-        </nav>
-
-        <div class="content">
-            <div id="tabHome" class="tab-content">
-                <div class="card profile-hero">
-                    <div id="uPic" class="avatar"></div>
-                    <h2 id="uName">...</h2>
-                    <p id="uMeta" style="color:var(--text-sub); font-size:14px">...</p>
-                </div>
-                <div class="card">
-                    <h4 style="margin-bottom:12px">Your Schedule</h4>
-                    <div class="day-bar" id="dayBar"></div>
-                    <div id="schedList"></div>
-                </div>
-            </div>
-
-            <div id="tabGrades" class="tab-content" style="display:none">
-                <div class="card">
-                    <h3>Academic Performance</h3>
-                    <p style="color:var(--text-sub); font-size:13px; margin-bottom:15px">1st Semester - Final Grades</p>
-                    <div id="gradeList"></div>
-                </div>
-            </div>
-
-            <div id="tabNotif" class="tab-content" style="display:none">
-                <div class="card">
-                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px">
-                        <h3>Notifications</h3>
-                        <small style="color:var(--primary); cursor:pointer" onclick="app.clearNotifs()">Mark all as read</small>
-                    </div>
-                    <div id="notifList"></div>
-                </div>
-            </div>
-
-            <div id="tabAdmin" class="tab-content" style="display:none">
-                <div class="card">
-                    <h3>Manage Students</h3>
-                    <input type="text" placeholder="Search ID or Name..." style="margin:10px 0; height:40px; border-radius:20px; background:var(--bg)" onkeyup="app.filter(this)">
-                    <div id="adminList"></div>
-                </div>
-            </div>
-
-            <div id="tabMenu" class="tab-content" style="display:none">
-                <div class="card">
-                    <div class="list-row" onclick="alert('v17.0.4 Enterprise')"><i class="fa-solid fa-info-circle"></i> Version Info</div>
-                    <div class="list-row" onclick="app.logout()"><i class="fa-solid fa-power-off"></i> Logout</div>
-                </div>
-            </div>
+    <div id="pDash" class="panel">
+        <div class="nav-tabs">
+            <div class="tab active" onclick="app.tab('home', this)"><i class="fa-solid fa-house-chimney"></i></div>
+            <div class="tab" onclick="app.tab('grades', this)"><i class="fa-solid fa-scroll"></i></div>
+            <div class="tab" id="tabNotifIcon" onclick="app.tab('notif', this)"><i class="fa-solid fa-envelope-open-text"></i></div>
+            <div class="tab" id="tabAdmin" style="display:none" onclick="app.tab('admin', this)"><i class="fa-solid fa-lock"></i></div>
         </div>
+
+        <div id="dashContent">
+            </div>
     </div>
 
 </div>
 
 <script>
     /**
-     * @constant DATA_MASTER
+     * @constant ACADEMIC_CONFIG
      */
     const SLIPS = ["112233", "445566", "123456", "654321", "224466"];
     const DAYS = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"];
-    const SCHEDULES = {
-        "Monday": [{t: "6:15 - 7:15", s: "MIL", r: "R101"}, {t: "7:15 - 8:15", s: "JAVA", r: "CL1"}, {t: "8:35 - 11:35", s: "Immersion", r: "Field"}],
-        "Tuesday": [{t: "6:15 - 7:15", s: "MIL", r: "R101"}, {t: "7:15 - 8:15", s: "JAVA", r: "CL1"}, {t: "8:35 - 11:35", s: "Immersion", r: "Field"}],
-        "Wednesday": [{t: "6:15 - 8:15", s: "Research", r: "Lib"}, {t: "8:35 - 11:35", s: "Immersion", r: "Field"}],
-        "Thursday": [{t: "6:15 - 8:15", s: "JAVA", r: "CL1"}, {t: "8:35 - 11:35", s: "Immersion", r: "Field"}],
-        "Friday": [{t: "6:15 - 8:15", s: "PE / Health", r: "Gym"}, {t: "8:35 - 11:35", s: "Immersion", r: "Field"}]
+    const SCHEDULE = {
+        "Monday": [{t: "06:15-07:15", s: "MIL / Homeroom", r: "R101"}, {t: "07:15-08:15", s: "JAVA", r: "CL1"}, {t: "08:35-11:35", s: "Immersion", r: "Field"}],
+        "Tuesday": [{t: "06:15-07:15", s: "MIL", r: "R101"}, {t: "07:15-08:15", s: "JAVA", r: "CL1"}, {t: "08:35-11:35", s: "Immersion", r: "Field"}],
+        "Wednesday": [{t: "06:15-08:15", s: "Research / III", r: "Lib"}, {t: "08:35-11:35", s: "Immersion", r: "Field"}],
+        "Thursday": [{t: "06:15-08:15", s: "JAVA", r: "CL1"}, {t: "08:35-11:35", s: "Immersion", r: "Field"}],
+        "Friday": [{t: "06:15-08:15", s: "PE / Health", r: "Gym"}, {t: "08:35-11:35", s: "Immersion", r: "Field"}]
     };
 
-    /**
-     * @module db
-     */
     const db = {
-        save: (k,v) => localStorage.setItem('sis17_'+k, JSON.stringify(v)),
-        get: (k) => JSON.parse(localStorage.getItem('sis17_'+k) || '[]'),
+        save: (k,v) => localStorage.setItem('sis18_'+k, JSON.stringify(v)),
+        get: (k) => JSON.parse(localStorage.getItem('sis18_'+k) || '[]'),
         sess: {
             set: (u) => localStorage.setItem('sis_sess', JSON.stringify(u)),
             get: () => JSON.parse(localStorage.getItem('sis_sess')),
@@ -248,11 +203,8 @@
         }
     };
 
-    /**
-     * @module ui
-     */
     const ui = {
-        panel: (id) => {
+        go: (id) => {
             document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
             document.getElementById(id).classList.add('active');
         },
@@ -260,15 +212,12 @@
             vLogin.style.display = id === 'vLogin' ? 'block' : 'none';
             vReg.style.display = id === 'vReg' ? 'block' : 'none';
         },
-        loading: (s) => loader.style.display = s ? 'flex' : 'none'
+        load: (s) => document.getElementById('spinner-overlay').style.display = s ? 'flex' : 'none'
     };
 
-    /**
-     * @module app
-     */
     const app = {
         me: null,
-        activeDay: DAYS[new Date().getDay() - 1] || "Monday",
+        day: DAYS[new Date().getDay() - 1] || "Monday",
         notifs: [],
 
         init: () => {
@@ -277,129 +226,94 @@
         },
 
         login: () => {
-            const role = liRole.value, id = liId.value.trim(), pass = liPass.value.trim();
-            errId.classList.remove('error'); errPass.classList.remove('error');
+            const r = lRole.value, id = lId.value.trim(), p = lPass.value.trim();
+            wrapId.classList.remove('has-error'); wrapPass.classList.remove('has-error');
 
-            ui.loading(true);
+            ui.load(true);
             setTimeout(() => {
-                ui.loading(false);
-                if(role === 'admin') {
-                    if(id === 'admin' && pass === 'admin123') {
-                        app.me = { role:'admin', name:'System Faculty', id:'ROOT-01' };
+                ui.load(false);
+                if(r === 'admin') {
+                    if(id === 'admin' && p === 'admin123') {
+                        app.me = { role:'admin', name:'System Faculty', id:'ADMIN-ROOT' };
                     } else {
-                        if(id !== 'admin') errId.classList.add('error'); else errPass.classList.add('error');
+                        if(id !== 'admin') wrapId.classList.add('has-error'); else wrapPass.classList.add('has-error');
                         return;
                     }
                 } else {
-                    const users = db.get('u');
-                    const u = users.find(x => x.id === id);
-                    if(!u) return errId.classList.add('error');
-                    if(u.pass !== pass) return errPass.classList.add('error');
+                    const u = db.get('u').find(x => x.id === id);
+                    if(!u) return wrapId.classList.add('has-error');
+                    if(u.p !== p) return wrapPass.classList.add('has-error');
                     app.me = { role:'student', ...u, name: u.f+' '+u.l };
                 }
                 db.sess.set(app.me);
                 app.launch();
-            }, 800);
+            }, 700);
         },
 
         register: () => {
-            const id = rgId.value, slip = rgSlip.value;
-            if(id.length !== 8 || slip.length !== 6 || !SLIPS.includes(slip)) return alert("Invalid Enrollment Data");
-            
+            const id = rId.value, slip = rSlip.value;
+            if(id.length !== 8 || slip.length !== 6 || !SLIPS.includes(slip)) return alert("Data Validation Failed.");
             let users = db.get('u');
-            if(users.some(x => x.id === id)) return alert("ID already exists");
+            if(users.some(x => x.id === id)) return alert("ID already exists.");
 
-            ui.loading(true);
+            ui.load(true);
             setTimeout(() => {
-                users.push({
-                    id, slip, f:rgF.value, l:rgL.value, pass:rgPass.value, t:rgTrack.value, pic:null,
-                    grades: { "MIL": 92, "JAVA": 89, "Research": 94, "Immersion": 98 }
-                });
+                users.push({ id, slip, f:rF.value, l:rL.value, p:rP.value, t:rT.value, pic:null, 
+                    grades: { "MIL": 92, "JAVA": 88, "Research": 95, "Immersion": 96 } });
                 db.save('u', users);
-                ui.loading(false);
-                alert("Account created!");
+                ui.load(false);
+                alert("Account Created.");
                 ui.subAuth('vLogin');
-            }, 1000);
+            }, 800);
         },
 
         launch: () => {
-            ui.panel('pPortal');
-            portalHeader.style.display = 'flex';
-            uName.innerText = app.me.name;
-            uMeta.innerText = app.me.role === 'admin' ? 'Faculty Admin' : `ID: ${app.me.id} • ${app.me.t}`;
-            uPic.innerHTML = app.me.pic ? `<img src="${app.me.pic}">` : `<i class="fa-solid fa-user"></i>`;
-            adminTab.style.display = app.me.role === 'admin' ? 'block' : 'none';
-            
-            // Add Sample Notifs for Student
-            if(app.me.role === 'student' && app.notifs.length === 0) {
-                app.notifs = [
-                    { id: 1, title: "Grade Posted", desc: "Your final grade for JAVA is now available.", read: false, icon: "graduation-cap" },
-                    { id: 2, title: "System Update", desc: "The portal has been updated to v17.0.", read: false, icon: "shield-halved" }
-                ];
+            ui.go('pDash');
+            appHeader.style.visibility = 'visible';
+            tabAdmin.style.display = app.me.role === 'admin' ? 'block' : 'none';
+            if(app.me.role === 'student' && !app.notifs.length) {
+                app.notifs = [{id:1, t:"Grade Update", d:"Final scores for Quarter 1 have been released.", read:false}];
             }
-            app.updateBadge();
             app.tab('home', document.querySelector('.tab'));
+            app.badge();
         },
 
-        tab: (name, el) => {
+        tab: (n, el) => {
             document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
             el.classList.add('active');
-            document.querySelectorAll('.tab-content').forEach(c => c.style.display = 'none');
-            document.getElementById('tab'+name.charAt(0).toUpperCase()+name.slice(1)).style.display = 'block';
-            
-            if(name === 'home') app.drawHome();
-            if(name === 'grades') app.drawGrades();
-            if(name === 'notif') app.drawNotifs();
-            if(name === 'admin') app.drawAdmin();
+            app.render(n);
         },
 
-        drawHome: () => {
-            dayBar.innerHTML = DAYS.map(d => `<button class="day-btn ${d===app.activeDay?'active':''}" onclick="app.setDay('${d}')">${d}</button>`).join('');
-            const list = SCHEDULES[app.activeDay] || [];
-            schedList.innerHTML = list.map(i => `<div class="list-row"><div class="tag">${i.t}</div><div><b>${i.s}</b><br><small>Room: ${i.r}</small></div></div>`).join('');
-        },
-
-        setDay: (d) => { app.activeDay = d; app.drawHome(); },
-
-        drawGrades: () => {
-            const g = app.me.grades || {};
-            gradeList.innerHTML = Object.entries(g).map(([s, v]) => `<div class="list-row" style="justify-content:space-between"><span>${s}</span><b style="color:var(--primary)">${v}</b></div>`).join('');
-        },
-
-        drawNotifs: () => {
-            notifList.innerHTML = app.notifs.length ? app.notifs.map(n => `
-                <div class="notif-item ${n.read?'':'unread'}" onclick="app.readNotif(${n.id})">
-                    <div class="notif-icon"><i class="fa-solid fa-${n.icon}"></i></div>
-                    <div><div style="font-weight:700">${n.title}</div><div style="font-size:12px; color:var(--text-sub)">${n.desc}</div></div>
-                    ${n.read ? '' : '<div class="notif-dot"></div>'}
+        render: (n) => {
+            let html = "";
+            if(n === 'home') {
+                html = `
+                <div style="text-align:center; margin-bottom:30px">
+                    <div class="pfp-wrap">${app.me.pic ? `<img src="${app.me.pic}">` : `<i class="fa-solid fa-user"></i>`}</div>
+                    <h2 style="font-weight:800">${app.me.name}</h2>
+                    <p style="color:var(--secondary); font-size:12px">${app.me.id} | ${app.me.t || 'Faculty'}</p>
                 </div>
-            `).join('') : '<p style="text-align:center; padding:20px; color:var(--text-sub)">No notifications yet.</p>';
+                <div class="data-card">
+                    <div style="display:flex; gap:8px; overflow-x:auto; padding-bottom:10px; margin-bottom:10px">
+                        ${DAYS.map(d => `<button onclick="app.setDay('${d}')" style="background:${d===app.day?'#000':'#eee'}; color:${d===app.day?'#fff':'#000'}; border:none; padding:8px 12px; font-size:11px; font-weight:700;">${d.toUpperCase()}</button>`).join('')}
+                    </div>
+                    ${(SCHEDULE[app.day] || []).map(i => `<div class="data-row"><div class="tag-time">${i.t}</div><div><b>${i.s}</b><br><small>${i.r}</small></div></div>`).join('')}
+                </div>`;
+            } else if(n === 'grades') {
+                const g = app.me.grades || {};
+                html = `<div class="data-card"><h3>Quarterly Progress</h3><div style="margin-top:15px">${Object.entries(g).map(([k,v])=>`<div class="data-row"><span>${k}</span><b>${v}</b></div>`).join('')}</div></div>`;
+            } else if(n === 'notif') {
+                html = `<div class="data-card"><h3>Notifications</h3><div style="margin-top:15px">` + 
+                (app.notifs.map(x => `<div class="notif-item ${x.read?'':'unread'}" onclick="app.read(${x.id})"><b>${x.t}</b><br><small>${x.d}</small></div>`).join('') || '<p>No updates.</p>') + `</div></div>`;
+            } else if(n === 'admin') {
+                html = `<div class="data-card"><h3>Directory</h3><div style="margin-top:10px">${db.get('u').map((u,i)=>`<div class="data-row"><div><b>${u.f} ${u.l}</b><br><small>${u.id}</small></div><button onclick="app.photo(${i})" style="background:#000; color:#fff; border:none; padding:5px 10px; font-size:10px">Photo</button></div>`).join('')}</div></div>`;
+            }
+            dashContent.innerHTML = html;
         },
 
-        readNotif: (id) => {
-            const n = app.notifs.find(x => x.id === id);
-            if(n) n.read = true;
-            app.updateBadge();
-            app.drawNotifs();
-        },
-
-        clearNotifs: () => {
-            app.notifs.forEach(n => n.read = true);
-            app.updateBadge();
-            app.drawNotifs();
-        },
-
-        updateBadge: () => {
-            const count = app.notifs.filter(n => !n.read).length;
-            notifBadge.innerText = count;
-            notifBadge.style.display = count > 0 ? 'block' : 'none';
-        },
-
-        drawAdmin: () => {
-            const users = db.get('u');
-            adminList.innerHTML = users.map((u, i) => `<div class="list-row" style="justify-content:space-between"><div><b>${u.f} ${u.l}</b><br><small>${u.id}</small></div><button onclick="app.photo(${i})" style="border:none; background:var(--bg); padding:5px 10px; border-radius:4px; font-size:11px">Photo</button></div>`).join('');
-        },
-
+        setDay: (d) => { app.day = d; app.render('home'); },
+        badge: () => { const c = app.notifs.filter(x=>!x.read).length; badge.style.display = c > 0 ? 'block' : 'none'; },
+        read: (id) => { const n = app.notifs.find(x=>x.id===id); if(n) n.read=true; app.badge(); app.render('notif'); },
         photo: (idx) => {
             const f = document.createElement('input'); f.type = 'file';
             f.onchange = e => {
@@ -407,18 +321,16 @@
                 r.onload = ev => {
                     let u = db.get('u'); u[idx].pic = ev.target.result; db.save('u', u);
                     if(app.me.id === u[idx].id) { app.me.pic = ev.target.result; db.sess.set(app.me); }
-                    app.launch();
+                    app.render('admin');
                 };
                 r.readAsDataURL(e.target.files[0]);
             };
             f.click();
         },
-
-        logout: () => { if(confirm("Sign out?")) { db.sess.kill(); location.reload(); } }
+        logout: () => { if(confirm("Logout?")) { db.sess.kill(); location.reload(); } }
     };
 
     window.onload = app.init;
 </script>
-
 </body>
 </html>
