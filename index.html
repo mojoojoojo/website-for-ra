@@ -726,8 +726,7 @@
 <div id="toast" class="toast">Action Successful</div>
 
 <script>
-    /* --- ENTERPRISE CORE ENGINE --- 
-    */
+    /* --- ENTERPRISE CORE ENGINE --- */
     const CONFIG = {
         SLIPS: ["112233"],
         SUBJECTS: ["Media & Info Literacy", "JAVA (Enterprise)", "Inquiries & Immersion", "Work Immersion", "PE & Health"],
@@ -883,6 +882,29 @@
                 });
                 h += `</tbody></table>`;
             }
+            else if(v === 'Admin Control') {
+                h += `<div class="stat-row">
+                        <div class="card" style="background:#fef3c7; border:none"><b>Total Students</b><br><span style="font-size:24px">${db.load().length}</span></div>
+                        <div class="card" style="background:#dbeafe; border:none"><b>Active Subjects</b><br><span style="font-size:24px">${CONFIG.SUBJECTS.length}</span></div>
+                      </div>
+                      <p style="margin-top:20px; color:var(--muted)">Welcome to the Administrator Control Panel. Use the tabs above to manage students and view reports.</p>`;
+            }
+            else if(v === 'Reports') {
+                h += `<div style="display:grid; gap:16px">
+                        <div class="card" style="background:#f0f7ff; border:none; cursor:pointer">
+                            <h4 style="margin:0 0 8px 0">Academic Performance Report</h4>
+                            <p style="margin:0; color:var(--muted); font-size:13px">View comprehensive grade analysis and statistics</p>
+                        </div>
+                        <div class="card" style="background:#f0fff4; border:none; cursor:pointer">
+                            <h4 style="margin:0 0 8px 0">Attendance Summary</h4>
+                            <p style="margin:0; color:var(--muted); font-size:13px">Monitor student attendance and absence records</p>
+                        </div>
+                        <div class="card" style="background:#fef2f2; border:none; cursor:pointer">
+                            <h4 style="margin:0 0 8px 0">Export Data</h4>
+                            <p style="margin:0; color:var(--muted); font-size:13px">Download student records and grades in CSV format</p>
+                        </div>
+                      </div>`;
+            }
 
             h += `</div><div id="subZone"></div>`;
             viewArea.innerHTML = h;
@@ -891,6 +913,22 @@
             const x = db.load()[idx];
             let h = `<div class="card"><h4>Grading Interface: ${x.name}</h4><div style="display:grid; grid-template-columns: 1fr 1fr; gap:15px; margin-top:20px">`;
             Object.entries(x.grades).forEach(([s,g]) => {
-                h += `<div class="form-group"><label>${s}</label><input type="number" class="g-inp" data-s="${s}" value="${g}"></div>`;
+                h += `<div class="form-group"><label>${s}</label><input type="number" class="g-inp" data-s="${s}" value="${g}" min="0" max="100"></div>`;
             });
-            h += `</div><button class="btn-main" onclick="ui.saveGrades(${idx})">SYNC DATA
+            h += `</div><button class="btn-main" onclick="ui.saveGrades(${idx})">SYNC DATA</button></div>`;
+            subZone.innerHTML = h;
+            subZone.scrollIntoView({ behavior: 'smooth' });
+        },
+        saveGrades(idx) {
+            let u = db.load();
+            document.querySelectorAll('.g-inp').forEach(i => u[idx].grades[i.dataset.s] = parseInt(i.value));
+            db.save(u); ui.notify("Database Synchronized"); ui.renderView('Students List');
+        }
+    };
+
+    // Initialize the system
+    sys.init();
+</script>
+
+</body>
+</html>
