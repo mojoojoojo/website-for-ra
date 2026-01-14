@@ -19,81 +19,37 @@
     --success: #10b981;
     --radius-lg: 16px;
     --radius-md: 12px;
-    --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+    --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
   }
 
   * { box-sizing: border-box; transition: all 0.2s ease; }
-  
-  body {
-    margin: 0; font-family: 'Inter', system-ui, sans-serif;
-    background-color: var(--bg-main); color: var(--text-main);
-    line-height: 1.5; padding: 24px;
-  }
-
+  body { margin: 0; font-family: 'Inter', sans-serif; background-color: var(--bg-main); color: var(--text-main); padding: 24px; }
   .app { width: 100%; max-width: 1200px; margin: 0 auto; display: flex; flex-direction: column; gap: 24px; }
 
-  /* Header Design */
-  header.app-header {
-    display: flex; align-items: center; justify-content: space-between;
-    padding: 12px 0; border-bottom: 1px solid var(--border);
-  }
+  header.app-header { display: flex; align-items: center; justify-content: space-between; padding-bottom: 12px; border-bottom: 1px solid var(--border); }
   .brand { display: flex; gap: 16px; align-items: center; }
-  .brand img { border-radius: var(--radius-md); box-shadow: var(--shadow); }
-  .title { font-weight: 800; font-size: 22px; letter-spacing: -0.025em; color: var(--primary); }
-  .subtitle { color: var(--text-muted); font-size: 14px; font-weight: 500; }
-
-  /* Card & Layout */
-  .card { 
-    background: var(--card-bg); border-radius: var(--radius-lg); padding: 24px; 
-    border: 1px solid var(--border); box-shadow: var(--shadow);
-  }
-  .center-view { display: flex; align-items: center; justify-content: center; min-height: 70vh; }
+  .title { font-weight: 800; font-size: 22px; color: var(--primary); }
+  
+  .card { background: var(--card-bg); border-radius: var(--radius-lg); padding: 24px; border: 1px solid var(--border); box-shadow: var(--shadow); }
   .grid-layout { display: grid; grid-template-columns: 1fr 340px; gap: 24px; }
   @media (max-width: 1024px) { .grid-layout { grid-template-columns: 1fr; } }
 
-  /* Inputs & Buttons */
-  label { display: block; font-size: 13px; font-weight: 600; color: var(--text-main); margin-bottom: 8px; }
-  input, select {
-    width: 100%; padding: 12px 16px; border-radius: var(--radius-md);
-    border: 1px solid var(--border); background: #fdfdfd; font-size: 14px;
-  }
-  input:focus { outline: 2px solid var(--primary); border-color: transparent; }
+  label { display: block; font-size: 13px; font-weight: 600; margin-bottom: 8px; }
+  input, select { width: 100%; padding: 12px; border-radius: var(--radius-md); border: 1px solid var(--border); font-size: 14px; margin-bottom: 16px; }
   
-  button {
-    padding: 12px 20px; border-radius: var(--radius-md); border: none;
-    font-weight: 600; cursor: pointer; font-size: 14px; display: inline-flex; align-items: center; justify-content: center;
-  }
+  button { padding: 12px 20px; border-radius: var(--radius-md); border: none; font-weight: 600; cursor: pointer; font-size: 14px; }
   button.primary { background: var(--primary); color: white; }
-  button.primary:hover { background: var(--primary-hover); transform: translateY(-1px); }
   button.ghost { background: transparent; border: 1px solid var(--border); color: var(--text-muted); }
-  button.ghost:hover { background: #f1f5f9; color: var(--text-main); }
   button.danger { background: #fee2e2; color: var(--danger); }
-  button.danger:hover { background: var(--danger); color: white; }
 
-  /* Tabs */
-  .tabs { display: flex; gap: 12px; margin-bottom: 24px; border-bottom: 1px solid var(--border); padding-bottom: 12px; }
-  .tabs button { background: none; color: var(--text-muted); border-radius: 0; padding: 8px 16px; }
-  .tabs button.active { color: var(--primary); border-bottom: 2px solid var(--primary); font-weight: 700; }
+  .tabs { display: flex; gap: 12px; margin-bottom: 24px; border-bottom: 1px solid var(--border); overflow-x: auto; }
+  .tabs button { background: none; color: var(--text-muted); border-radius: 0; border-bottom: 2px solid transparent; }
+  .tabs button.active { color: var(--primary); border-bottom-color: var(--primary); }
 
-  /* Table */
-  table { width: 100%; border-collapse: collapse; margin-top: 16px; }
-  th { text-align: left; padding: 12px; color: var(--text-muted); font-size: 12px; text-transform: uppercase; letter-spacing: 0.05em; border-bottom: 1px solid var(--border); }
-  td { padding: 16px 12px; border-bottom: 1px solid var(--border); font-size: 14px; }
-
-  /* Profile Elements */
-  .avatar-lg { 
-    width: 140px; height: 140px; border-radius: var(--radius-lg); 
-    object-fit: cover; border: 4px solid white; box-shadow: var(--shadow);
-  }
-  .placeholder-lg {
-    width: 140px; height: 140px; border-radius: var(--radius-lg);
-    background: linear-gradient(135deg, var(--primary), var(--accent));
-    color: white; display: flex; align-items: center; justify-content: center; font-size: 40px; font-weight: 800;
-  }
+  table { width: 100%; border-collapse: collapse; }
+  th { text-align: left; font-size: 12px; color: var(--text-muted); padding: 12px; border-bottom: 1px solid var(--border); }
+  td { padding: 12px; border-bottom: 1px solid var(--border); font-size: 14px; }
   .thumb { width: 40px; height: 40px; border-radius: 8px; object-fit: cover; margin-right: 12px; vertical-align: middle; }
-
-  .pill { background: #eff6ff; color: var(--primary); padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; }
-  .hr { height: 1px; background: var(--border); margin: 24px 0; }
 </style>
 </head>
 <body>
@@ -101,16 +57,139 @@
 <div class="app">
   <header class="app-header">
     <div class="brand">
-      <img src="acshslogo.jpg" alt="Logo" width="50" height="50">
-      <div>
-        <div class="title">myACSHS</div>
-        <div class="subtitle">Official Student Records Portal</div>
-      </div>
+      <img src="acshslogo.jpg" alt="Logo" width="50" height="50" style="border-radius:12px;">
+      <div><div class="title">myACSHS</div><div class="subtitle">Student Records System</div></div>
     </div>
-    <div style="font-size: 13px; font-weight: 500; color: var(--text-muted);">
-      Admin: <span style="color: var(--text-main);">admin / admin123</span>
-    </div>
+    <button class="danger" id="logoutBtn" style="display:none" onclick="logout()">Sign Out</button>
   </header>
+
+  <main id="loginView" class="card" style="max-width:400px; margin: 100px auto;">
+    <h2 style="margin-top:0">Sign In</h2>
+    <label>Role</label><select id="loginRole"><option value="student">Student</option><option value="admin">Admin</option></select>
+    <label>ID / Username</label><input id="loginId" type="text" placeholder="Enter ID">
+    <label>Password</label><input id="loginPass" type="password" placeholder="••••••••">
+    <button class="primary" onclick="login()" style="width:100%">Access Portal</button>
+  </main>
+
+  <section id="dashboardView" style="display:none">
+    <div class="grid-layout">
+      <div class="card">
+        <h2 id="userTitle" style="margin-top:0">Dashboard</h2>
+        <div id="tabsArea" class="tabs"></div>
+        <div id="mainArea"></div>
+      </div>
+      <aside class="card">
+        <label>System Date</label>
+        <div id="todayDate" style="font-weight:700"></div>
+        <hr style="margin:20px 0; border:0; border-top:1px solid var(--border)">
+        <div id="quickStats"></div>
+      </aside>
+    </div>
+  </section>
+</div>
+
+<script>
+const LS = { USERS:'csr_users_v1', ATT:'csr_attendance_v1', GRADES:'csr_grades_v1', SCHED:'csr_schedule_v1' };
+const ADMIN = { username:'admin', password:'admin123' };
+
+function read(k){ return JSON.parse(localStorage.getItem(k) || '[]'); }
+function write(k,v){ localStorage.setItem(k, JSON.stringify(v)); }
+
+let state = { role:null, user:null };
+document.getElementById('todayDate').innerText = new Date().toLocaleDateString();
+
+function login(){
+  const role = document.getElementById('loginRole').value;
+  const id = document.getElementById('loginId').value.trim();
+  const pass = document.getElementById('loginPass').value.trim();
+
+  if(role==='admin' && id===ADMIN.username && pass===ADMIN.password){
+    state = { role:'admin', user:{username:'Admin'} };
+    openDashboard();
+  } else {
+    const u = read(LS.USERS).find(x => x.id === id);
+    if(u && pass === `${u.id}-${u.birth.split('-')[1]}${u.birth.split('-')[2]}`){
+      state = { role:'student', user:u }; openDashboard();
+    } else alert('Access Denied');
+  }
+}
+
+function logout(){ location.reload(); }
+
+function openDashboard(){
+  document.getElementById('loginView').style.display='none';
+  document.getElementById('dashboardView').style.display='block';
+  document.getElementById('logoutBtn').style.display='block';
+  renderTabs();
+}
+
+function renderTabs(){
+  const area = document.getElementById('tabsArea'); area.innerHTML = '';
+  if(state.role==='admin'){
+    addTab('Students', true, renderManageStudents);
+    addTab('Attendance', false, renderAdminAttendance);
+    addTab('Grades', false, renderAdminGrades);
+    addTab('Schedule', false, renderAdminSchedule);
+  } else {
+    addTab('My Profile', true, renderStudentProfile);
+  }
+}
+
+function addTab(label, active, fn){
+  const btn = document.createElement('button'); btn.innerText = label;
+  if(active){ btn.className='active'; fn(); }
+  btn.onclick = (e) => { 
+    Array.from(document.getElementById('tabsArea').children).forEach(c=>c.classList.remove('active'));
+    e.target.classList.add('active'); fn(); 
+  };
+  document.getElementById('tabsArea').appendChild(btn);
+}
+
+/* ADMIN PANELS RESTORED */
+function renderManageStudents(){
+  const users = read(LS.USERS);
+  const rows = users.map((u,i)=>`<tr><td>${u.avatar?`<img src="${u.avatar}" class="thumb">`:''}${u.id}</td><td>${u.firstName} ${u.lastName}</td><td><button class="ghost" onclick="uploadPhoto(${i})">Photo</button> <button class="danger" onclick="deleteUser(${i})">Delete</button></td></tr>`).join('');
+  document.getElementById('mainArea').innerHTML = `<h3>Enroll Student</h3><input id="nId" placeholder="ID"><input id="nF" placeholder="First"><input id="nL" placeholder="Last"><input id="nB" type="date"><button class="primary" onclick="addUser()">Add</button><table>${rows}</table>`;
+}
+
+function renderAdminAttendance(){
+  const users = read(LS.USERS);
+  document.getElementById('mainArea').innerHTML = `<h3>Mark Attendance</h3><select id="aId">${users.map(u=>`<option value="${u.id}">${u.id} - ${u.firstName}</option>`)}</select><input type="date" id="aD"><select id="aS"><option>Present</option><option>Absent</option></select><button class="primary" onclick="addAtt()">Save</button>`;
+}
+
+function renderAdminGrades(){
+  const users = read(LS.USERS);
+  document.getElementById('mainArea').innerHTML = `<h3>Encode Grades</h3><select id="gId">${users.map(u=>`<option value="${u.id}">${u.id} - ${u.firstName}</option>`)}</select><input id="gSub" placeholder="Subject"><input id="gV" type="number" placeholder="Grade"><button class="primary" onclick="addG()">Save</button>`;
+}
+
+function renderAdminSchedule(){
+  document.getElementById('mainArea').innerHTML = `<h3>Manage Schedule</h3><input id="sSub" placeholder="Subject"><input id="sT" placeholder="Time"><button class="primary" onclick="addS()">Add</button>`;
+}
+
+/* STUDENT PROFILE */
+function renderStudentProfile(){
+  const u = state.user;
+  document.getElementById('mainArea').innerHTML = `<div style="text-align:center">${u.avatar?`<img src="${u.avatar}" style="width:120px;border-radius:12px">`:`<div style="font-size:40px">👤</div>`}<h2>${u.firstName} ${u.lastName}</h2><p>${u.id}</p></div>`;
+}
+
+/* LOGIC HELPERS */
+function addUser(){
+  const list = read(LS.USERS);
+  list.push({ id: nId.value, firstName: nF.value, lastName: nL.value, birth: nB.value, avatar: null });
+  write(LS.USERS, list); renderManageStudents();
+}
+function uploadPhoto(i){
+  const input = document.createElement('input'); input.type='file';
+  input.onchange = e => {
+    const reader = new FileReader();
+    reader.onload = ev => { const list = read(LS.USERS); list[i].avatar = ev.target.result; write(LS.USERS, list); renderManageStudents(); };
+    reader.readAsDataURL(e.target.files[0]);
+  }; input.click();
+}
+function deleteUser(i){ const list = read(LS.USERS); list.splice(i,1); write(LS.USERS,list); renderManageStudents(); }
+</script>
+</body>
+</html>  </header>
 
   <main id="loginView" class="center-view">
     <div class="card" style="width: 100%; max-width: 400px;">
