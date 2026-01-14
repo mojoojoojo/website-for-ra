@@ -4,241 +4,323 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 <title>myACSHS — Student Records System</title>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
-  :root{
-    --bg-1: #f3f6ff; --primary: #2563eb; --accent: #6a11cb; --muted: #6b7280;
-    --card: #ffffff; --danger: #ef4444; --success: #16a34a; --radius: 12px;
+  :root {
+    --bg-main: #f8fafc;
+    --primary: #2563eb;
+    --primary-hover: #1d4ed8;
+    --accent: #4f46e5;
+    --text-main: #1e293b;
+    --text-muted: #64748b;
+    --card-bg: #ffffff;
+    --border: #e2e8f0;
+    --danger: #ef4444;
+    --success: #10b981;
+    --radius-lg: 16px;
+    --radius-md: 12px;
+    --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
   }
-  *{box-sizing:border-box}
-  body{
-    margin:0; font-family:Inter,system-ui,-apple-system,"Segoe UI",Roboto,Arial;
-    background: linear-gradient(180deg,#e9f0ff 0%,#f7fbff 100%); color:#0f172a; padding:20px; display:flex; justify-content:center;
+
+  * { box-sizing: border-box; transition: all 0.2s ease; }
+  
+  body {
+    margin: 0; font-family: 'Inter', system-ui, sans-serif;
+    background-color: var(--bg-main); color: var(--text-main);
+    line-height: 1.5; padding: 24px;
   }
-  .app { width:100%; max-width:1100px; display:flex; gap:20px; flex-direction:column; }
 
-  header.app-header { display:flex; align-items:center; justify-content:space-between; gap:12px; }
-  .brand { display:flex; gap:12px; align-items:center; }
-  .logo { width:56px; height:56px; border-radius:12px; background:linear-gradient(135deg,var(--accent),var(--primary)); color:white; display:flex; align-items:center; justify-content:center; font-weight:800; font-size:18px; box-shadow:0 6px 18px rgba(99,102,241,0.18); }
-  .title { font-weight:700; font-size:18px; } .subtitle { color:var(--muted); font-size:13px; }
+  .app { width: 100%; max-width: 1200px; margin: 0 auto; display: flex; flex-direction: column; gap: 24px; }
 
-  .card { background:var(--card); border-radius:var(--radius); padding:16px; box-shadow:0 10px 30px rgba(2,6,23,0.06); }
-  .center { display:flex; align-items:center; justify-content:center; min-height:72vh; }
-
-  label { display:block; font-size:13px; color:var(--muted); margin-bottom:6px; }
-  input[type="text"], input[type="password"], input[type="date"], select, textarea, input[type="number"] { width:100%; padding:10px 12px; border-radius:10px; border:1px solid #e6eef8; font-size:14px; background:white; }
-  button { padding:10px 14px; border-radius:10px; border:none; cursor:pointer; font-weight:600; }
-  button.primary { background:var(--primary); color:white; } button.ghost { background:transparent; border:1px solid #e6eef8; color:var(--muted); } button.danger { background:var(--danger); color:white; }
-
-  .grid { display:grid; grid-template-columns: 1fr 360px; gap:18px; } @media (max-width:980px){ .grid{ grid-template-columns: 1fr } }
-  .tabs { display:flex; gap:8px; flex-wrap:wrap; margin-bottom:12px; } .tabs button { background:#f3f4f6; color:#0f172a; padding:8px 12px; border-radius:10px; } .tabs button.active { background:var(--primary); color:white; box-shadow:0 6px 16px rgba(37,99,235,0.12) }
-
-  table { width:100%; border-collapse:collapse; font-size:14px; } th, td { padding:10px 8px; border-bottom: 1px solid #eef2f7; text-align:left; } th { color:var(--muted); font-size:13px; font-weight:700; }
-  .muted{ color:var(--muted); font-size:13px } .pill{ display:inline-block; background:#f3f4f6; padding:6px 10px; border-radius:999px; font-size:13px; } .row{ display:flex; gap:8px; } .col{ flex:1; } .hr{ height:1px; background:#eef2f7; margin:12px 0; border-radius:4px; }
-
-  @media (max-width:600px){ th{display:none} td{display:block; padding:8px 0; border-bottom:1px solid #eef2f7} td::before{ content: attr(data-label); font-weight:700; display:block; color:var(--muted); margin-bottom:6px } }
-
-  .avatar { width:150px; height:150px; object-fit:cover; display:block; margin-bottom:10px; border:4px solid white; box-shadow:0 8px 20px rgba(2,6,23,0.08); border-radius:0; }
-  .avatar-placeholder { width:150px; height:150px; display:flex; align-items:center; justify-content:center; background:#eef2ff; color:var(--primary); font-weight:700; font-size:36px; margin-bottom:10px; border:4px solid white; box-shadow:0 8px 20px rgba(2,6,23,0.08); border-radius:0; }
-  .thumb { width:40px; height:40px; border-radius:6px; object-fit:cover; display:inline-block; vertical-align:middle; margin-right:8px; }
-
-  @media (max-width:600px){
-    .avatar { width:100px; height:100px; }
-    .avatar-placeholder { width:100px; height:100px; font-size:22px; }
+  /* Header Design */
+  header.app-header {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 12px 0; border-bottom: 1px solid var(--border);
   }
+  .brand { display: flex; gap: 16px; align-items: center; }
+  .brand img { border-radius: var(--radius-md); box-shadow: var(--shadow); }
+  .title { font-weight: 800; font-size: 22px; letter-spacing: -0.025em; color: var(--primary); }
+  .subtitle { color: var(--text-muted); font-size: 14px; font-weight: 500; }
+
+  /* Card & Layout */
+  .card { 
+    background: var(--card-bg); border-radius: var(--radius-lg); padding: 24px; 
+    border: 1px solid var(--border); box-shadow: var(--shadow);
+  }
+  .center-view { display: flex; align-items: center; justify-content: center; min-height: 70vh; }
+  .grid-layout { display: grid; grid-template-columns: 1fr 340px; gap: 24px; }
+  @media (max-width: 1024px) { .grid-layout { grid-template-columns: 1fr; } }
+
+  /* Inputs & Buttons */
+  label { display: block; font-size: 13px; font-weight: 600; color: var(--text-main); margin-bottom: 8px; }
+  input, select {
+    width: 100%; padding: 12px 16px; border-radius: var(--radius-md);
+    border: 1px solid var(--border); background: #fdfdfd; font-size: 14px;
+  }
+  input:focus { outline: 2px solid var(--primary); border-color: transparent; }
+  
+  button {
+    padding: 12px 20px; border-radius: var(--radius-md); border: none;
+    font-weight: 600; cursor: pointer; font-size: 14px; display: inline-flex; align-items: center; justify-content: center;
+  }
+  button.primary { background: var(--primary); color: white; }
+  button.primary:hover { background: var(--primary-hover); transform: translateY(-1px); }
+  button.ghost { background: transparent; border: 1px solid var(--border); color: var(--text-muted); }
+  button.ghost:hover { background: #f1f5f9; color: var(--text-main); }
+  button.danger { background: #fee2e2; color: var(--danger); }
+  button.danger:hover { background: var(--danger); color: white; }
+
+  /* Tabs */
+  .tabs { display: flex; gap: 12px; margin-bottom: 24px; border-bottom: 1px solid var(--border); padding-bottom: 12px; }
+  .tabs button { background: none; color: var(--text-muted); border-radius: 0; padding: 8px 16px; }
+  .tabs button.active { color: var(--primary); border-bottom: 2px solid var(--primary); font-weight: 700; }
+
+  /* Table */
+  table { width: 100%; border-collapse: collapse; margin-top: 16px; }
+  th { text-align: left; padding: 12px; color: var(--text-muted); font-size: 12px; text-transform: uppercase; letter-spacing: 0.05em; border-bottom: 1px solid var(--border); }
+  td { padding: 16px 12px; border-bottom: 1px solid var(--border); font-size: 14px; }
+
+  /* Profile Elements */
+  .avatar-lg { 
+    width: 140px; height: 140px; border-radius: var(--radius-lg); 
+    object-fit: cover; border: 4px solid white; box-shadow: var(--shadow);
+  }
+  .placeholder-lg {
+    width: 140px; height: 140px; border-radius: var(--radius-lg);
+    background: linear-gradient(135deg, var(--primary), var(--accent));
+    color: white; display: flex; align-items: center; justify-content: center; font-size: 40px; font-weight: 800;
+  }
+  .thumb { width: 40px; height: 40px; border-radius: 8px; object-fit: cover; margin-right: 12px; vertical-align: middle; }
+
+  .pill { background: #eff6ff; color: var(--primary); padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; }
+  .hr { height: 1px; background: var(--border); margin: 24px 0; }
 </style>
 </head>
 <body>
-  <div class="app">
-    <header class="app-header">
-      <div class="brand">
-        <img src="acshslogo.jpg" alt="ACSHS Logo" width="56" height="56" style="border-radius:12px;">
-        <div>
-          <div class="title">myACSHS</div>
-          <div class="subtitle">ACSHS — ICT Grade 12</div>
-        </div>
+
+<div class="app">
+  <header class="app-header">
+    <div class="brand">
+      <img src="acshslogo.jpg" alt="Logo" width="50" height="50">
+      <div>
+        <div class="title">myACSHS</div>
+        <div class="subtitle">Official Student Records Portal</div>
       </div>
-      <div class="muted">Admin: <strong>admin</strong> / <strong>admin123</strong></div>
-    </header>
+    </div>
+    <div style="font-size: 13px; font-weight: 500; color: var(--text-muted);">
+      Admin: <span style="color: var(--text-main);">admin / admin123</span>
+    </div>
+  </header>
 
-    <main id="loginView" class="card center">
-      <div style="max-width:520px; width:100%;">
-        <h2 style="margin-bottom:6px">Sign in</h2>
-        <div class="muted" style="margin-bottom:12px">Access your student records portal.</div>
+  <main id="loginView" class="center-view">
+    <div class="card" style="width: 100%; max-width: 400px;">
+      <h2 style="margin: 0 0 8px 0; font-weight: 800;">Sign In</h2>
+      <p style="color: var(--text-muted); font-size: 14px; margin-bottom: 24px;">Enter your credentials to access your dashboard.</p>
+      
+      <label>User Role</label>
+      <select id="loginRole" style="margin-bottom: 16px;">
+        <option value="student">Student</option>
+        <option value="admin">Administrator</option>
+      </select>
 
-        <label>Role</label>
-        <select id="loginRole"><option value="student">Student</option><option value="admin">Admin</option></select>
+      <label>ID Number / Username</label>
+      <input id="loginId" type="text" placeholder="e.g. 12-1234-567" style="margin-bottom: 16px;">
 
-        <label style="margin-top:10px">ID / Username</label>
-        <input id="loginId" type="text" placeholder="ID or admin">
+      <label>Password</label>
+      <input id="loginPass" type="password" placeholder="••••••••" style="margin-bottom: 24px;">
 
-        <label>Password</label>
-        <input id="loginPass" type="password" placeholder="Password">
+      <button class="primary" onclick="login()" style="width: 100%;">Access Portal</button>
+    </div>
+  </main>
 
-        <div style="display:flex; gap:8px; margin-top:12px">
-          <button class="primary" onclick="login()">Login</button>
-        </div>
-      </div>
-    </main>
-
-    <section id="dashboardView" style="display:none">
-      <div class="grid">
-        <div>
-          <div class="card">
-            <div style="display:flex; justify-content:space-between; align-items:center;">
-              <div>
-                <div id="userTitle" style="font-weight:700; font-size:18px">Welcome</div>
-                <div id="userMeta" class="muted">Dashboard</div>
-              </div>
-              <div style="display:flex; gap:8px; align-items:center">
-                <button class="danger" onclick="logout()">Logout</button>
-              </div>
+  <section id="dashboardView" style="display:none">
+    <div class="grid-layout">
+      <div class="main-content">
+        <div class="card">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 20px;">
+            <div>
+              <h2 id="userTitle" style="margin:0; font-weight:800;">Welcome Back</h2>
+              <div id="userMeta" class="subtitle">System Dashboard</div>
             </div>
-            <div class="hr"></div>
-            <div id="tabsArea" class="tabs"></div>
-            <div id="mainArea" style="margin-top:12px"></div>
+            <button class="danger" onclick="logout()">Sign Out</button>
           </div>
+          
+          <div id="tabsArea" class="tabs"></div>
+          <div id="mainArea"></div>
         </div>
-        <aside>
-          <div class="card">
-            <div class="muted">Today</div>
-            <div style="font-weight:700; margin-top:6px" id="todayDate"></div>
-            <div class="hr"></div>
-            <div id="quickPills" style="display:flex; gap:8px; flex-wrap:wrap"></div>
-          </div>
-        </aside>
       </div>
-    </section>
-  </div>
+
+      <aside class="sidebar">
+        <div class="card">
+          <label style="color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em;">Current Session</label>
+          <div style="font-weight: 700; font-size: 18px; margin-bottom: 16px;" id="todayDate"></div>
+          <div class="hr" style="margin: 16px 0;"></div>
+          <div id="quickStats" style="display: flex; flex-direction: column; gap: 12px;"></div>
+        </div>
+      </aside>
+    </div>
+  </section>
+</div>
 
 <script>
+/* CORE LOGIC & DATA HANDLING */
 const LS = { USERS:'csr_users_v1', ATT:'csr_attendance_v1', GRADES:'csr_grades_v1', SCHED:'csr_schedule_v1' };
 const ADMIN = { username:'admin', password:'admin123' };
 
-/* LocalStorage Utils */
 function read(key){ try{ return JSON.parse(localStorage.getItem(key) || 'null'); }catch(e){ return null; } }
 function write(key,val){ localStorage.setItem(key, JSON.stringify(val)); }
-function todayDate(){ return new Date().toLocaleDateString(); }
 function fullName(u){ return `${u.firstName} ${u.lastName}`; }
-function formatMMDDFromBirth(birth){ if(!birth) return ''; const p=birth.split('-'); return p.length===3 ? p[1].padStart(2,'0')+p[2].padStart(2,'0') : ''; }
+function formatMMDD(birth){ if(!birth) return ''; const p=birth.split('-'); return p.length===3 ? p[1].padStart(2,'0')+p[2].padStart(2,'0') : ''; }
 
-/* DOM */
-const loginView = document.getElementById('loginView');
-const dashboardView = document.getElementById('dashboardView');
-const loginRole = document.getElementById('loginRole');
-const loginId = document.getElementById('loginId');
-const loginPass = document.getElementById('loginPass');
-const userTitle = document.getElementById('userTitle');
-const tabsArea  = document.getElementById('tabsArea');
-const mainArea  = document.getElementById('mainArea');
-const todayDateEl = document.getElementById('todayDate');
-const quickPills = document.getElementById('quickPills');
-
-todayDateEl.innerText = todayDate();
 let state = { role:null, user:null };
+document.getElementById('todayDate').innerText = new Date().toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
 
-/* Auth */
 function login(){
-  const role = loginRole.value;
-  const id = loginId.value.trim();
-  const pass = loginPass.value.trim();
+  const role = document.getElementById('loginRole').value;
+  const id = document.getElementById('loginId').value.trim();
+  const pass = document.getElementById('loginPass').value.trim();
 
   if(role === 'admin'){
     if(id === ADMIN.username && pass === ADMIN.password){
-      state.role = 'admin'; state.user = { username: ADMIN.username };
-      openDashboard(); return;
-    } else { alert('Admin access denied'); return; }
+      state = { role: 'admin', user: { username: 'Admin' } };
+      openDashboard();
+    } else alert('Invalid administrative credentials.');
+    return;
   }
 
   const users = read(LS.USERS) || [];
-  const u = users.find(x=>x.id===id);
-  if(!u){ alert('Student ID not found'); return; }
-  const mmdd = formatMMDDFromBirth(u.birth);
-  if(pass === `${u.id}-${mmdd}`){ state.role='student'; state.user = u; openDashboard(); } 
-  else { alert('Invalid password'); }
+  const u = users.find(x => x.id === id);
+  if(!u) return alert('Student ID not recognized.');
+  
+  if(pass === `${u.id}-${formatMMDD(u.birth)}`){
+    state = { role: 'student', user: u };
+    openDashboard();
+  } else alert('Incorrect password. Use ID-MMDD format.');
 }
 
-function logout(){ state={role:null,user:null}; dashboardView.style.display='none'; loginView.style.display='flex'; }
+function logout(){ 
+  state = { role: null, user: null };
+  document.getElementById('dashboardView').style.display='none';
+  document.getElementById('loginView').style.display='flex';
+}
 
 function openDashboard(){
-  loginView.style.display='none'; dashboardView.style.display='block';
-  if(state.role==='admin'){ userTitle.innerText='Administrator'; buildAdminTabs(); } 
-  else { userTitle.innerText = fullName(state.user); buildStudentTabs(); }
-  renderRightSummary();
+  document.getElementById('loginView').style.display='none';
+  document.getElementById('dashboardView').style.display='block';
+  renderTabs();
+  renderStats();
 }
 
-/* Tabs */
-function clearTabs(){ tabsArea.innerHTML=''; }
-function addTab(label, active=false, onClick=null){
-  const btn = document.createElement('button'); btn.innerText = label; btn.className = active ? 'active' : ''; btn.onclick = ()=>{
-    Array.from(tabsArea.children).forEach(c=>c.classList.remove('active')); btn.classList.add('active'); if(onClick) onClick();
-  }; tabsArea.appendChild(btn); if(active && onClick) onClick();
+function renderTabs(){
+  const area = document.getElementById('tabsArea'); area.innerHTML = '';
+  if(state.role === 'admin'){
+    createTab('Overview', true, renderAdminHome);
+    createTab('Student Directory', false, renderManageStudents);
+  } else {
+    createTab('My Profile', true, renderStudentProfile);
+  }
 }
 
-function buildStudentTabs(){ 
-  clearTabs(); 
-  addTab('Main Page', true, renderStudentMain); 
-  addTab('Schedule', false, renderStudentSchedule); 
-  addTab('Attendance', false, renderStudentAttendance); 
-  addTab('Grades', false, renderStudentGrades); 
+function createTab(label, active, fn){
+  const btn = document.createElement('button');
+  btn.innerText = label;
+  if(active) { btn.className = 'active'; fn(); }
+  btn.onclick = (e) => {
+    Array.from(area.children).forEach(c => c.classList.remove('active'));
+    e.target.classList.add('active');
+    fn();
+  };
+  document.getElementById('tabsArea').appendChild(btn);
 }
 
-function buildAdminTabs(){ 
-  clearTabs(); 
-  addTab('Admin Home', true, renderAdminHome); 
-  addTab('Students', false, renderManageStudents); 
-  addTab('Attendance', false, renderAdminAttendance); 
-  addTab('Grades', false, renderAdminGrades); 
+function renderStats(){
+  const users = read(LS.USERS) || [];
+  document.getElementById('quickStats').innerHTML = `<div class="pill">Total Students: ${users.length}</div>`;
 }
 
-function renderRightSummary(){
-  quickPills.innerHTML='';
-  const users = read(LS.USERS)||[];
-  quickPills.innerHTML = `<div class="pill">${users.length} Active Students</div>`;
-}
-
-/* Views (Student) */
-function renderStudentMain(){
+/* VIEWS */
+function renderStudentProfile(){
   const u = state.user;
-  const avatarHtml = u.avatar ? `<img src="${u.avatar}" class="avatar">` : `<div class="avatar-placeholder">${u.firstName[0]}${u.lastName[0]}</div>`;
-  mainArea.innerHTML = `<div class="card"><div style="display:flex; gap:16px; align-items:center">${avatarHtml}<div><strong>${fullName(u)}</strong><div class="muted">${u.id} • ${u.track}</div></div></div></div>`;
+  const avatar = u.avatar ? `<img src="${u.avatar}" class="avatar-lg">` : `<div class="placeholder-lg">${u.firstName[0]}${u.lastName[0]}</div>`;
+  document.getElementById('mainArea').innerHTML = `
+    <div style="display: flex; gap: 32px; align-items: center; padding: 20px 0;">
+      ${avatar}
+      <div>
+        <h1 style="margin:0; font-size: 32px; font-weight: 800;">${fullName(u)}</h1>
+        <p style="font-size: 18px; color: var(--text-muted); margin: 4px 0 16px 0;">${u.track} Student • ${u.id}</p>
+        <div class="pill" style="background: #f1f5f9; color: var(--text-main);">Academic Year 2024-2025</div>
+      </div>
+    </div>
+  `;
 }
-function renderStudentSchedule(){ mainArea.innerHTML = `<div class="card"><h3>Schedule</h3><p class="muted">Contact admin for updates.</p></div>`; }
-function renderStudentAttendance(){ mainArea.innerHTML = `<div class="card"><h3>Attendance</h3><p class="muted">Record list empty.</p></div>`; }
-function renderStudentGrades(){ mainArea.innerHTML = `<div class="card"><h3>Grades</h3><p class="muted">No grades encoded yet.</p></div>`; }
 
-/* Views (Admin) */
-function renderAdminHome(){ mainArea.innerHTML = `<div class="card"><h3>Admin Portal</h3><p>Select a tab to manage school records.</p></div>`; }
+function renderAdminHome(){
+  document.getElementById('mainArea').innerHTML = `
+    <div style="padding: 40px 0; text-align: center;">
+      <h3 style="color: var(--text-muted);">Administrative Console</h3>
+      <p>Select "Student Directory" to manage enrollments and photos.</p>
+    </div>
+  `;
+}
 
 function renderManageStudents(){
   const users = read(LS.USERS) || [];
-  const rows = users.map((u,i)=>`<tr><td>${u.id}</td><td>${fullName(u)}</td><td><button class="danger" onclick="deleteStudent(${i})">Delete</button></td></tr>`).join('');
-  mainArea.innerHTML = `
-    <div class="card">
-      <h3>Add Student</h3>
-      <div class="row"><input id="newId" placeholder="ID"/><input id="newFirst" placeholder="First"/><input id="newLast" placeholder="Last"/></div>
-      <div class="row" style="margin-top:8px"><input id="newTrack" placeholder="Track"/><input id="newBirth" type="date"/></div>
-      <button class="primary" style="margin-top:8px" onclick="addStudent()">Add</button>
-      <div class="hr"></div>
-      <table><thead><tr><th>ID</th><th>Name</th><th>Action</th></tr></thead><tbody>${rows}</tbody></table>
-    </div>`;
+  const rows = users.map((u, i) => `
+    <tr>
+      <td>${u.avatar ? `<img src="${u.avatar}" class="thumb">` : ''}${u.id}</td>
+      <td style="font-weight: 600;">${fullName(u)}</td>
+      <td style="text-align: right;">
+        <button class="ghost" onclick="uploadPhoto(${i})" style="margin-right: 8px;">Photo</button>
+        <button class="danger" onclick="removeStudent(${i})">Delete</button>
+      </td>
+    </tr>
+  `).join('');
+
+  document.getElementById('mainArea').innerHTML = `
+    <div style="margin-bottom: 32px;">
+      <h4 style="margin-bottom: 16px;">Enroll New Student</h4>
+      <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin-bottom: 12px;">
+        <input id="nId" placeholder="ID Number">
+        <input id="nFirst" placeholder="First Name">
+        <input id="nLast" placeholder="Last Name">
+      </div>
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px;">
+        <input id="nTrack" placeholder="Track (e.g. ICT)">
+        <input id="nBirth" type="date">
+      </div>
+      <button class="primary" onclick="addStudent()">Register Student</button>
+    </div>
+    <div class="hr"></div>
+    <table>
+      <thead><tr><th>Student ID</th><th>Full Name</th><th style="text-align: right;">Management</th></tr></thead>
+      <tbody>${rows}</tbody>
+    </table>
+  `;
 }
 
-function renderAdminAttendance(){ mainArea.innerHTML = `<div class="card"><h3>Manage Attendance</h3><p class="muted">Select students from list to mark status.</p></div>`; }
-function renderAdminGrades(){ mainArea.innerHTML = `<div class="card"><h3>Manage Grades</h3><p class="muted">Input grades per subject.</p></div>`; }
-
-/* Actions */
+/* ACTIONS */
 function addStudent(){
-  const id=document.getElementById('newId').value; const f=document.getElementById('newFirst').value; const l=document.getElementById('newLast').value;
-  const t=document.getElementById('newTrack').value; const b=document.getElementById('newBirth').value;
-  if(!id||!f||!l||!b) return alert('Fill all fields');
-  const u = read(LS.USERS)||[]; u.push({id, firstName:f, lastName:l, track:t, birth:b, avatar:null});
-  write(LS.USERS, u); renderManageStudents(); renderRightSummary();
+  const u = { id: nId.value, firstName: nFirst.value, lastName: nLast.value, track: nTrack.value, birth: nBirth.value, avatar: null };
+  if(!u.id || !u.firstName) return alert('Basic info required.');
+  const list = read(LS.USERS) || []; list.push(u); write(LS.USERS, list);
+  renderManageStudents(); renderStats();
 }
-function deleteStudent(i){ if(confirm('Delete?')){ const u=read(LS.USERS); u.splice(i,1); write(LS.USERS,u); renderManageStudents(); renderRightSummary(); } }
 
-/* No Auto-Boot */
-(function boot(){ if(!localStorage.getItem(LS.USERS)) { /* Empty init */ } })();
+function uploadPhoto(index){
+  const input = document.createElement('input'); input.type = 'file'; input.accept = 'image/*';
+  input.onchange = e => {
+    const reader = new FileReader();
+    reader.onload = ev => {
+      const list = read(LS.USERS); list[index].avatar = ev.target.result;
+      write(LS.USERS, list); renderManageStudents();
+    };
+    reader.readAsDataURL(e.target.files[0]);
+  };
+  input.click();
+}
+
+function removeStudent(i){ if(confirm('Permanently delete this record?')){ const list = read(LS.USERS); list.splice(i,1); write(LS.USERS, list); renderManageStudents(); renderStats(); } }
 </script>
+
 </body>
 </html>
