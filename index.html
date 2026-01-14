@@ -3,331 +3,394 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no" />
-    <title>myACSHS | SIS v18.0</title>
+    <title>myACSHS Enterprise | SIS v22.0</title>
     
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     
     <style>
-        /** * MINIMALIST DESIGN SYSTEM 
-         * Focus: High contrast, sharp edges, professional utility.
+        /** * DESIGN SYSTEM: BRUTALIST MINIMALISM
+         * Palette: #000000, #FFFFFF, #E11D48 (Errors)
          */
         :root {
             --primary: #000000;
             --secondary: #64748b;
             --error: #e11d48;
-            --surface: #ffffff;
             --bg: #ffffff;
-            --border: #e2e8f0;
-            --radius: 0px; /* Sharp corners for minimalist look */
+            --border-thick: 3px;
+            --border-thin: 1px;
         }
 
         * { box-sizing: border-box; -webkit-font-smoothing: antialiased; margin: 0; padding: 0; }
-        body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--primary); }
+        body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--primary); line-height: 1.5; }
 
-        /* SHARED UI COMPONENTS */
-        .container { max-width: 480px; margin: 0 auto; padding: 20px; }
-        .panel { display: none; width: 100%; animation: fadeIn 0.3s ease; }
-        .panel.active { display: block; }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-
-        header { 
-            display: flex; justify-content: space-between; align-items: center; 
-            padding: 20px 0; border-bottom: 2px solid var(--primary); margin-bottom: 40px;
+        /* --- RESPONSIVE ARCHITECTURE --- */
+        .app-wrapper {
+            max-width: 1440px;
+            margin: 0 auto;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
         }
-        .logo h2 { font-weight: 800; font-size: 24px; letter-spacing: -1px; }
 
-        /* MINIMALIST LOGIN FORM */
-        .form-title { margin-bottom: 30px; }
-        .form-title h1 { font-size: 32px; font-weight: 800; }
-        .form-title p { color: var(--secondary); font-size: 14px; }
+        .layout-grid {
+            display: grid;
+            grid-template-columns: 1fr; /* Mobile */
+            gap: 30px;
+            padding: 20px;
+        }
 
-        .form-group { margin-bottom: 20px; position: relative; }
-        .form-group label { display: block; font-size: 11px; font-weight: 800; text-transform: uppercase; margin-bottom: 8px; }
+        @media (min-width: 1024px) {
+            .layout-grid {
+                grid-template-columns: 320px 1fr 300px; /* PC/Laptop 3-Column */
+            }
+        }
+
+        /* --- AUTHENTICATION (PC CENTERED) --- */
+        .auth-gate {
+            display: flex; align-items: center; justify-content: center; min-height: 85vh;
+        }
+        .auth-card {
+            width: 100%; max-width: 420px;
+            padding: 50px 40px; border: var(--border-thick) solid var(--primary);
+            background: #fff; position: relative;
+        }
+        .auth-card::after {
+            content: ''; position: absolute; top: 12px; left: 12px; 
+            width: 100%; height: 100%; border: var(--border-thick) solid var(--primary); 
+            z-index: -1;
+        }
+
+        .form-field { margin-bottom: 25px; }
+        .form-field label { display: block; font-size: 10px; font-weight: 900; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 10px; }
         
         input, select {
-            width: 100%; height: 54px; padding: 0 15px; border: 2px solid var(--border);
-            border-radius: var(--radius); font-size: 16px; outline: none; transition: 0.2s;
-            background: #fff;
+            width: 100%; height: 55px; padding: 0 15px; border: 2px solid var(--primary);
+            font-size: 16px; font-family: inherit; outline: none; border-radius: 0;
         }
-        input:focus { border-color: var(--primary); }
+        input:focus { box-shadow: 6px 6px 0px var(--primary); }
 
-        /* ERROR STATE (Facebook-logic in Minimalist style) */
-        .form-group.has-error input {
+        /* FACEBOOK-STYLE ERROR STATE */
+        .form-field.has-error input {
             border-color: var(--error) !important;
-            background: #fffafa;
-            animation: shake 0.2s 2;
+            animation: shake 0.25s ease-in-out 0s 2;
         }
-        .error-note {
-            color: var(--error); font-size: 12px; font-weight: 600;
-            margin-top: 6px; display: none;
-        }
-        .form-group.has-error .error-note { display: block; }
+        .error-text { color: var(--error); font-size: 12px; font-weight: 700; margin-top: 8px; display: none; }
+        .form-field.has-error .error-text { display: block; }
 
-        @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-5px); } 75% { transform: translateX(5px); } }
+        @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-8px); } 75% { transform: translateX(8px); } }
 
-        /* BUTTONS */
-        .btn-black { 
-            width: 100%; height: 56px; background: var(--primary); color: #fff; 
-            border: none; font-weight: 800; font-size: 16px; cursor: pointer; transition: 0.2s;
-        }
-        .btn-black:active { transform: translateY(1px); opacity: 0.9; }
-        .btn-ghost { 
-            width: 100%; background: none; border: 2px solid var(--border); 
-            height: 50px; margin-top: 15px; font-weight: 700; cursor: pointer;
+        .btn-primary { width: 100%; height: 60px; background: var(--primary); color: #fff; border: none; font-weight: 900; cursor: pointer; text-transform: uppercase; letter-spacing: 1px; }
+        .btn-secondary { width: 100%; height: 60px; background: #fff; color: var(--primary); border: 2px solid var(--primary); font-weight: 800; cursor: pointer; margin-top: 15px; }
+
+        /* --- DASHBOARD COMPONENTS --- */
+        header {
+            padding: 25px 40px; border-bottom: var(--border-thick) solid var(--primary);
+            display: flex; justify-content: space-between; align-items: center;
+            background: #fff; position: sticky; top: 0; z-index: 1000;
         }
 
-        /* DASHBOARD ELEMENTS */
-        .nav-tabs { display: flex; border-bottom: 2px solid var(--border); margin-bottom: 30px; }
-        .tab { 
-            flex: 1; padding: 15px; text-align: center; color: var(--secondary); 
-            cursor: pointer; font-weight: 700; border-bottom: 3px solid transparent;
-        }
-        .tab.active { color: var(--primary); border-bottom-color: var(--primary); }
-        .tab i { font-size: 20px; }
+        .tab-system { display: flex; border-bottom: 2px solid var(--primary); margin-bottom: 25px; }
+        .tab-btn { flex: 1; padding: 18px; text-align: center; cursor: pointer; font-weight: 900; font-size: 11px; letter-spacing: 1px; }
+        .tab-btn.active { background: var(--primary); color: #fff; }
 
-        .pfp-wrap { width: 100px; height: 100px; border: 3px solid var(--primary); margin: 0 auto 15px; display: flex; align-items: center; justify-content: center; overflow: hidden; }
-        .pfp-wrap img { width: 100%; height: 100%; object-fit: cover; }
-        .pfp-wrap i { font-size: 40px; color: var(--border); }
+        .widget-box { border: 2px solid var(--primary); padding: 30px; margin-bottom: 30px; background: #fff; }
+        
+        .user-pfp { width: 140px; height: 140px; border: var(--border-thick) solid var(--primary); margin: 0 auto 20px; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+        .user-pfp img { width: 100%; height: 100%; object-fit: cover; }
+        .user-pfp i { font-size: 60px; }
 
-        .data-card { border: 1px solid var(--border); padding: 15px; margin-bottom: 12px; }
-        .data-row { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid #f1f5f9; }
+        .data-row { display: flex; justify-content: space-between; align-items: center; padding: 18px 0; border-bottom: 1px solid #eee; }
         .data-row:last-child { border-bottom: none; }
-        .tag-time { background: var(--primary); color: #fff; padding: 4px 8px; font-size: 10px; font-weight: 700; }
+        .tag { border: 1.5px solid var(--primary); padding: 5px 10px; font-size: 10px; font-weight: 900; }
+
+        /* SEARCH FILTER BAR */
+        .search-container { position: relative; margin-bottom: 20px; }
+        .search-container i { position: absolute; left: 15px; top: 18px; color: var(--secondary); }
+        .search-input { padding-left: 45px !important; height: 50px !important; font-size: 14px !important; }
 
         /* NOTIFICATIONS */
-        .notif-pill { position: relative; }
-        .notif-dot { position: absolute; top: -2px; right: -2px; width: 8px; height: 8px; background: var(--error); border-radius: 50%; display: none; }
-        .notif-item { padding: 12px; border-left: 4px solid var(--border); margin-bottom: 10px; background: #f8fafc; cursor: pointer; }
-        .notif-item.unread { border-left-color: var(--primary); background: #fff; }
+        .alert-card { padding: 20px; border: 1px solid #000; margin-bottom: 15px; cursor: pointer; }
+        .alert-card.unread { border-left: 8px solid var(--primary); background: #f9f9f9; }
 
-        #spinner-overlay { position: fixed; inset: 0; background: rgba(255,255,255,0.9); display: none; align-items: center; justify-content: center; z-index: 1000; }
-        .spinner { width: 30px; height: 30px; border: 3px solid var(--border); border-top-color: var(--primary); border-radius: 50%; animation: spin 0.8s linear infinite; }
+        #loading-overlay { position: fixed; inset: 0; background: #fff; z-index: 10000; display: none; align-items: center; justify-content: center; }
+        .spinner { width: 45px; height: 45px; border: 6px solid #f3f3f3; border-top: 6px solid #000; border-radius: 50%; animation: spin 0.8s linear infinite; }
         @keyframes spin { to { transform: rotate(360deg); } }
+
+        .view-panel { display: none; }
+        .view-panel.active { display: block; }
+        
+        .pc-sidebar { display: flex; flex-direction: column; }
+        @media (max-width: 1023px) { .pc-sidebar { display: none; } }
     </style>
 </head>
 <body>
 
-<div id="spinner-overlay"><div class="spinner"></div></div>
+<div id="loading-overlay"><div class="spinner"></div></div>
 
-<div class="container">
+<div class="app-wrapper">
     
-    <header id="appHeader" style="visibility:hidden">
-        <div class="logo"><h2>myACSHS</h2></div>
-        <div style="display:flex; gap:20px; align-items:center">
-            <div class="notif-pill" onclick="app.tab('notif', document.getElementById('tabNotifIcon'))">
+    <header id="appHeader" style="display:none">
+        <div class="logo"><h1 style="font-weight:900; font-size:26px; letter-spacing:-2px">myACSHS</h1></div>
+        <div style="display:flex; gap:30px; align-items:center">
+            <div style="position:relative; cursor:pointer" onclick="app.tab('notif', document.getElementById('tabNotif'))">
                 <i class="fa-solid fa-bell"></i>
-                <span id="badge" class="notif-dot"></span>
+                <span id="notifBadge" style="position:absolute; top:-8px; right:-10px; background:var(--error); color:#fff; font-size:10px; padding:2px 6px; font-weight:900; border:2px solid #fff; display:none">0</span>
             </div>
-            <i class="fa-solid fa-power-off" onclick="app.logout()"></i>
+            <i class="fa-solid fa-power-off" onclick="app.logout()" style="cursor:pointer"></i>
         </div>
     </header>
 
-    <div id="pAuth" class="panel active">
-        <div id="vLogin">
-            <div class="form-title">
-                <h1>Login</h1>
-                <p>Student Information System</p>
-            </div>
-            <div class="form-group" id="wrapRole">
-                <label>Access Role</label>
-                <select id="lRole">
-                    <option value="student">Student Account</option>
-                    <option value="admin">Administrator</option>
-                </select>
-            </div>
-            <div class="form-group" id="wrapId">
-                <label>Identification Number</label>
-                <input type="text" id="lId" placeholder="ID Number">
-                <div class="error-note">Wrong ID Number. Please try again.</div>
-            </div>
-            <div class="form-group" id="wrapPass">
-                <label>Password</label>
-                <input type="password" id="lPass" placeholder="••••••••">
-                <div class="error-note">Wrong Password. Please try again.</div>
-            </div>
-            <button class="btn-black" onclick="app.login()">Sign In</button>
-            <button class="btn-ghost" onclick="ui.subAuth('vReg')">Create Account</button>
-        </div>
+    <div id="pAuth" class="view-panel active">
+        <div class="auth-gate">
+            <div id="loginView" class="auth-card">
+                <h2 style="font-weight:900; margin-bottom:35px; font-size:32px">Portal Access</h2>
+                
+                <div class="form-field">
+                    <label>Account Type</label>
+                    <select id="loginRole">
+                        <option value="student">Student Account</option>
+                        <option value="admin">Administrator</option>
+                    </select>
+                </div>
 
-        <div id="vReg" style="display:none">
-            <div class="form-title"><h1>Register</h1><p>New Student Identity</p></div>
-            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px">
-                <div class="form-group"><label>First Name</label><input type="text" id="rF"></div>
-                <div class="form-group"><label>Last Name</label><input type="text" id="rL"></div>
+                <div class="form-field" id="wrapId">
+                    <label>ID Number</label>
+                    <input type="text" id="loginId" placeholder="2026-XXXX">
+                    <div class="error-text">Identity not recognized.</div>
+                </div>
+
+                <div class="form-field" id="wrapPass">
+                    <label>Secret Password</label>
+                    <input type="password" id="loginPass" placeholder="••••••••">
+                    <div class="error-text">Authentication failed. Incorrect password.</div>
+                </div>
+
+                <button class="btn-primary" onclick="app.login()">Log In</button>
+                <button class="btn-secondary" onclick="ui.subAuth('regView')">Request Account</button>
             </div>
-            <div class="form-group"><label>8-Digit ID</label><input type="number" id="rId"></div>
-            <div class="form-group"><label>6-Digit Slip</label><input type="number" id="rSlip"></div>
-            <div class="form-group"><label>Strand/Section</label><input type="text" id="rT" placeholder="e.g. ICT 1202"></div>
-            <div class="form-group"><label>Password</label><input type="password" id="rP"></div>
-            <button class="btn-black" onclick="app.register()">Create Profile</button>
-            <button class="btn-ghost" onclick="ui.subAuth('vLogin')">Back to Login</button>
+
+            <div id="regView" class="auth-card" style="display:none">
+                <h2 style="font-weight:900; margin-bottom:25px">Register</h2>
+                <div class="form-field"><label>Full Name</label><input type="text" id="regNm"></div>
+                <div class="form-field"><label>8-Digit ID</label><input type="number" id="regId"></div>
+                <div class="form-field"><label>6-Digit Slip</label><input type="number" id="regSlip"></div>
+                <div class="form-field"><label>Track/Section</label><input type="text" id="regTrk" placeholder="e.g. ICT 1201"></div>
+                <div class="form-field"><label>Password</label><input type="password" id="regPass"></div>
+                <button class="btn-primary" onclick="app.register()">Register Student</button>
+                <button class="btn-secondary" onclick="ui.subAuth('loginView')">Back</button>
+            </div>
         </div>
     </div>
 
-    <div id="pDash" class="panel">
-        <div class="nav-tabs">
-            <div class="tab active" onclick="app.tab('home', this)"><i class="fa-solid fa-house-chimney"></i></div>
-            <div class="tab" onclick="app.tab('grades', this)"><i class="fa-solid fa-scroll"></i></div>
-            <div class="tab" id="tabNotifIcon" onclick="app.tab('notif', this)"><i class="fa-solid fa-envelope-open-text"></i></div>
-            <div class="tab" id="tabAdmin" style="display:none" onclick="app.tab('admin', this)"><i class="fa-solid fa-lock"></i></div>
+    <div id="pPortal" class="view-panel">
+        <div class="tab-system">
+            <div class="tab-btn active" onclick="app.tab('home', this)">SCHEDULE</div>
+            <div class="tab-btn" onclick="app.tab('grades', this)">ACADEMICS</div>
+            <div id="tabNotif" class="tab-btn" onclick="app.tab('notif', this)">ALERTS</div>
+            <div id="tabAdmin" class="tab-btn" style="display:none" onclick="app.tab('admin', this)">ADMIN</div>
         </div>
 
-        <div id="dashContent">
+        <div class="layout-grid">
+            <div class="pc-sidebar">
+                <div class="widget-box" style="text-align:center">
+                    <div id="uPic" class="user-pfp"></div>
+                    <h2 id="uName" style="font-weight:900; font-size:24px">...</h2>
+                    <p id="uMeta" style="color:var(--secondary); font-size:11px; margin-top:8px; font-weight:800; text-transform:uppercase"></p>
+                </div>
+                <div class="widget-box">
+                    <h4 style="font-weight:900; font-size:10px; margin-bottom:20px; letter-spacing:1px">OFFLINE STORAGE</h4>
+                    <p style="font-size:12px; margin-bottom:12px">Data Synced: <b id="syncStatus">Yes</b></p>
+                    <p style="font-size:12px">Last Backup: <b id="syncTime">--:--</b></p>
+                </div>
             </div>
+
+            <div id="mainDisplay">
+                </div>
+
+            <div class="pc-sidebar">
+                <div class="widget-box">
+                    <h4 style="font-weight:900; font-size:10px; margin-bottom:20px; letter-spacing:1px">INSTITUTIONAL INFO</h4>
+                    <div class="data-row" style="font-size:11px"><span>A.Y.</span><b>2025-2026</b></div>
+                    <div class="data-row" style="font-size:11px"><span>Semester</span><b>Second</b></div>
+                    <div class="data-row" style="font-size:11px"><span>Portal Status</span><b style="color:green">LIVE</b></div>
+                </div>
+                <div class="widget-box">
+                    <h4 style="font-weight:900; font-size:10px; margin-bottom:15px">HELP DESK</h4>
+                    <p style="font-size:12px; font-weight:700">it-support@acshs.edu.ph</p>
+                </div>
+            </div>
+        </div>
     </div>
 
 </div>
 
 <script>
     /**
-     * @constant ACADEMIC_CONFIG
+     * CORE SIS ENGINE v22.0
+     * Features: Offline-First Database, PC Grid, Admin Search Filter
      */
-    const SLIPS = ["112233", "445566", "123456", "654321", "224466"];
-    const DAYS = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"];
-    const SCHEDULE = {
-        "Monday": [{t: "06:15-07:15", s: "MIL / Homeroom", r: "R101"}, {t: "07:15-08:15", s: "JAVA", r: "CL1"}, {t: "08:35-11:35", s: "Immersion", r: "Field"}],
-        "Tuesday": [{t: "06:15-07:15", s: "MIL", r: "R101"}, {t: "07:15-08:15", s: "JAVA", r: "CL1"}, {t: "08:35-11:35", s: "Immersion", r: "Field"}],
-        "Wednesday": [{t: "06:15-08:15", s: "Research / III", r: "Lib"}, {t: "08:35-11:35", s: "Immersion", r: "Field"}],
-        "Thursday": [{t: "06:15-08:15", s: "JAVA", r: "CL1"}, {t: "08:35-11:35", s: "Immersion", r: "Field"}],
-        "Friday": [{t: "06:15-08:15", s: "PE / Health", r: "Gym"}, {t: "08:35-11:35", s: "Immersion", r: "Field"}]
+
+    const CONFIG = {
+        SLIPS: ["112233", "445566", "123456", "654321", "224466"],
+        DAYS: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
+        TIMETABLE: {
+            "Monday": [{t: "06:15-08:15", s: "Media & Information", r: "R101"}, {t: "08:35-11:35", s: "Work Immersion", r: "Field"}],
+            "Tuesday": [{t: "06:15-08:15", s: "JAVA Programming", r: "CL1"}, {t: "08:35-11:35", s: "Work Immersion", r: "Field"}],
+            "Wednesday": [{t: "06:15-08:15", s: "Inquiries & Research", r: "Lib"}, {t: "08:35-11:35", s: "Work Immersion", r: "Field"}],
+            "Thursday": [{t: "06:15-08:15", s: "JAVA Programming", r: "CL1"}, {t: "08:35-11:35", s: "Work Immersion", r: "Field"}],
+            "Friday": [{t: "06:15-08:15", s: "P.E. & Health", r: "Gym"}, {t: "08:35-11:35", s: "Work Immersion", r: "Field"}]
+        }
     };
 
-    const db = {
-        save: (k,v) => localStorage.setItem('sis18_'+k, JSON.stringify(v)),
-        get: (k) => JSON.parse(localStorage.getItem('sis18_'+k) || '[]'),
-        sess: {
-            set: (u) => localStorage.setItem('sis_sess', JSON.stringify(u)),
-            get: () => JSON.parse(localStorage.getItem('sis_sess')),
-            kill: () => localStorage.removeItem('sis_sess')
+    const storage = {
+        save: (k,v) => localStorage.setItem('acshs_v22_'+k, JSON.stringify(v)),
+        get: (k) => JSON.parse(localStorage.getItem('acshs_v22_'+k) || '[]'),
+        session: {
+            set: (u) => localStorage.setItem('acshs_v22_sess', JSON.stringify(u)),
+            get: () => JSON.parse(localStorage.getItem('acshs_v22_sess')),
+            kill: () => localStorage.removeItem('acshs_v22_sess')
         }
     };
 
     const ui = {
-        go: (id) => {
-            document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+        panel: (id) => {
+            document.querySelectorAll('.view-panel').forEach(p => p.classList.remove('active'));
             document.getElementById(id).classList.add('active');
         },
         subAuth: (id) => {
-            vLogin.style.display = id === 'vLogin' ? 'block' : 'none';
-            vReg.style.display = id === 'vReg' ? 'block' : 'none';
+            loginView.style.display = id === 'loginView' ? 'block' : 'none';
+            regView.style.display = id === 'regView' ? 'block' : 'none';
         },
-        load: (s) => document.getElementById('spinner-overlay').style.display = s ? 'flex' : 'none'
+        loader: (on) => loading_overlay.style.display = on ? 'flex' : 'none'
     };
 
     const app = {
-        me: null,
-        day: DAYS[new Date().getDay() - 1] || "Monday",
-        notifs: [],
+        user: null,
+        activeDay: CONFIG.DAYS[new Date().getDay() - 1] || "Monday",
+        alerts: [{id:1, t:"System Update", d:"Offline-First mode is now enabled.", r:false}, {id:2, t:"Grade Posted", d:"Quarter 2 Exam results are now visible.", r:false}],
 
         init: () => {
-            const s = db.sess.get();
-            if(s) { app.me = s; app.launch(); }
+            const s = storage.session.get();
+            if(s) { app.user = s; app.launch(); }
         },
 
         login: () => {
-            const r = lRole.value, id = lId.value.trim(), p = lPass.value.trim();
+            const r = loginRole.value, id = loginId.value.trim(), p = loginPass.value.trim();
             wrapId.classList.remove('has-error'); wrapPass.classList.remove('has-error');
 
-            ui.load(true);
+            ui.loader(true);
             setTimeout(() => {
-                ui.load(false);
+                ui.loader(false);
                 if(r === 'admin') {
                     if(id === 'admin' && p === 'admin123') {
-                        app.me = { role:'admin', name:'System Faculty', id:'ADMIN-ROOT' };
+                        app.user = { role:'admin', name:'Staff Admin', id:'ROOT-01' };
                     } else {
                         if(id !== 'admin') wrapId.classList.add('has-error'); else wrapPass.classList.add('has-error');
                         return;
                     }
                 } else {
-                    const u = db.get('u').find(x => x.id === id);
+                    const u = storage.get('u').find(x => x.id === id);
                     if(!u) return wrapId.classList.add('has-error');
-                    if(u.p !== p) return wrapPass.classList.add('has-error');
-                    app.me = { role:'student', ...u, name: u.f+' '+u.l };
+                    if(u.pass !== p) return wrapPass.classList.add('has-error');
+                    app.user = { role:'student', ...u };
                 }
-                db.sess.set(app.me);
+                storage.session.set(app.user);
                 app.launch();
-            }, 700);
-        },
-
-        register: () => {
-            const id = rId.value, slip = rSlip.value;
-            if(id.length !== 8 || slip.length !== 6 || !SLIPS.includes(slip)) return alert("Data Validation Failed.");
-            let users = db.get('u');
-            if(users.some(x => x.id === id)) return alert("ID already exists.");
-
-            ui.load(true);
-            setTimeout(() => {
-                users.push({ id, slip, f:rF.value, l:rL.value, p:rP.value, t:rT.value, pic:null, 
-                    grades: { "MIL": 92, "JAVA": 88, "Research": 95, "Immersion": 96 } });
-                db.save('u', users);
-                ui.load(false);
-                alert("Account Created.");
-                ui.subAuth('vLogin');
             }, 800);
         },
 
+        register: () => {
+            const id = regId.value, slip = regSlip.value;
+            if(id.length !== 8 || slip.length !== 6 || !CONFIG.SLIPS.includes(slip)) return alert("Invalid credentials.");
+            
+            let users = storage.get('u');
+            if(users.some(x => x.id === id)) return alert("ID already registered.");
+
+            ui.loader(true);
+            setTimeout(() => {
+                users.push({ id, name: regNm.value, pass: regPass.value, track: regTrk.value, pic: null, 
+                             grades: {"Media Lit":94, "JAVA":89, "Research":92, "Immersion":97} });
+                storage.save('u', users);
+                ui.loader(false);
+                alert("Account verified.");
+                ui.subAuth('loginView');
+            }, 1000);
+        },
+
         launch: () => {
-            ui.go('pDash');
-            appHeader.style.visibility = 'visible';
-            tabAdmin.style.display = app.me.role === 'admin' ? 'block' : 'none';
-            if(app.me.role === 'student' && !app.notifs.length) {
-                app.notifs = [{id:1, t:"Grade Update", d:"Final scores for Quarter 1 have been released.", read:false}];
-            }
-            app.tab('home', document.querySelector('.tab'));
-            app.badge();
+            ui.panel('pPortal');
+            appHeader.style.display = 'flex';
+            uName.innerText = app.user.name;
+            uMeta.innerText = app.user.role === 'admin' ? 'SYSTEM STAFF' : `${app.user.id} | ${app.user.track}`;
+            uPic.innerHTML = app.user.pic ? `<img src="${app.user.pic}">` : `<i class="fa-solid fa-user-gear"></i>`;
+            tabAdmin.style.display = app.user.role === 'admin' ? 'block' : 'none';
+            syncTime.innerText = new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+            app.tab('home', document.querySelector('.tab-btn'));
+            app.badgeUpdate();
         },
 
-        tab: (n, el) => {
-            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+        tab: (name, el) => {
+            document.querySelectorAll('.tab-btn').forEach(t => t.classList.remove('active'));
             el.classList.add('active');
-            app.render(n);
+            app.render(name);
         },
 
-        render: (n) => {
+        render: (name) => {
             let html = "";
-            if(n === 'home') {
-                html = `
-                <div style="text-align:center; margin-bottom:30px">
-                    <div class="pfp-wrap">${app.me.pic ? `<img src="${app.me.pic}">` : `<i class="fa-solid fa-user"></i>`}</div>
-                    <h2 style="font-weight:800">${app.me.name}</h2>
-                    <p style="color:var(--secondary); font-size:12px">${app.me.id} | ${app.me.t || 'Faculty'}</p>
-                </div>
-                <div class="data-card">
-                    <div style="display:flex; gap:8px; overflow-x:auto; padding-bottom:10px; margin-bottom:10px">
-                        ${DAYS.map(d => `<button onclick="app.setDay('${d}')" style="background:${d===app.day?'#000':'#eee'}; color:${d===app.day?'#fff':'#000'}; border:none; padding:8px 12px; font-size:11px; font-weight:700;">${d.toUpperCase()}</button>`).join('')}
+            if(name === 'home') {
+                html = `<div class="widget-box">
+                    <h3 style="font-weight:900; margin-bottom:20px">Academic Timetable</h3>
+                    <div style="display:flex; gap:8px; margin-bottom:25px; overflow-x:auto">
+                        ${CONFIG.DAYS.map(d => `<button onclick="app.setDay('${d}')" style="background:${d===app.activeDay?'#000':'#fff'}; color:${d===app.activeDay?'#fff':'#000'}; border:2px solid #000; padding:12px; font-size:11px; font-weight:900; cursor:pointer">${d.toUpperCase()}</button>`).join('')}
                     </div>
-                    ${(SCHEDULE[app.day] || []).map(i => `<div class="data-row"><div class="tag-time">${i.t}</div><div><b>${i.s}</b><br><small>${i.r}</small></div></div>`).join('')}
+                    ${(CONFIG.TIMETABLE[app.activeDay] || []).map(c => `<div class="data-row"><span class="tag">${c.t}</span><div><b style="font-size:15px">${c.s}</b><br><small>Room: ${c.r}</small></div></div>`).join('')}
                 </div>`;
-            } else if(n === 'grades') {
-                const g = app.me.grades || {};
-                html = `<div class="data-card"><h3>Quarterly Progress</h3><div style="margin-top:15px">${Object.entries(g).map(([k,v])=>`<div class="data-row"><span>${k}</span><b>${v}</b></div>`).join('')}</div></div>`;
-            } else if(n === 'notif') {
-                html = `<div class="data-card"><h3>Notifications</h3><div style="margin-top:15px">` + 
-                (app.notifs.map(x => `<div class="notif-item ${x.read?'':'unread'}" onclick="app.read(${x.id})"><b>${x.t}</b><br><small>${x.d}</small></div>`).join('') || '<p>No updates.</p>') + `</div></div>`;
-            } else if(n === 'admin') {
-                html = `<div class="data-card"><h3>Directory</h3><div style="margin-top:10px">${db.get('u').map((u,i)=>`<div class="data-row"><div><b>${u.f} ${u.l}</b><br><small>${u.id}</small></div><button onclick="app.photo(${i})" style="background:#000; color:#fff; border:none; padding:5px 10px; font-size:10px">Photo</button></div>`).join('')}</div></div>`;
+            } else if(name === 'grades') {
+                const g = app.user.grades || {};
+                html = `<div class="widget-box"><h3 style="font-weight:900; margin-bottom:20px">Quarterly Grades</h3>${Object.entries(g).map(([k,v])=>`<div class="data-row"><span>${k}</span><b style="font-size:18px">${v}</b></div>`).join('')}</div>`;
+            } else if(name === 'notif') {
+                html = `<div class="widget-box"><h3 style="font-weight:900; margin-bottom:25px">Notifications</h3>` + 
+                (app.alerts.map(a => `<div class="alert-card ${a.r?'':'unread'}" onclick="app.read(${a.id})"><b>${a.t}</b><br><small style="color:var(--secondary)">${a.d}</small></div>`).join('') || '<p>No alerts.</p>') + `</div>`;
+            } else if(name === 'admin') {
+                html = `<div class="widget-box">
+                    <h3 style="font-weight:900; margin-bottom:20px">Student Directory</h3>
+                    <div class="search-container">
+                        <i class="fa-solid fa-magnifying-glass"></i>
+                        <input type="text" class="search-input" placeholder="Search by name or ID..." onkeyup="app.filter(this.value)">
+                    </div>
+                    <div id="dirList">${app.getDirHTML(storage.get('u'))}</div>
+                </div>`;
             }
-            dashContent.innerHTML = html;
+            mainDisplay.innerHTML = html;
         },
 
-        setDay: (d) => { app.day = d; app.render('home'); },
-        badge: () => { const c = app.notifs.filter(x=>!x.read).length; badge.style.display = c > 0 ? 'block' : 'none'; },
-        read: (id) => { const n = app.notifs.find(x=>x.id===id); if(n) n.read=true; app.badge(); app.render('notif'); },
-        photo: (idx) => {
-            const f = document.createElement('input'); f.type = 'file';
-            f.onchange = e => {
-                const r = new FileReader();
-                r.onload = ev => {
-                    let u = db.get('u'); u[idx].pic = ev.target.result; db.save('u', u);
-                    if(app.me.id === u[idx].id) { app.me.pic = ev.target.result; db.sess.set(app.me); }
-                    app.render('admin');
-                };
-                r.readAsDataURL(e.target.files[0]);
-            };
-            f.click();
+        getDirHTML: (list) => {
+            return list.map((u,i) => `<div class="data-row"><div><b>${u.name}</b><br><small>${u.id}</small></div><button onclick="app.photo(${i})" style="background:#000; color:#fff; border:none; padding:10px 15px; font-size:10px; font-weight:900; cursor:pointer">UPLOAD PHOTO</button></div>`).join('');
         },
-        logout: () => { if(confirm("Logout?")) { db.sess.kill(); location.reload(); } }
+
+        filter: (val) => {
+            const filtered = storage.get('u').filter(u => u.name.toLowerCase().includes(val.toLowerCase()) || u.id.includes(val));
+            document.getElementById('dirList').innerHTML = app.getDirHTML(filtered);
+        },
+
+        setDay: (d) => { app.activeDay = d; app.render('home'); },
+        badgeUpdate: () => { const c = app.alerts.filter(x=>!x.r).length; notifBadge.innerText = c; notifBadge.style.display = c > 0 ? 'block' : 'none'; },
+        read: (id) => { const a = app.alerts.find(x=>x.id===id); if(a) a.r = true; app.badgeUpdate(); app.render('notif'); },
+        photo: (idx) => {
+            const inp = document.createElement('input'); inp.type = 'file';
+            inp.onchange = e => {
+                const reader = new FileReader();
+                reader.onload = ev => {
+                    let u = storage.get('u'); u[idx].pic = ev.target.result; storage.save('u', u);
+                    if(app.user.id === u[idx].id) { app.user.pic = ev.target.result; storage.session.set(app.user); }
+                    app.launch();
+                };
+                reader.readAsDataURL(e.target.files[0]);
+            };
+            inp.click();
+        },
+        logout: () => { if(confirm("Log out of session?")) { storage.session.kill(); location.reload(); } }
     };
 
     window.onload = app.init;
