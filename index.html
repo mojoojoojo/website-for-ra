@@ -3,354 +3,311 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no" />
-<title>myACSHS | Student Information System</title>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<title>myACSHS Portal</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 <style>
   :root {
-    --brand: #2563eb; 
-    --brand-dark: #1e40af; 
-    --bg: #f8fafc;
-    --text: #0f172a; 
-    --text-light: #64748b; 
-    --surface: #ffffff;
-    --border: #e2e8f0; 
-    --danger: #ef4444; 
-    --radius-xl: 24px; 
-    --radius-lg: 12px;
-    --photo-size: 128px; /* 4x4 ratio approximation */
+    --bg: #ffffff;
+    --ui-soft: #f4f4f7;
+    --text: #1a1a1b;
+    --text-mid: #65676b;
+    --accent: #000000;
+    --border: #eeeeee;
+    --radius: 12px;
   }
 
-  /* GLOBAL RESET */
   * { box-sizing: border-box; -webkit-font-smoothing: antialiased; margin: 0; padding: 0; }
+  
   body { 
     font-family: 'Inter', sans-serif; 
     background-color: var(--bg); 
     color: var(--text); 
+    line-height: 1.4;
+    font-size: 14px; /* Standard mobile base size */
+  }
+
+  .wrapper { width: 100%; max-width: 1000px; margin: 0 auto; padding: 15px; }
+
+  /* HEADER - COMPACT */
+  header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 0 20px 0;
+  }
+  .brand { font-weight: 700; font-size: 18px; display: flex; align-items: center; gap: 8px; }
+  .brand img { width: 28px; height: 28px; border-radius: 4px; }
+
+  /* COMPACT AUTH FORMS */
+  .auth-box {
+    max-width: 360px;
+    margin: 40px auto;
     padding: 20px;
   }
+  .auth-box h2 { font-size: 22px; margin-bottom: 20px; text-align: center; font-weight: 700; }
+
+  .field { margin-bottom: 15px; }
+  .field label { display: block; font-size: 11px; font-weight: 700; color: var(--text-mid); text-transform: uppercase; margin-bottom: 4px; }
   
-  .container { width: 100%; max-width: 1300px; margin: 0 auto; }
-
-  /* HEADER */
-  header.navbar { 
-    display: flex; 
-    align-items: center; 
-    justify-content: space-between; 
-    padding-bottom: 20px; 
-    border-bottom: 1px solid var(--border); 
-    margin-bottom: 30px; 
-  }
-  .logo-area { display: flex; align-items: center; gap: 12px; }
-  .logo-area img { width: 45px; height: 45px; border-radius: 10px; }
-  .brand-name { font-weight: 800; font-size: 24px; color: var(--brand); letter-spacing: -1px; }
-
-  /* AUTHENTICATION SCREENS */
-  .auth-wrapper { 
-    max-width: 450px; 
-    margin: 60px auto; 
-    background: var(--surface); 
-    padding: 40px; 
-    border-radius: var(--radius-xl); 
-    border: 1px solid var(--border); 
-    box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1); 
-  }
-  .form-group { margin-bottom: 20px; }
-  .form-group label { display: block; font-size: 13px; font-weight: 700; margin-bottom: 8px; color: var(--text-light); text-transform: uppercase; }
-  
-  input, select { 
-    width: 100%; height: 54px; padding: 0 15px; border-radius: var(--radius-lg); 
-    border: 1.5px solid var(--border); font-size: 16px; background: #fff; outline: none; 
-  }
-  input:focus { border-color: var(--brand); box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.1); }
-
-  /* EYE ICON */
-  .pass-box { position: relative; }
-  .eye-btn { position: absolute; right: 15px; top: 18px; color: var(--text-light); cursor: pointer; font-size: 18px; }
-
-  /* BUTTONS */
-  .btn { 
-    display: inline-flex; align-items: center; justify-content: center; height: 54px; 
-    border-radius: var(--radius-lg); font-weight: 700; font-size: 16px; border: none; cursor: pointer; width: 100%; 
-  }
-  .btn-primary { background: var(--brand); color: white; }
-  .btn-danger { background: #fee2e2; color: var(--danger); height: 44px; width: auto; padding: 0 20px; }
-
-  /* DASHBOARD: PC/LAPTOP COMPATIBILITY (SIDE-BY-SIDE) */
-  .dash-grid { 
-    display: grid; 
-    grid-template-columns: 1fr 320px; 
-    gap: 25px; 
+  input, select {
+    width: 100%; height: 44px; padding: 0 12px; border-radius: 8px;
+    border: 1px solid var(--border); font-size: 16px; outline: none; background: var(--ui-soft);
   }
 
-  .main-panel { 
-    background: var(--surface); 
-    border-radius: var(--radius-xl); 
-    padding: 30px; 
-    border: 1px solid var(--border);
-    min-height: 600px;
+  .btn {
+    width: 100%; height: 44px; border-radius: 8px; border: none; font-weight: 600;
+    font-size: 14px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px;
+  }
+  .btn-dark { background: var(--accent); color: #fff; }
+  .btn-text { background: transparent; color: var(--text-mid); font-size: 12px; text-decoration: underline; margin-top: 10px; }
+
+  /* DASHBOARD GRID */
+  .dash-layout {
+    display: grid;
+    grid-template-columns: 1fr 240px;
+    gap: 30px;
   }
 
-  /* THE 4x4 TOP LEFT PHOTO FIX */
-  .profile-header { 
-    display: flex; 
-    align-items: flex-start; /* Keeps items at the top */
-    gap: 25px; 
-    margin-bottom: 30px; 
+  /* PROFILE - TOP LEFT & RESPONSIVE SIZE */
+  .profile-header {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 25px;
   }
-  .photo-frame {
-    width: var(--photo-size);
-    height: var(--photo-size);
-    flex-shrink: 0;
+  .p-photo {
+    width: 100px; height: 100px; /* PC Size */
     border-radius: 12px;
+    background: var(--ui-soft);
+    border: 1px solid var(--border);
     overflow: hidden;
-    background: #e2e8f0;
-    border: 4px solid #fff;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    flex-shrink: 0;
   }
-  .photo-frame img { width: 100%; height: 100%; object-fit: cover; }
-  .photo-frame .no-pic { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; font-size: 40px; color: #94a3b8; }
+  .p-photo img { width: 100%; height: 100%; object-fit: cover; }
+  .p-photo .empty { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; color: #ccc; font-size: 32px; }
 
-  .user-info h1 { font-size: 28px; font-weight: 800; margin-bottom: 5px; }
-  .user-info p { color: var(--text-light); font-weight: 600; }
+  .p-info h1 { font-size: 22px; font-weight: 700; }
+  .p-info p { color: var(--text-mid); font-size: 13px; }
 
-  /* TABS */
-  .tab-bar { display: flex; gap: 10px; border-bottom: 2px solid var(--bg); margin-bottom: 25px; overflow-x: auto; }
-  .tab-bar button { padding: 12px 20px; border: none; background: none; font-weight: 700; cursor: pointer; color: var(--text-light); border-bottom: 3px solid transparent; white-space: nowrap; }
-  .tab-bar button.active { color: var(--brand); border-bottom-color: var(--brand); }
+  /* TABS - MOBILE FRIENDLY SCROLL */
+  .tab-nav { 
+    display: flex; 
+    gap: 20px; 
+    border-bottom: 1px solid var(--border); 
+    margin-bottom: 20px; 
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  .tab-nav button {
+    padding: 10px 0; border: none; background: none; cursor: pointer;
+    font-size: 13px; font-weight: 600; color: var(--text-mid); border-bottom: 2px solid transparent;
+    white-space: nowrap;
+  }
+  .tab-nav button.active { color: var(--accent); border-bottom-color: var(--accent); }
 
-  /* TABLES */
-  .table-container { overflow-x: auto; border: 1px solid var(--border); border-radius: var(--radius-lg); }
-  table { width: 100%; border-collapse: collapse; min-width: 600px; }
-  th { text-align: left; padding: 15px; background: #f8fafc; font-size: 12px; color: var(--text-light); text-transform: uppercase; }
-  td { padding: 15px; border-bottom: 1px solid var(--bg); font-size: 14px; }
+  /* DATA LISTS (Replaces heavy tables on mobile) */
+  .list-item {
+    padding: 12px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .list-item b { font-size: 14px; }
+  .list-item span { font-size: 12px; color: var(--text-mid); }
 
   /* SIDEBAR STATS */
-  .stat-card { background: var(--surface); padding: 25px; border-radius: var(--radius-xl); border: 1px solid var(--border); margin-bottom: 20px; }
-  .stat-val { font-size: 32px; font-weight: 800; color: var(--brand); }
+  .side-card { padding: 15px; background: var(--ui-soft); border-radius: 10px; margin-bottom: 10px; }
+  .side-label { font-size: 10px; font-weight: 700; color: var(--text-mid); text-transform: uppercase; }
+  .side-val { font-size: 20px; font-weight: 700; }
 
-  /* CELLPHONE COMPATIBILITY FIX */
-  @media (max-width: 850px) {
-    .dash-grid { grid-template-columns: 1fr; }
-    .profile-header { flex-direction: column; align-items: center; text-align: center; }
-    .profile-header { align-items: flex-start; text-align: left; flex-direction: row; } /* Keeping top-left even on small screens */
-    .photo-frame { width: 100px; height: 100px; } /* Slightly smaller for mobile */
-    .brand-name { font-size: 20px; }
-    header.navbar { flex-direction: column; gap: 15px; }
+  /* MOBILE FIXES */
+  @media (max-width: 768px) {
+    .dash-layout { grid-template-columns: 1fr; }
+    .side-area { display: flex; gap: 10px; }
+    .side-card { flex: 1; margin-bottom: 0; }
+    .p-photo { width: 80px; height: 80px; } /* Smaller for phone */
+    .p-info h1 { font-size: 18px; }
   }
 
   @media (max-width: 480px) {
-    .profile-header { flex-direction: column; align-items: center; text-align: center; }
-    .photo-frame { width: 120px; height: 120px; margin: 0 auto; }
-    .btn-danger { width: 100%; }
+    .wrapper { padding: 10px; }
+    header { margin-bottom: 20px; }
+    .brand { font-size: 16px; }
+    .btn { height: 40px; font-size: 13px; }
+    input { height: 40px; font-size: 14px; }
   }
 </style>
 </head>
 <body>
 
-<div class="container">
-  <header class="navbar">
-    <div class="logo-area">
-      <img src="acshslogo.jpg" alt="Logo">
-      <div class="brand-name">myACSHS Portal</div>
-    </div>
-    <button class="btn btn-danger" id="logoutBtn" style="display:none" onclick="app.logout()">Sign Out</button>
+<div class="wrapper">
+  <header>
+    <div class="brand"><img src="acshslogo.jpg" alt="L"> myACSHS</div>
+    <button class="btn btn-dark" id="loBtn" style="display:none; width:auto; padding:0 12px; height:32px; font-size:11px" onclick="app.logout()">Logout</button>
   </header>
 
-  <div id="authArea">
-    <div id="loginView" class="auth-wrapper">
-      <div style="text-align:center; margin-bottom:30px"><h2>Welcome Back</h2></div>
-      <div class="form-group">
-        <label>Portal Access</label>
-        <select id="loginRole"><option value="student">Student</option><option value="admin">Administrator</option></select>
+  <div id="authPanel">
+    <div id="view-login" class="auth-box">
+      <h2>Sign In</h2>
+      <div class="field"><label>Role</label><select id="liRole"><option value="student">Student</option><option value="admin">Admin</option></select></div>
+      <div class="field"><label>ID Number</label><input type="text" id="liId" placeholder="ID"></div>
+      <div class="field"><label>Password</label><input type="password" id="liPass" placeholder="••••"></div>
+      <button class="btn btn-dark" onclick="app.login()">Login</button>
+      <div style="text-align:center">
+        <button class="btn btn-text" onclick="ui.goto('view-forgot')">Forgot Password?</button>
+        <button class="btn btn-text" onclick="ui.goto('view-reg')">Create Account</button>
       </div>
-      <div class="form-group"><label>ID Number</label><input type="text" id="loginId"></div>
-      <div class="form-group">
-        <label>Password</label>
-        <div class="pass-box">
-          <input type="password" id="loginPass">
-          <i class="fa-solid fa-eye-slash eye-btn" onclick="ui.togglePass('loginPass', this)"></i>
-        </div>
-      </div>
-      <div style="text-align:right; margin-bottom:20px"><a href="#" onclick="ui.view('forgotView')" style="color:var(--brand); font-weight:700; text-decoration:none; font-size:13px">Forgot Password?</a></div>
-      <button class="btn btn-primary" onclick="app.login()">Login to Portal</button>
-      <div style="text-align:center; margin-top:25px; font-size:14px">Not registered? <span onclick="ui.view('signupView')" style="color:var(--brand); font-weight:800; cursor:pointer">Create Account</span></div>
     </div>
 
-    <div id="signupView" class="auth-wrapper" style="display:none">
-      <div style="text-align:center; margin-bottom:20px"><h2>Student Registration</h2></div>
-      <div class="form-group"><label>First Name</label><input id="regF"></div>
-      <div class="form-group"><label>Last Name</label><input id="regL"></div>
-      <div class="form-group"><label>Student ID</label><input id="regId"></div>
-      <div class="form-group"><label>Enrollment Order No.</label><input type="number" id="regOrder"></div>
-      <div class="form-group"><label>Strand</label><input id="regT"></div>
-      <div class="form-group"><label>Password</label><input type="password" id="regPass"></div>
-      <button class="btn btn-primary" onclick="app.signup()">Register Account</button>
-      <div style="text-align:center; margin-top:15px"><span onclick="ui.view('loginView')" style="color:var(--brand); cursor:pointer; font-weight:700">Back to Login</span></div>
+    <div id="view-reg" class="auth-box" style="display:none">
+      <h2>Register</h2>
+      <div class="field"><label>Name</label><div style="display:flex;gap:5px"><input id="rgF" placeholder="First"><input id="rgL" placeholder="Last"></div></div>
+      <div class="field"><label>Student ID</label><input id="rgId"></div>
+      <div class="field"><label>Enrollment Order No.</label><input type="number" id="rgOrder"></div>
+      <div class="field"><label>Strand</label><input id="rgT"></div>
+      <div class="field"><label>Password</label><input type="password" id="rgP"></div>
+      <button class="btn btn-dark" onclick="app.register()">Register</button>
+      <button class="btn btn-text" style="width:100%" onclick="ui.goto('view-login')">Back</button>
     </div>
 
-    <div id="forgotView" class="auth-wrapper" style="display:none">
-      <div style="text-align:center; margin-bottom:20px"><h2>Security Check</h2></div>
-      <div class="form-group"><label>Student ID</label><input id="fId"></div>
-      <div class="form-group"><label>Enrollment Order No.</label><input type="number" id="fOrder"></div>
-      <div class="form-group"><label>New Password</label><input type="password" id="fPass"></div>
-      <button class="btn btn-primary" onclick="app.reset()">Reset Password</button>
-      <div style="text-align:center; margin-top:15px"><span onclick="ui.view('loginView')" style="color:var(--brand); cursor:pointer; font-weight:700">Cancel</span></div>
+    <div id="view-forgot" class="auth-box" style="display:none">
+      <h2>Reset</h2>
+      <div class="field"><label>ID</label><input id="fId"></div>
+      <div class="field"><label>Enrollment No.</label><input type="number" id="fOrder"></div>
+      <div class="field"><label>New Password</label><input type="password" id="fP"></div>
+      <button class="btn btn-dark" onclick="app.reset()">Update</button>
+      <button class="btn btn-text" style="width:100%" onclick="ui.goto('view-login')">Cancel</button>
     </div>
   </div>
 
-  <main id="dashboard" style="display:none">
-    <div class="dash-grid">
-      <section class="main-panel">
+  <main id="dashPanel" style="display:none">
+    <div class="dash-layout">
+      <div class="main-area">
         <div class="profile-header">
-          <div id="avatarSpot" class="photo-frame"></div>
-          <div class="user-info">
-            <h1 id="userDispName">...</h1>
-            <p id="userDispMeta"></p>
+          <div id="uPhoto" class="p-photo"></div>
+          <div class="p-info">
+            <h1 id="uTitle">...</h1>
+            <p id="uSub">...</p>
           </div>
         </div>
+        <nav class="tab-nav" id="tList"></nav>
+        <div id="view-port"></div>
+      </div>
 
-        <div id="tabNav" class="tab-bar"></div>
-        <div id="contentArea"></div>
-      </section>
-
-      <aside>
-        <div class="stat-card">
-          <div style="font-size:12px; font-weight:800; color:var(--text-light); margin-bottom:5px">SYSTEM DATE</div>
-          <div id="clock" style="font-weight:700; color:var(--brand)"></div>
+      <div class="side-area">
+        <div class="side-card">
+          <div class="side-label">Students</div>
+          <div id="countPop" class="side-val">0</div>
         </div>
-        <div class="stat-card">
-          <div style="font-size:12px; font-weight:800; color:var(--text-light); margin-bottom:5px">ENROLLED STUDENTS</div>
-          <div id="statCount" class="stat-val">0</div>
+        <div class="side-card">
+          <div class="side-label">Status</div>
+          <div class="side-val" style="font-size:14px; color:green">Active</div>
         </div>
-      </aside>
+      </div>
     </div>
   </main>
 </div>
 
 <script>
-/* DATA ENGINE */
-const db = {
-  read: (k) => JSON.parse(localStorage.getItem('acshs_v10_'+k) || '[]'),
-  write: (k, v) => localStorage.setItem('acshs_v10_'+k, JSON.stringify(v)),
-  session: {
-    get: () => JSON.parse(localStorage.getItem('acshs_sess_v10')),
-    set: (u) => localStorage.setItem('acshs_sess_v10', JSON.stringify(u)),
-    end: () => localStorage.removeItem('acshs_sess_v10')
+const ds = {
+  get: (k) => JSON.parse(localStorage.getItem('min_v2_'+k) || '[]'),
+  set: (k, v) => localStorage.setItem('min_v2_'+k, JSON.stringify(v)),
+  sess: {
+    put: (v) => localStorage.setItem('min_sess', JSON.stringify(v)),
+    get: () => JSON.parse(localStorage.getItem('min_sess')),
+    off: () => localStorage.removeItem('min_sess')
   }
 };
 
-/* UI CONTROLLER */
 const ui = {
-  togglePass: (id, el) => {
-    const input = document.getElementById(id);
-    input.type = input.type === 'password' ? 'text' : 'password';
-    el.className = input.type === 'password' ? 'fa-solid fa-eye-slash eye-btn' : 'fa-solid fa-eye eye-btn';
-  },
-  view: (id) => {
-    ['loginView', 'signupView', 'forgotView'].forEach(v => document.getElementById(v).style.display = 'none');
-    document.getElementById(id).style.display = 'block';
+  goto: (id) => {
+    ['view-login', 'view-reg', 'view-forgot'].forEach(v => {
+      const el = document.getElementById(v); if(el) el.style.display='none';
+    });
+    document.getElementById(id).style.display='block';
   }
 };
 
-/* APP LOGIC */
 const app = {
-  user: null,
+  me: null,
   init: () => {
-    const s = db.session.get(); if(s) { app.user = s; app.launch(); }
-    document.getElementById('clock').innerText = new Date().toLocaleDateString(undefined, {weekday:'long', month:'long', day:'numeric'});
-    app.updateStats();
+    const s = ds.sess.get(); if(s) { app.me = s; app.run(); }
+    app.updatePop();
   },
-  signup: () => {
-    const users = db.read('users');
-    users.push({ 
-      id: regId.value, f: regF.value, l: regL.value, 
-      order: regOrder.value, t: regT.value, p: regPass.value, avatar: null 
-    });
-    db.write('users', users); alert("Account Created!"); ui.view('loginView'); app.updateStats();
+  register: () => {
+    const u = ds.get('u');
+    u.push({ id:rgId.value, f:rgF.value, l:rgL.value, o:rgOrder.value, t:rgT.value, p:rgP.value, pic:null });
+    ds.set('u', u); alert("Done!"); ui.goto('view-login'); app.updatePop();
   },
   login: () => {
-    const role = loginRole.value, id = loginId.value, p = loginPass.value;
-    if(role === 'admin' && id === 'admin' && p === 'admin123') {
-      app.user = { role: 'admin', name: 'Administrator', id: 'FACULTY' };
-    } else {
-      const u = db.read('users').find(x => x.id === id && x.p === p);
-      if(!u) return alert("Wrong Credentials");
-      app.user = { role: 'student', ...u, name: u.f+' '+u.l };
+    const r = liRole.value, id = liId.value, p = liPass.value;
+    if(r==='admin' && id==='admin' && p==='admin') app.me = {role:'admin', name:'Admin', id:'0'};
+    else {
+      const x = ds.get('u').find(i => i.id === id && i.p === p);
+      if(!x) return alert("Fail");
+      app.me = {role:'student', ...x, name: x.f+' '+x.l};
     }
-    db.session.set(app.user); app.launch();
+    ds.sess.put(app.me); app.run();
   },
   reset: () => {
-    let u = db.read('users');
-    const idx = u.findIndex(x => x.id === fId.value && x.order === fOrder.value);
-    if(idx === -1) return alert("Security Check Failed.");
-    u[idx].p = fPass.value; db.write('users', u); alert("Password Updated!"); ui.view('loginView');
+    let u = ds.get('u'); const i = u.findIndex(x => x.id === fId.value && x.o === fOrder.value);
+    if(i===-1) return alert("Verify Error");
+    u[i].p = fP.value; ds.set('u', u); alert("Ok"); ui.goto('view-login');
   },
-  launch: () => {
-    document.getElementById('authArea').style.display = 'none';
-    document.getElementById('dashboard').style.display = 'block';
-    document.getElementById('logoutBtn').style.display = 'block';
-    document.getElementById('userDispName').innerText = app.user.name;
-    document.getElementById('userDispMeta').innerText = app.user.role === 'admin' ? 'Faculty Portal' : `ID: ${app.user.id} | ${app.user.t}`;
-    
-    const spot = document.getElementById('avatarSpot');
-    spot.innerHTML = app.user.avatar ? `<img src="${app.user.avatar}">` : `<div class="no-pic"><i class="fa-solid fa-user"></i></div>`;
-    
-    app.renderTabs();
+  run: () => {
+    document.getElementById('authPanel').style.display = 'none';
+    document.getElementById('dashPanel').style.display = 'block';
+    document.getElementById('loBtn').style.display = 'block';
+    document.getElementById('uTitle').innerText = app.me.name;
+    document.getElementById('uSub').innerText = app.me.role==='admin'?'System Faculty':`ID: ${app.me.id} | ${app.me.t}`;
+    uPhoto.innerHTML = app.me.pic ? `<img src="${app.me.pic}">` : `<div class="empty"><i class="fa-solid fa-user"></i></div>`;
+    app.tabs();
   },
-  renderTabs: () => {
-    const nav = document.getElementById('tabNav'); nav.innerHTML = '';
-    const menu = app.user.role === 'admin' 
-      ? [['Students', app.renderDir], ['Schedules', app.renderSch], ['Grades', app.renderGrd]]
-      : [['My Schedule', app.renderMySch], ['Attendance', app.renderMyAtt], ['My Grades', app.renderMyGrd]];
-    
-    menu.forEach(([label, fn], i) => {
-      const b = document.createElement('button'); b.innerText = label;
-      if(i === 0) { b.classList.add('active'); fn(); }
-      b.onclick = (e) => { 
-        document.querySelectorAll('.tab-bar button').forEach(x=>x.classList.remove('active')); 
-        e.target.classList.add('active'); fn(); 
-      };
-      nav.appendChild(b);
+  tabs: () => {
+    const list = document.getElementById('tList'); list.innerHTML = '';
+    const menu = app.me.role==='admin' ? [['Students', app.dir], ['Schedule', app.sch]] : [['My Class', app.mySch], ['Grades', () => view-port.innerHTML='<p>Pending</p>']];
+    menu.forEach(([l, f], i) => {
+      const b = document.createElement('button'); b.innerText = l;
+      if(i===0) { b.classList.add('active'); f(); }
+      b.onclick = (e) => { document.querySelectorAll('.tab-nav button').forEach(x=>x.classList.remove('active')); e.target.classList.add('active'); f(); };
+      list.appendChild(b);
     });
   },
-  /* CONTENT RENDERS */
-  renderDir: () => {
-    const u = db.read('users');
-    let rows = u.map((x, i) => `<tr><td>${x.id}</td><td><b>${x.f} ${x.l}</b></td><td>Order #${x.order}</td><td><button class="btn-primary" style="height:32px; font-size:12px" onclick="app.upPhoto(${i})">Upload Photo</button></td></tr>`).join('');
-    document.getElementById('contentArea').innerHTML = `<h3>Student Directory</h3><div class="table-container"><table><thead><tr><th>ID</th><th>Name</th><th>Order</th><th>Action</th></tr></thead><tbody>${rows || '<td>Empty</td>'}</tbody></table></div>`;
+  dir: () => {
+    const u = ds.get('u');
+    document.getElementById('view-port').innerHTML = u.map((x, i) => `
+      <div class="list-item">
+        <div><b>${x.f} ${x.l}</b><br><span>ID: ${x.id} • Slip: #${x.o}</span></div>
+        <button class="btn btn-dark" style="width:auto; height:30px; padding:0 10px; font-size:10px" onclick="app.up(${i})">Edit</button>
+      </div>`).join('');
   },
-  renderSch: () => {
-    document.getElementById('contentArea').innerHTML = `<h3>Schedule Manager</h3><div style="display:grid; gap:10px; margin-bottom:15px"><input id="sS" placeholder="Subject Name"><input id="sT" placeholder="Time Slot (e.g. 7:30-9:30)"></div><button class="btn btn-primary" onclick="app.addS()">Add Class</button><div id="sList" style="margin-top:20px"></div>`;
-    app.showS();
+  mySch: () => {
+    const s = ds.get('s');
+    document.getElementById('view-port').innerHTML = s.map(x => `<div class="list-item"><b>${x.s}</b> <span>${x.t}</span></div>`).join('') || 'Empty';
   },
-  renderMySch: () => {
-    const s = db.read('sch');
-    let rows = s.map(x => `<tr><td><b>${x.sub}</b></td><td>${x.tim}</td></tr>`).join('');
-    document.getElementById('contentArea').innerHTML = `<h3>My Daily Classes</h3><div class="table-container"><table><thead><tr><th>Subject</th><th>Time</th></tr></thead><tbody>${rows || '<td>None</td>'}</tbody></table></div>`;
+  sch: () => {
+    document.getElementById('view-port').innerHTML = `<div class="field"><input id="ss" placeholder="Subject"><input id="st" placeholder="Time" style="margin-top:5px"></div><button class="btn btn-dark" onclick="app.addS()">Add</button><div id="sl" style="margin-top:10px"></div>`;
+    app.listS();
   },
-  addS: () => { const s = db.read('sch'); s.push({sub: sS.value, tim: sT.value}); db.write('sch', s); app.showS(); },
-  showS: () => {
-    const s = db.read('sch');
-    document.getElementById('sList').innerHTML = s.map((x,i)=> `<div style="padding:15px; border:1px solid var(--border); border-radius:12px; margin-bottom:10px; display:flex; justify-content:space-between"><span><b>${x.sub}</b> | ${x.tim}</span><i class="fa-solid fa-trash" style="color:var(--danger); cursor:pointer" onclick="app.delS(${i})"></i></div>`).join('');
+  addS: () => { const s = ds.get('s'); s.push({s:ss.value, t:st.value}); ds.set('s', s); app.listS(); },
+  listS: () => {
+    const s = ds.get('s');
+    sl.innerHTML = s.map((x,i)=> `<div class="list-item"><b>${x.s}</b> <i class="fa fa-trash" onclick="app.delS(${i})"></i></div>`).join('');
   },
-  delS: (i) => { let s = db.read('sch'); s.splice(i,1); db.write('sch', s); app.showS(); },
-  upPhoto: (idx) => {
-    const file = document.createElement('input'); file.type='file'; file.accept='image/*';
-    file.onchange = e => {
-      const reader = new FileReader();
-      reader.onload = ev => {
-        let u = db.read('users'); u[idx].avatar = ev.target.result; db.write('users', u);
-        if(app.user.id === u[idx].id) { app.user.avatar = ev.target.result; db.session.set(app.user); }
-        app.launch();
-      }; reader.readAsDataURL(e.target.files[0]);
-    }; file.click();
+  delS: (i) => { let s = ds.get('s'); s.splice(i,1); ds.set('s', s); app.listS(); },
+  up: (i) => {
+    const f = document.createElement('input'); f.type='file'; f.onchange = e => {
+      const r = new FileReader(); r.onload = ev => {
+        let u = ds.get('u'); u[i].pic = ev.target.result; ds.set('u', u);
+        if(app.me.id === u[i].id) { app.me.pic = ev.target.result; ds.sess.put(app.me); }
+        app.run();
+      }; r.readAsDataURL(e.target.files[0]);
+    }; f.click();
   },
-  updateStats: () => { document.getElementById('statCount').innerText = db.read('users').length; },
-  renderGrd: () => { document.getElementById('contentArea').innerHTML = "<h3>Encode Grades</h3><p>Assign grades to students here.</p>"; },
-  renderMyAtt: () => { document.getElementById('contentArea').innerHTML = "<h3>Attendance History</h3><p>All records are clear.</p>"; },
-  renderMyGrd: () => { document.getElementById('contentArea').innerHTML = "<h3>My Academic Grades</h3><p>Grades are pending release.</p>"; },
-  logout: () => { db.session.end(); location.reload(); }
+  updatePop: () => { document.getElementById('countPop').innerText = ds.get('u').length; },
+  logout: () => { ds.sess.off(); location.reload(); }
 };
 app.init();
 </script>
