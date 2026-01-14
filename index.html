@@ -2,380 +2,327 @@
 <html lang="en">
 <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no" />
-    <title>myACSHS | Student Information System v26.0</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>myACSHS | Enterprise SIS v29.0</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     
     <style>
         /* * ==========================================
-         * 1. BRAND COLOR SYSTEM (BLUE & WHITE)
+         * 1. SYSTEM DESIGN TOKENS
          * ==========================================
          */
         :root {
-            --primary-blue: #003366;    /* Deep University Blue */
-            --accent-blue: #0056b3;     /* Brighter Action Blue */
-            --pure-white: #ffffff;
-            --error-red: #dc3545;       /* Classic Error Red */
-            --bg-light: #f4f7f9;
-            --text-dark: #1a1a1a;
-            --border-std: 1px solid #d1d9e0;
+            --navy: #003366;
+            --blue-glow: #0056b3;
+            --white: #ffffff;
+            --danger: #dc3545;
+            --success: #28a745;
+            --bg: #f4f7f9;
+            --text: #1a1a1a;
+            --muted: #6c757d;
+            --border: #d1d9e0;
+            --radius: 10px;
         }
 
         * { box-sizing: border-box; -webkit-font-smoothing: antialiased; margin: 0; padding: 0; }
-        body { font-family: 'Inter', sans-serif; background-color: var(--bg-light); color: var(--text-dark); line-height: 1.6; }
+        body { font-family: 'Inter', sans-serif; background-color: var(--bg); color: var(--text); }
 
         /* * ==========================================
-         * 2. AUTHENTICATION (ORIGINAL CENTERED DESIGN)
+         * 2. AUTHENTICATION STYLES
          * ==========================================
          */
-        .auth-container {
-            display: flex; align-items: center; justify-content: center; min-height: 100vh; padding: 20px;
-        }
-
+        .auth-container { display: flex; align-items: center; justify-content: center; min-height: 100vh; padding: 20px; }
         .auth-card {
-            width: 100%; max-width: 420px; background: var(--pure-white); 
-            border-radius: 12px; padding: 40px; 
-            box-shadow: 0 10px 25px rgba(0, 51, 102, 0.1); border: var(--border-std);
+            width: 100%; max-width: 440px; background: var(--white); border-radius: var(--radius);
+            padding: 45px; box-shadow: 0 10px 30px rgba(0, 51, 102, 0.1); border: 1px solid var(--border);
         }
 
-        .auth-card h1 {
-            color: var(--primary-blue); font-weight: 800; font-size: 28px; 
-            margin-bottom: 10px; text-align: center;
+        .input-box { margin-bottom: 22px; position: relative; }
+        .input-box label { display: block; font-size: 11px; font-weight: 800; color: var(--navy); margin-bottom: 8px; text-transform: uppercase; }
+        .input-box input, .input-box select {
+            width: 100%; height: 50px; padding: 0 15px; border: 2px solid #e2e8f0; border-radius: 8px; font-size: 15px; outline: none; transition: 0.2s;
         }
+        .input-box input:focus { border-color: var(--blue-glow); }
 
-        .auth-subtext {
-            text-align: center; color: #666; font-size: 14px; margin-bottom: 30px;
+        .eye-btn { position: absolute; right: 15px; top: 38px; cursor: pointer; color: #94a3b8; padding: 5px; }
+
+        /* FACEBOOK-STYLE ERROR LOGIC */
+        .input-box.has-error input { border-color: var(--danger) !important; background-color: #fffafa; animation: shake 0.3s; }
+        .err-msg { color: var(--danger); font-size: 11px; font-weight: 700; margin-top: 5px; display: none; }
+        .input-box.has-error .err-msg { display: block; }
+
+        @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-4px); } 75% { transform: translateX(4px); } }
+
+        .btn-action {
+            width: 100%; height: 55px; background: var(--navy); color: #fff; border: none; 
+            border-radius: 8px; font-weight: 800; cursor: pointer; transition: 0.3s;
         }
-
-        .input-group { margin-bottom: 20px; position: relative; }
-        .input-group label { display: block; font-size: 12px; font-weight: 700; color: var(--primary-blue); margin-bottom: 8px; text-transform: uppercase; }
-        
-        input, select {
-            width: 100%; height: 50px; padding: 0 15px; border: 2px solid #e1e8ed;
-            border-radius: 8px; font-size: 15px; font-family: inherit; outline: none; transition: 0.2s;
-        }
-
-        input:focus { border-color: var(--accent-blue); background: #fff; }
-
-        /* SHOW PASSWORD TOGGLE */
-        .toggle-btn {
-            position: absolute; right: 15px; top: 38px; cursor: pointer; color: #999;
-        }
-
-        /* FACEBOOK-STYLE RED ERROR */
-        .input-group.has-error input {
-            border-color: var(--error-red) !important;
-            background-color: #fff8f8;
-            animation: shake 0.3s ease-in-out;
-        }
-        .error-msg { color: var(--error-red); font-size: 11px; font-weight: 600; margin-top: 5px; display: none; }
-        .input-group.has-error .error-msg { display: block; }
-
-        @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-6px); } 75% { transform: translateX(6px); } }
-
-        .btn-main {
-            width: 100%; height: 55px; background: var(--primary-blue); color: #fff;
-            border: none; border-radius: 8px; font-weight: 700; cursor: pointer; font-size: 16px; transition: 0.3s;
-        }
-        .btn-main:hover { background: var(--accent-blue); transform: translateY(-1px); }
-
-        .btn-ghost {
-            width: 100%; height: 50px; background: transparent; color: var(--primary-blue);
-            border: 2px solid var(--primary-blue); border-radius: 8px; font-weight: 700; margin-top: 15px; cursor: pointer;
-        }
+        .btn-action:hover { background: var(--blue-glow); transform: translateY(-2px); }
 
         /* * ==========================================
-         * 3. PORTAL DASHBOARD (BLUE ACCENTS)
+         * 3. PORTAL CORE UI
          * ==========================================
          */
         header {
-            background: var(--primary-blue); color: #fff; padding: 15px 25px;
-            display: flex; justify-content: space-between; align-items: center;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1); position: sticky; top: 0; z-index: 1000;
+            background: var(--navy); color: #fff; padding: 15px 30px;
+            display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 1000;
         }
 
-        .nav-tabs {
-            display: flex; background: #fff; border-bottom: 1px solid #ddd;
-        }
+        .nav-tabs { display: flex; background: #fff; border-bottom: 1px solid var(--border); overflow-x: auto; }
         .tab {
-            flex: 1; padding: 15px; text-align: center; cursor: pointer; 
-            font-weight: 700; font-size: 12px; color: #666; transition: 0.3s;
+            flex: 1; padding: 18px; text-align: center; cursor: pointer; font-weight: 800; font-size: 10px;
+            color: #94a3b8; text-transform: uppercase; letter-spacing: 1px; min-width: 120px;
         }
-        .tab.active { color: var(--primary-blue); border-bottom: 4px solid var(--primary-blue); }
+        .tab.active { color: var(--navy); border-bottom: 4px solid var(--navy); background: #f8fafc; }
 
-        .content-area { max-width: 600px; margin: 20px auto; padding: 0 15px; }
+        .portal-container { max-width: 650px; margin: 25px auto; padding: 0 15px 100px; }
+
+        /* ANALYTICS STRIP */
+        .analytics {
+            background: #eef4ff; padding: 15px; border-radius: 12px; margin-bottom: 25px;
+            display: flex; justify-content: space-around; border: 1px solid #d0e0ff;
+        }
+        .stat-val { display: block; font-weight: 900; color: var(--navy); font-size: 20px; text-align: center; }
+        .stat-lbl { font-size: 10px; font-weight: 700; color: var(--blue-glow); text-transform: uppercase; }
+
+        .widget { background: #fff; border-radius: 15px; padding: 25px; border: 1px solid var(--border); margin-bottom: 20px; }
+        .widget-h { font-weight: 800; color: var(--navy); font-size: 14px; margin-bottom: 20px; text-transform: uppercase; border-left: 4px solid var(--navy); padding-left: 10px; }
         
-        .profile-card {
-            background: #fff; border-radius: 15px; padding: 30px; text-align: center;
-            border: var(--border-std); margin-bottom: 25px;
+        .row { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid #f1f5f9; }
+        .badge { background: #eef4ff; color: var(--navy); padding: 5px 10px; border-radius: 4px; font-size: 10px; font-weight: 800; }
+
+        /* EDITOR MODAL */
+        #editorModal {
+            position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 2000;
+            display: none; align-items: center; justify-content: center; padding: 20px;
         }
-        .pfp-wrap {
-            width: 110px; height: 110px; border-radius: 50%; border: 4px solid var(--bg-light);
-            margin: 0 auto 15px; overflow: hidden; display: flex; align-items: center; justify-content: center;
-            background: #eee;
-        }
-        .pfp-wrap img { width: 100%; height: 100%; object-fit: cover; }
-        .pfp-wrap i { font-size: 40px; color: var(--primary-blue); }
+        .modal-card { background: #fff; width: 100%; max-width: 400px; border-radius: 15px; padding: 30px; box-shadow: 0 20px 50px rgba(0,0,0,0.2); }
 
-        .data-card {
-            background: #fff; border-radius: 12px; padding: 20px; border: var(--border-std); margin-bottom: 15px;
-        }
-        .row { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid #f0f0f0; }
-        .row:last-child { border-bottom: none; }
+        #main-loader { position: fixed; inset: 0; background: rgba(255,255,255,0.9); z-index: 9999; display: none; align-items: center; justify-content: center; }
+        .spin { width: 40px; height: 40px; border: 4px solid #f3f3f3; border-top: 4px solid var(--navy); border-radius: 50%; animation: rot 0.8s linear infinite; }
+        @keyframes rot { to { transform: rotate(360deg); } }
 
-        .blue-tag { background: #eef4ff; color: var(--primary-blue); padding: 4px 10px; border-radius: 4px; font-size: 11px; font-weight: 800; }
-
-        /* SEARCH */
-        .search-bar { position: relative; margin-bottom: 20px; }
-        .search-bar i { position: absolute; left: 15px; top: 15px; color: #999; }
-        .search-bar input { padding-left: 45px; border: 1px solid #ddd; border-radius: 30px; height: 45px; }
-
-        #loading-screen { position: fixed; inset: 0; background: rgba(255,255,255,0.9); z-index: 9999; display: none; align-items: center; justify-content: center; }
-        .loader { width: 40px; height: 40px; border: 4px solid #f3f3f3; border-top: 4px solid var(--primary-blue); border-radius: 50%; animation: spin 0.8s linear infinite; }
-        @keyframes spin { to { transform: rotate(360deg); } }
-
-        .panel { display: none; }
-        .panel.active { display: block; }
+        .view-panel { display: none; }
+        .view-panel.active { display: block; }
     </style>
 </head>
 <body>
 
-<div id="loading-screen"><div class="loader"></div></div>
+<div id="main-loader"><div class="spin"></div></div>
 
-<header id="appNav" style="display:none">
-    <div style="font-weight:900; font-size:20px; letter-spacing:-1px"><i class="fa-solid fa-graduation-cap"></i> myACSHS</div>
-    <div style="display:flex; gap:20px; align-items:center">
-        <div style="position:relative; cursor:pointer" onclick="app.setTab('notif', document.getElementById('tabNotif'))">
-            <i class="fa-solid fa-bell"></i>
-            <span id="notifCount" style="position:absolute; top:-8px; right:-10px; background:var(--error-red); color:#fff; font-size:9px; padding:2px 5px; border-radius:10px; font-weight:900; border:2px solid var(--primary-blue); display:none">0</span>
-        </div>
-        <i class="fa-solid fa-arrow-right-from-bracket" onclick="app.logout()" style="cursor:pointer"></i>
-    </div>
-</header>
-
-<div id="pAuth" class="panel active">
-    <div class="auth-container">
-        <div id="viewLogin" class="auth-card">
-            <h1>Welcome Back</h1>
-            <p class="auth-subtext">Please sign in to access your student records.</p>
-            
-            <div class="input-group">
-                <label>Account Type</label>
-                <select id="loginRole">
-                    <option value="student">Student Account</option>
-                    <option value="admin">Faculty Admin</option>
-                </select>
-            </div>
-
-            <div class="input-group" id="wrapLoginId">
-                <label>Student/Faculty ID</label>
-                <input type="text" id="loginId" placeholder="2026-XXXX">
-                <div class="error-msg">Invalid identification number.</div>
-            </div>
-
-            <div class="input-group" id="wrapLoginPass">
-                <label>Password</label>
-                <input type="password" id="loginPass" placeholder="••••••••">
-                <i class="fa-solid fa-eye toggle-btn" onclick="ui.togglePass('loginPass')"></i>
-                <div class="error-msg">The password you entered is incorrect.</div>
-            </div>
-
-            <button class="btn-main" onclick="app.login()">Login to Portal</button>
-            <button class="btn-ghost" onclick="ui.subAuth('viewReg')">Register New Student</button>
-        </div>
-
-        <div id="viewReg" class="auth-card" style="display:none">
-            <h1>Student Registry</h1>
-            <p class="auth-subtext">Initialize your student profile below.</p>
-            <div class="input-group"><label>Full Name</label><input type="text" id="regName"></div>
-            <div class="input-group"><label>8-Digit ID Number</label><input type="number" id="regId"></div>
-            <div class="input-group"><label>6-Digit Enrollment Slip</label><input type="number" id="regSlip"></div>
-            <div class="input-group"><label>Track / Section</label><input type="text" id="regTrack" placeholder="e.g. STEM 12-A"></div>
-            <div class="input-group">
-                <label>Create Password</label>
-                <input type="password" id="regPass">
-                <i class="fa-solid fa-eye toggle-btn" onclick="ui.togglePass('regPass')"></i>
-            </div>
-            <button class="btn-main" onclick="app.register()">Complete Registration</button>
-            <button class="btn-ghost" onclick="ui.subAuth('viewLogin')">Back to Login</button>
+<div id="editorModal">
+    <div class="modal-card">
+        <h3 id="editStudentName" style="color:var(--navy); margin-bottom:20px; font-weight:900">Edit Grades</h3>
+        <div id="gradesInputsZone"></div>
+        <div style="display:flex; gap:10px; margin-top:20px">
+            <button class="btn-action" style="flex:1" onclick="app.saveGrades()">SAVE</button>
+            <button class="btn-action" style="flex:1; background:#94a3b8" onclick="editorModal.style.display='none'">CANCEL</button>
         </div>
     </div>
 </div>
 
-<div id="pPortal" class="panel">
-    <div class="nav-tabs">
-        <div class="tab active" onclick="app.setTab('home', this)">SCHEDULE</div>
-        <div class="tab" onclick="app.setTab('grades', this)">GRADES</div>
-        <div id="tabNotif" class="tab" onclick="app.setTab('notif', this)">ALERTS</div>
-        <div id="tabAdmin" class="tab" style="display:none" onclick="app.setTab('admin', this)">ADMIN</div>
+<header id="navMain" style="display:none">
+    <div style="font-weight:900; font-size:22px; letter-spacing:-1px">myACSHS</div>
+    <div style="display:flex; gap:20px; align-items:center">
+        <i class="fa-solid fa-power-off" onclick="app.logout()" style="cursor:pointer"></i>
     </div>
+</header>
 
-    <div class="content-area">
-        <div class="profile-card">
-            <div id="uPic" class="pfp-wrap"></div>
-            <h2 id="uNameDisplay" style="color:var(--primary-blue); font-weight:800">...</h2>
-            <p id="uMetaDisplay" style="font-size:12px; font-weight:700; color:#888; text-transform:uppercase; letter-spacing:1px; margin-top:5px"></p>
+<div id="pAuth" class="view-panel active">
+    <div class="auth-container">
+        <div id="boxLogin" class="auth-card">
+            <h1 style="color:var(--navy); font-weight:900; margin-bottom:30px; text-align:center">Secure Login</h1>
+            <div class="input-box"><label>Role</label><select id="liRole"><option value="student">Student</option><option value="admin">Administrator</option></select></div>
+            <div class="input-box" id="errId"><label>ID</label><input type="text" id="liId" placeholder="ID Number"><div class="err-msg">ID not found.</div></div>
+            <div class="input-box" id="errPass"><label>Password</label><input type="password" id="liPass" placeholder="••••••••"><i class="fa-solid fa-eye eye-btn" onclick="app.eye('liPass')"></i><div class="err-msg">Incorrect password.</div></div>
+            <button class="btn-action" onclick="app.login()">SIGN IN</button>
+            <button style="width:100%; background:none; border:none; margin-top:20px; font-weight:700; color:var(--navy); cursor:pointer" onclick="app.swapAuth('boxReg')">New Student? Register</button>
         </div>
-
-        <div id="mainDisplayZone"></div>
+        <div id="boxReg" class="auth-card" style="display:none">
+            <h1 style="color:var(--navy); font-weight:900; margin-bottom:30px; text-align:center">Register</h1>
+            <div class="input-box"><label>Full Name</label><input type="text" id="rgName"></div>
+            <div class="input-box"><label>8-Digit ID</label><input type="number" id="rgId"></div>
+            <div class="input-box"><label>6-Digit Slip</label><input type="number" id="rgSlip"></div>
+            <div class="input-box"><label>Section</label><input type="text" id="rgTrack"></div>
+            <div class="input-box"><label>Password</label><input type="password" id="rgPass"><i class="fa-solid fa-eye eye-btn" onclick="app.eye('rgPass')"></i></div>
+            <button class="btn-action" onclick="app.register()">SUBMIT REGISTRATION</button>
+            <button style="width:100%; background:none; border:none; margin-top:20px; font-weight:700; color:var(--navy); cursor:pointer" onclick="app.swapAuth('boxLogin')">Back to Login</button>
+        </div>
     </div>
+</div>
+
+<div id="pPortal" class="view-panel">
+    <nav class="nav-tabs">
+        <div class="tab active" onclick="app.nav('home', this)">Schedule</div>
+        <div class="tab" onclick="app.nav('acads', this)">Academic Records</div>
+        <div id="tabAdmin" class="tab" style="display:none" onclick="app.nav('admin', this)">Directory & Management</div>
+    </nav>
+
+    <main class="portal-container">
+        <div id="adminAnalytics" class="analytics" style="display:none">
+            <div class="stat-box"><span class="stat-val" id="totalCount">0</span><span class="stat-lbl">Enrolled</span></div>
+            <div class="stat-box"><span class="stat-val">Online</span><span class="stat-lbl">Registry</span></div>
+        </div>
+        <div class="widget" style="text-align:center">
+            <div id="uPic" style="width:100px; height:100px; border-radius:50%; border:3px solid var(--navy); margin:0 auto 15px; overflow:hidden; background:#eee; display:flex; align-items:center; justify-content:center"></div>
+            <h2 id="uName" style="color:var(--navy); font-weight:900">...</h2>
+            <p id="uMeta" style="font-size:11px; font-weight:800; color:#888; text-transform:uppercase"></p>
+        </div>
+        <div id="renderZone"></div>
+    </main>
 </div>
 
 <script>
     /**
-     * SIS SIS SIS - ENTERPRISE ENGINE v26.0
-     * Complexity Level: Professional / College Grade
+     * SIS ENTERPRISE SYSTEM v29.0
+     * Core: Local DB, Grades Editor, Auth Validation
      */
-
     const CONFIG = {
         SLIPS: ["112233", "445566", "123456", "654321", "224466"],
         DAYS: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
+        SUBJECTS: ["Programming", "Practical Research", "Media Literacy", "Mathematics"],
         TIMETABLE: {
-            "Monday": [{t: "06:15-08:15", s: "Media Literacy", r: "R102"}, {t: "08:35-11:35", s: "Immersion", r: "Field"}],
-            "Tuesday": [{t: "06:15-08:15", s: "JAVA Prog", r: "CL1"}, {t: "08:35-11:35", s: "Immersion", r: "Field"}],
-            "Wednesday": [{t: "06:15-08:15", s: "Research 2", r: "Lib"}, {t: "08:35-11:35", s: "Immersion", r: "Field"}],
-            "Thursday": [{t: "06:15-08:15", s: "JAVA Prog", r: "CL1"}, {t: "08:35-11:35", s: "Immersion", r: "Field"}],
-            "Friday": [{t: "06:15-08:15", s: "PE / Health", r: "Gym"}, {t: "08:35-11:35", s: "Immersion", r: "Field"}]
+            "Monday": [{t: "06:15-08:15", s: "Media Literacy"}, {t: "08:35-11:35", s: "Immersion"}],
+            "Tuesday": [{t: "06:15-08:15", s: "JAVA Programming"}, {t: "08:35-11:35", s: "Immersion"}],
+            "Wednesday": [{t: "06:15-08:15", s: "Research 2"}, {t: "08:35-11:35", s: "Immersion"}],
+            "Thursday": [{t: "06:15-08:15", s: "JAVA Programming"}, {t: "08:35-11:35", s: "Immersion"}],
+            "Friday": [{t: "06:15-08:15", s: "PE & Health"}, {t: "08:35-11:35", s: "Immersion"}]
         }
     };
 
     const db = {
-        save: (k, v) => localStorage.setItem('acshs_pro_' + k, JSON.stringify(v)),
-        get: (k) => JSON.parse(localStorage.getItem('acshs_pro_' + k) || '[]'),
-        sess: {
-            set: (u) => localStorage.setItem('acshs_pro_session', JSON.stringify(u)),
-            get: () => JSON.parse(localStorage.getItem('acshs_pro_session')),
-            kill: () => localStorage.removeItem('acshs_pro_session')
-        }
-    };
-
-    const ui = {
-        loader: (on) => document.getElementById('loading-screen').style.display = on ? 'flex' : 'none',
-        toggleView: (id) => {
-            document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
-            document.getElementById(id).classList.add('active');
-        },
-        subAuth: (id) => {
-            viewLogin.style.display = id === 'viewLogin' ? 'block' : 'none';
-            viewReg.style.display = id === 'viewReg' ? 'block' : 'none';
-        },
-        togglePass: (id) => {
-            const x = document.getElementById(id);
-            x.type = x.type === 'password' ? 'text' : 'password';
-        },
-        error: (wrapId, state) => {
-            document.getElementById(wrapId).classList[state ? 'add' : 'remove']('has-error');
-        }
+        save: (k,v) => localStorage.setItem('sis_v29_'+k, JSON.stringify(v)),
+        get: (k) => JSON.parse(localStorage.getItem('sis_v29_'+k) || '[]'),
+        sess: (v) => v ? localStorage.setItem('sis_v29_session', JSON.stringify(v)) : JSON.parse(localStorage.getItem('sis_v29_session'))
     };
 
     const app = {
-        user: null,
-        activeDay: CONFIG.DAYS[new Date().getDay() - 1] || "Monday",
-        notifs: [{id:1, t:"Portal Live", d:"The SIS v26.0 is now online.", r:false}, {id:2, t:"New Grades", d:"Q2 Final Grades are now posted.", r:false}],
+        user: null, editingIdx: null, activeDay: CONFIG.DAYS[new Date().getDay() - 1] || "Monday",
 
-        init: () => {
-            const s = db.sess.get();
-            if(s) { app.user = s; app.launch(); }
-        },
+        init: () => { const s = db.sess(); if(s) { app.user = s; app.launch(); } },
+        eye: (id) => { const x = document.getElementById(id); x.type = x.type === 'password' ? 'text' : 'password'; },
+        swapAuth: (id) => { boxLogin.style.display = id === 'boxLogin' ? 'block' : 'none'; boxReg.style.display = id === 'boxReg' ? 'block' : 'none'; },
 
         login: () => {
-            const r = loginRole.value, id = loginId.value.trim(), p = loginPass.value.trim();
-            ui.error('wrapLoginId', false); ui.error('wrapLoginPass', false);
-            
-            ui.loader(true);
+            const r = liRole.value, id = liId.value.trim(), p = liPass.value.trim();
+            errId.classList.remove('has-error'); errPass.classList.remove('has-error');
+            document.getElementById('main-loader').style.display = 'flex';
+
             setTimeout(() => {
-                ui.loader(false);
+                document.getElementById('main-loader').style.display = 'none';
                 if(r === 'admin') {
-                    if(id === 'admin' && p === 'admin123') {
-                        app.user = { role:'admin', name:'Staff Faculty', id:'ADM-001' };
-                    } else {
-                        id !== 'admin' ? ui.error('wrapLoginId', true) : ui.error('wrapLoginPass', true);
-                        return;
-                    }
+                    if(id === 'admin' && p === 'admin123') app.user = { role:'admin', name:'Staff Admin', id:'FAC-01' };
+                    else { id !== 'admin' ? errId.classList.add('has-error') : errPass.classList.add('has-error'); return; }
                 } else {
-                    const u = db.get('users').find(x => x.id === id);
-                    if(!u) return ui.error('wrapLoginId', true);
-                    if(u.pass !== p) return ui.error('wrapLoginPass', true);
+                    const u = db.get('u').find(x => x.id === id);
+                    if(!u) return errId.classList.add('has-error');
+                    if(u.pass !== p) return errPass.classList.add('has-error');
                     app.user = { role:'student', ...u };
                 }
-                db.sess.set(app.user); app.launch();
-            }, 1000);
+                db.sess(app.user); app.launch();
+            }, 800);
         },
 
         register: () => {
-            const id = regId.value, slip = regSlip.value;
-            if(id.length !== 8 || !CONFIG.SLIPS.includes(slip)) return alert("Authorization Error: Enrollment Data Mismatch.");
+            const id = rgId.value, slip = rgSlip.value;
+            if(id.length !== 8 || !CONFIG.SLIPS.includes(slip)) return alert("Data Validation Error.");
+            let users = db.get('u');
+            if(users.some(u => u.id === id)) return alert("ID Already Registered.");
             
-            let users = db.get('users');
-            if(users.some(x => x.id === id)) return alert("Registry Error: ID already in use.");
-
-            ui.loader(true);
-            setTimeout(() => {
-                users.push({ id, name: regName.value, pass: regPass.value, track: regTrack.value, pic: null, 
-                             grades: {"Media Lit":92, "Prog 1":89, "Research":94, "Immersion":98} });
-                db.save('users', users); ui.loader(false);
-                alert("Account Verified."); ui.subAuth('viewLogin');
-            }, 1500);
+            users.push({ id, name: rgName.value, pass: rgPass.value, track: rgTrack.value, pic: null, 
+                         grades: {"Programming":75, "Practical Research":75, "Media Literacy":75, "Mathematics":75} });
+            db.save('u', users);
+            alert("Registered Successfully."); app.swapAuth('boxLogin');
         },
 
         launch: () => {
-            ui.toggleView('pPortal'); appNav.style.display = 'flex';
-            uNameDisplay.innerText = app.user.name;
-            uMetaDisplay.innerText = app.user.role === 'admin' ? 'FACULTY STATUS' : `${app.user.id} | ${app.user.track}`;
-            uPic.innerHTML = app.user.pic ? `<img src="${app.user.pic}">` : `<i class="fa-solid fa-circle-user"></i>`;
-            tabAdmin.style.display = app.user.role === 'admin' ? 'block' : 'none';
-            app.setTab('home', document.querySelector('.tab'));
-            app.badge();
-        },
-
-        setTab: (name, el) => {
-            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-            el.classList.add('active');
-            app.render(name);
-        },
-
-        render: (name) => {
-            let h = "";
-            const target = document.getElementById('mainDisplayZone');
-            if(name === 'home') {
-                h = `<div class="data-card"><h3 style="margin-bottom:15px; font-weight:800; color:var(--primary-blue)">Class Schedule</h3>` +
-                    `<div style="display:flex; gap:8px; margin-bottom:20px; overflow-x:auto">` +
-                    CONFIG.DAYS.map(d => `<button onclick="app.setDay('${d}')" style="background:${d===app.activeDay?'var(--primary-blue)':'#fff'}; color:${d===app.activeDay?'#fff':'#666'}; border:1px solid #ddd; padding:10px 15px; border-radius:8px; font-size:10px; font-weight:800; cursor:pointer">${d}</button>`).join('') +
-                    `</div>` +
-                    (CONFIG.TIMETABLE[app.activeDay] || []).map(c => `<div class="row"><span class="blue-tag">${c.t}</span><b>${c.s}</b></div>`).join('') + `</div>`;
-            } else if(name === 'grades') {
-                const g = app.user.grades || {};
-                h = `<div class="data-card"><h3 style="margin-bottom:15px; font-weight:800; color:var(--primary-blue)">Academic Results</h3>` +
-                    Object.entries(g).map(([k,v])=>`<div class="row"><span>${k}</span><b style="color:var(--accent-blue); font-size:18px">${v}</b></div>`).join('') + `</div>`;
-            } else if(name === 'notif') {
-                h = `<div class="data-card"><h3 style="margin-bottom:15px; font-weight:800; color:var(--primary-blue)">System Alerts</h3>` +
-                    (app.notifs.map(n => `<div class="data-card" style="border-left:5px solid ${n.r?'#ddd':'var(--primary-blue)'}" onclick="app.read(${n.id})"><b>${n.t}</b><br><small style="color:#888">${n.d}</small></div>`).join('') || '<p>No alerts.</p>') + `</div>`;
-            } else if(name === 'admin') {
-                h = `<div class="data-card"><h3 style="margin-bottom:15px; font-weight:800; color:var(--primary-blue)">Student Directory</h3>` +
-                    `<div class="search-bar"><i class="fa-solid fa-search"></i><input type="text" placeholder="Search name or ID..." onkeyup="app.filter(this.value)"></div>` +
-                    `<div id="dirList">` + app.dirHTML(db.get('users')) + `</div></div>`;
+            pAuth.classList.remove('active'); pPortal.classList.add('active'); navMain.style.display = 'flex';
+            uName.innerText = app.user.name; uMeta.innerText = app.user.role === 'admin' ? 'FACULTY ACCESS' : `${app.user.id} | ${app.user.track}`;
+            uPic.innerHTML = app.user.pic ? `<img src="${app.user.pic}" style="width:100%;height:100%;object-fit:cover">` : `<i class="fa-solid fa-user-tie" style="font-size:40px; color:var(--navy)"></i>`;
+            
+            if(app.user.role === 'admin') {
+                adminAnalytics.style.display = 'flex'; totalCount.innerText = db.get('u').length; tabAdmin.style.display = 'block';
             }
-            target.innerHTML = h;
+            app.nav('home', document.querySelector('.tab'));
         },
 
-        dirHTML: (list) => list.map((u,i) => `<div class="row"><div><b>${u.name}</b><br><small>${u.id}</small></div><button onclick="app.photo(${i})" style="background:var(--primary-blue); color:#fff; border:none; padding:8px 12px; border-radius:6px; font-size:10px; font-weight:800">EDIT PFP</button></div>`).join(''),
-        filter: (q) => { const f = db.get('users').filter(u => u.name.toLowerCase().includes(q.toLowerCase()) || u.id.includes(q)); dirList.innerHTML = app.dirHTML(f); },
+        nav: (view, el) => {
+            document.querySelectorAll('.tab').forEach(b => b.classList.remove('active'));
+            el.classList.add('active'); app.render(view);
+        },
+
+        render: (view) => {
+            let h = "";
+            if(view === 'home') {
+                h = `<div class="widget"><h3 class="widget-h">Timetable</h3>` +
+                    `<div style="display:flex; gap:5px; margin-bottom:15px; overflow-x:auto">` +
+                    CONFIG.DAYS.map(d => `<button onclick="app.setDay('${d}')" style="background:${d===app.activeDay?'var(--navy)':'#fff'}; color:${d===app.activeDay?'#fff':'#666'}; border:1px solid #ddd; padding:8px 12px; border-radius:6px; font-size:10px; font-weight:800; cursor:pointer">${d}</button>`).join('') +
+                    `</div>` + (CONFIG.TIMETABLE[app.activeDay] || []).map(c => `<div class="row"><span class="badge">${c.t}</span><b>${c.s}</b></div>`).join('') + `</div>`;
+            } else if(view === 'acads') {
+                const g = app.user.grades || {};
+                h = `<div class="widget"><h3 class="widget-h">My Performance</h3>` +
+                    Object.entries(g).map(([k,v])=>`<div class="row"><span>${k}</span><b style="color:var(--blue-glow); font-size:18px">${v}</b></div>`).join('') + `</div>`;
+            } else if(view === 'admin') {
+                h = `<div class="widget"><h3 class="widget-h">Directory</h3>` +
+                    `<input type="text" placeholder="Search students..." onkeyup="app.filter(this.value)" style="width:100%; height:42px; padding:0 15px; border-radius:20px; border:1px solid #ddd; outline:none; margin-bottom:15px">` +
+                    `<div id="dirT">` + app.dirHTML(db.get('u')) + `</div></div>`;
+            }
+            renderZone.innerHTML = h;
+        },
+
         setDay: (d) => { app.activeDay = d; app.render('home'); },
-        badge: () => { const c = app.notifs.filter(x=>!x.r).length; notifCount.innerText = c; notifCount.style.display = c > 0 ? 'block' : 'none'; },
-        read: (id) => { const n = app.notifs.find(x=>x.id===id); if(n) n.read = true; app.badge(); app.render('notif'); },
-        photo: (idx) => {
-            const i = document.createElement('input'); i.type = 'file';
-            i.onchange = e => {
+
+        dirHTML: (list) => list.map((u,i) => `
+            <div class="row">
+                <div><b>${u.name}</b><br><small style="color:#888">${u.id}</small></div>
+                <div style="display:flex; gap:5px">
+                    <button onclick="app.openEditor(${i})" style="background:var(--success); color:#fff; border:none; padding:8px 12px; border-radius:6px; font-size:9px; font-weight:800; cursor:pointer">GRADES</button>
+                    <button onclick="app.updatePhoto(${i})" style="background:var(--navy); color:#fff; border:none; padding:8px 12px; border-radius:6px; font-size:9px; font-weight:800; cursor:pointer">PFP</button>
+                </div>
+            </div>`).join(''),
+
+        filter: (q) => { const f = db.get('u').filter(u => u.name.toLowerCase().includes(q.toLowerCase()) || u.id.includes(q)); dirT.innerHTML = app.dirHTML(f); },
+
+        openEditor: (idx) => {
+            const users = db.get('u');
+            const target = users[idx];
+            app.editingIdx = idx;
+            editStudentName.innerText = `Update: ${target.name}`;
+            let inputs = "";
+            CONFIG.SUBJECTS.forEach(sub => {
+                inputs += `<div class="input-box"><label>${sub}</label><input type="number" class="grade-input" data-sub="${sub}" value="${target.grades[sub] || 75}"></div>`;
+            });
+            gradesInputsZone.innerHTML = inputs;
+            editorModal.style.display = 'flex';
+        },
+
+        saveGrades: () => {
+            let users = db.get('u');
+            const inputs = document.querySelectorAll('.grade-input');
+            inputs.forEach(inp => {
+                const sub = inp.getAttribute('data-sub');
+                users[app.editingIdx].grades[sub] = parseInt(inp.value);
+            });
+            db.save('u', users);
+            editorModal.style.display = 'none';
+            app.render('admin');
+            alert("Academic records updated.");
+        },
+
+        updatePhoto: (idx) => {
+            const inp = document.createElement('input'); inp.type = 'file';
+            inp.onchange = e => {
                 const r = new FileReader(); r.onload = ev => {
-                    let u = db.get('users'); u[idx].pic = ev.target.result; db.save('users', u);
-                    if(app.user.id === u[idx].id) { app.user.pic = ev.target.result; db.sess.set(app.user); }
+                    let u = db.get('u'); u[idx].pic = ev.target.result; db.save('u', u);
+                    if(app.user.id === u[idx].id) { app.user.pic = ev.target.result; db.sess(app.user); }
                     app.launch();
                 }; r.readAsDataURL(e.target.files[0]);
-            }; i.click();
+            }; inp.click();
         },
-        logout: () => { if(confirm("Terminate session?")) { db.sess.kill(); location.reload(); } }
+
+        logout: () => { if(confirm("Sign out?")) { localStorage.removeItem('sis_v29_session'); location.reload(); } }
     };
 
     window.onload = app.init;
