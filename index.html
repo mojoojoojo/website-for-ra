@@ -3,317 +3,439 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-    <title>myACSHS | Enterprise SIS v42.0 - Elite Academic Portal</title>
+    <title>myACSHS | Professional Academic Portal</title>
     
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     
     <style>
-        /* --- PROFESSIONAL SYSTEM VARIABLES --- */
+        /* --- PROFESSIONAL DESIGN SYSTEM --- */
         :root {
-            --primary: #003366; /* Deep Oxford Blue */
-            --accent: #007bff;
-            --success: #198754;
-            --danger: #dc3545;
-            --warning: #f59e0b;
-            --sidebar-bg: #f8fafc;
-            --card-border: #e2e8f0;
-            --text-dark: #0f172a;
-            --text-slate: #64748b;
-            --white: #ffffff;
+            --primary: #2563eb;
+            --primary-dark: #1d4ed8;
+            --accent: #6a11cb;
+            --bg-body: #f8fafc;
+            --bg-card: #ffffff;
+            --text-main: #0f172a;
+            --text-muted: #64748b;
+            --border-color: #e2e8f0;
+            --success: #10b981;
+            --danger: #ef4444;
+            --radius-lg: 12px;
+            --radius-md: 8px;
             --shadow-sm: 0 1px 3px rgba(0,0,0,0.1);
-            --shadow-lg: 0 10px 25px -5px rgba(0,0,0,0.1);
-            --radius: 8px;
+            --shadow-md: 0 10px 15px -3px rgba(0,0,0,0.05);
         }
 
-        /* --- CORE RESET & LAYOUT --- */
         * { margin: 0; padding: 0; box-sizing: border-box; -webkit-font-smoothing: antialiased; }
-        body { font-family: 'Inter', sans-serif; background: #f1f5f9; color: var(--text-dark); overflow-x: hidden; }
 
-        /* --- AUTHENTICATION (600+ LINES LOGIC STARTS HERE) --- */
-        .auth-wrapper { min-height: 100vh; display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, #001f3f 0%, #003366 100%); padding: 20px; }
-        .auth-card { background: var(--white); width: 100%; max-width: 440px; border-radius: 16px; padding: 40px; box-shadow: var(--shadow-lg); }
-        .auth-logo { width: 80px; height: 80px; margin: 0 auto 20px; display: block; border-radius: 50%; border: 3px solid #eee; }
-        
-        .field-label { display: block; font-size: 12px; font-weight: 700; color: var(--primary); text-transform: uppercase; margin-bottom: 8px; }
-        .input-group { position: relative; margin-bottom: 20px; }
-        .input-group input, .input-group select { 
-            width: 100%; height: 50px; padding: 0 15px; border: 1.5px solid var(--card-border); 
-            border-radius: var(--radius); outline: none; font-size: 15px; transition: 0.2s;
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            line-height: 1.5;
         }
-        .input-group input:focus { border-color: var(--accent); box-shadow: 0 0 0 4px rgba(0,123,255,0.1); }
-        .pass-eye { position: absolute; right: 15px; top: 15px; cursor: pointer; color: var(--text-slate); }
 
-        .btn-auth { 
-            width: 100%; height: 52px; background: var(--primary); color: #fff; border: none; 
-            border-radius: var(--radius); font-weight: 700; cursor: pointer; transition: 0.2s; 
+        /* --- AUTHENTICATION VIEW --- */
+        .auth-screen {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #f0f4ff 0%, #e5edff 100%);
+            padding: 20px;
         }
-        .btn-auth:hover { background: #002244; transform: translateY(-1px); }
 
-        .auth-footer { margin-top: 20px; text-align: center; font-size: 13px; color: var(--text-slate); }
-        .link-text { color: var(--accent); cursor: pointer; font-weight: 600; text-decoration: none; }
-
-        /* --- PORTAL HEADER --- */
-        header { 
-            background: var(--primary); height: 65px; display: flex; justify-content: space-between; 
-            align-items: center; padding: 0 30px; position: sticky; top: 0; z-index: 1000; box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+        .auth-card {
+            background: var(--bg-card);
+            width: 100%;
+            max-width: 480px;
+            padding: 40px;
+            border-radius: var(--radius-lg);
+            box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1);
+            border: 1px solid var(--border-color);
         }
-        .header-brand { display: flex; align-items: center; gap: 12px; color: #fff; font-weight: 800; }
-        .header-brand img { width: 35px; border-radius: 50%; background: #fff; }
 
-        /* --- DASHBOARD LAYOUT --- */
-        .portal-grid { display: grid; grid-template-columns: 280px 1fr; min-height: calc(100vh - 65px); }
-        
-        /* SIDEBAR (SMALL PROFILE & NAV) */
-        .sidebar { background: var(--sidebar-bg); border-right: 1px solid var(--card-border); padding: 30px 20px; }
-        .mini-profile { text-align: center; margin-bottom: 40px; }
-        .pfp-small { 
-            width: 80px; height: 80px; border-radius: 50%; margin: 0 auto 15px; 
-            border: 3px solid var(--primary); overflow: hidden; background: #fff;
-            display: flex; align-items: center; justify-content: center;
+        .auth-logo { width: 64px; height: 64px; border-radius: 12px; margin-bottom: 20px; }
+
+        /* --- LAYOUT STRUCTURE (Professional Grid) --- */
+        .app-header {
+            background: var(--bg-card);
+            height: 70px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 40px;
+            border-bottom: 1px solid var(--border-color);
+            position: sticky;
+            top: 0;
+            z-index: 100;
         }
-        .pfp-small img { width: 100%; height: 100%; object-fit: cover; }
-        .profile-name { font-size: 16px; font-weight: 800; color: var(--primary); margin-bottom: 5px; }
-        .profile-id { font-size: 11px; font-family: 'Roboto Mono', monospace; background: #e2e8f0; padding: 2px 8px; border-radius: 4px; }
 
-        .nav-menu { list-style: none; }
-        .nav-item { 
-            padding: 14px 18px; border-radius: var(--radius); cursor: pointer; margin-bottom: 8px;
-            display: flex; align-items: center; gap: 12px; font-weight: 600; color: var(--text-slate);
+        .main-container {
+            max-width: 1200px;
+            margin: 30px auto;
+            padding: 0 20px;
+            display: grid;
+            grid-template-columns: 1fr 350px; /* 2-Column Desktop Layout */
+            gap: 24px;
+        }
+
+        /* --- RESPONSIVE ADJUSTMENTS --- */
+        @media (max-width: 992px) {
+            .main-container { grid-template-columns: 1fr; }
+            .app-header { padding: 0 20px; }
+        }
+
+        /* --- COMPONENTS --- */
+        .card {
+            background: var(--bg-card);
+            border-radius: var(--radius-lg);
+            padding: 24px;
+            border: 1px solid var(--border-color);
+            box-shadow: var(--shadow-sm);
+            margin-bottom: 20px;
+        }
+
+        .tabs { display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap; }
+        .tab-btn {
+            padding: 10px 18px;
+            border-radius: var(--radius-md);
+            border: none;
+            background: #f1f5f9;
+            color: var(--text-muted);
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .tab-btn.active { background: var(--primary); color: white; box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2); }
+
+        .field-label { display: block; font-size: 13px; font-weight: 700; color: var(--text-muted); margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.5px; }
+        input, select {
+            width: 100%;
+            height: 48px;
+            padding: 0 16px;
+            border-radius: var(--radius-md);
+            border: 1.5px solid var(--border-color);
+            font-size: 15px;
+            outline: none;
+            transition: border-color 0.2s;
+            background: #fcfdfe;
+        }
+        input:focus { border-color: var(--primary); background: #fff; }
+
+        .btn-primary {
+            width: 100%;
+            height: 50px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: var(--radius-md);
+            font-weight: 700;
+            cursor: pointer;
+            font-size: 15px;
             transition: 0.2s;
         }
-        .nav-item:hover { background: #eef2f6; color: var(--primary); }
-        .nav-item.active { background: var(--primary); color: #fff; }
+        .btn-primary:hover { background: var(--primary-dark); transform: translateY(-1px); }
 
-        /* MAIN CONTENT AREA */
-        .main-view { padding: 40px; overflow-y: auto; }
-        .section-header { margin-bottom: 25px; border-bottom: 2px solid var(--primary); padding-bottom: 10px; display: flex; justify-content: space-between; }
+        /* --- DATA TABLES & LISTS --- */
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+        th { text-align: left; font-size: 12px; color: var(--text-muted); padding: 12px; border-bottom: 2px solid var(--border-color); text-transform: uppercase; }
+        td { padding: 14px 12px; border-bottom: 1px solid var(--border-color); font-size: 14px; }
 
-        /* PANELS & CARDS */
-        .panel { background: var(--white); border-radius: var(--radius); border: 1px solid var(--card-border); padding: 25px; margin-bottom: 25px; box-shadow: var(--shadow-sm); }
-        .schedule-row { display: flex; align-items: center; gap: 20px; padding: 15px; border-bottom: 1px solid #f1f5f9; }
-        .schedule-row:last-child { border-bottom: none; }
-        .sched-time { width: 100px; font-family: 'Roboto Mono', monospace; font-size: 13px; color: var(--accent); font-weight: 700; }
-        .sched-subj { flex: 1; font-weight: 700; color: var(--text-dark); }
-        .sched-instr { font-size: 12px; color: var(--text-slate); }
-
-        /* ADMIN GRADE EDITOR PANEL */
-        .editor-container { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-        .student-list-item { 
-            display: flex; justify-content: space-between; padding: 12px; border: 1px solid #f1f5f9; 
-            border-radius: 6px; margin-bottom: 8px; cursor: pointer; transition: 0.2s;
+        /* --- SIDEBAR PROFILE --- */
+        .avatar-frame {
+            width: 150px; height: 150px;
+            background: #f1f5f9;
+            border-radius: var(--radius-md); /* Square layout as requested */
+            overflow: hidden;
+            margin-bottom: 15px;
+            border: 4px solid #fff;
+            box-shadow: var(--shadow-sm);
         }
-        .student-list-item:hover { background: #f8fafc; border-color: var(--accent); }
+        .avatar-frame img { width: 100%; height: 100%; object-fit: cover; }
+        .pill { background: #e2e8f0; color: var(--text-main); padding: 4px 10px; border-radius: 99px; font-size: 11px; font-weight: 700; }
 
-        .grade-input-box { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
-        .grade-input-box label { font-size: 13px; font-weight: 600; }
-        .grade-input-box input { width: 70px; padding: 5px; text-align: center; border-radius: 4px; border: 1px solid #ccc; }
+        /* --- SCHEDULE ITEMS --- */
+        .sched-item { display: flex; gap: 15px; padding: 15px 0; border-bottom: 1px solid #f1f5f9; }
+        .sched-item:last-child { border-bottom: none; }
+        .sched-time { font-family: 'JetBrains Mono', monospace; font-size: 13px; font-weight: 600; color: var(--primary); min-width: 90px; }
+        .sched-info b { display: block; font-size: 14px; }
+        .sched-info span { font-size: 12px; color: var(--text-muted); }
 
-        /* PRINT */
-        @media print {
-            .sidebar, header, .btn-auth { display: none !important; }
-            .portal-grid { grid-template-columns: 1fr; }
-            .main-view { padding: 0; }
-        }
+        /* --- UTILS --- */
+        .flex-between { display: flex; justify-content: space-between; align-items: center; }
+        .text-danger { color: var(--danger); }
+        .pass-container { position: relative; }
+        .pass-toggle { position: absolute; right: 15px; top: 14px; cursor: pointer; color: var(--text-muted); }
     </style>
 </head>
 <body>
 
-<div id="vAuth">
-    <div class="auth-wrapper">
-        <div class="auth-card" id="boxL">
-            <img src="acshslogo.jpg" class="auth-logo">
-            <h2 style="text-align:center; margin-bottom:30px">Portal Access</h2>
-            <div class="field-label">Portal Role</div>
-            <div class="input-group">
-                <select id="lRole"><option value="student">Student Portal</option><option value="admin">Administrator</option></select>
-            </div>
-            <div class="field-label">ID / Username</div>
-            <div class="input-group"><input type="text" id="lId" placeholder="2024XXXX"></div>
-            <div class="field-label">Secure Password</div>
-            <div class="input-group">
+<div id="vAuth" class="auth-screen">
+    <div class="auth-card" id="loginBox">
+        <img src="acshslogo.jpg" class="auth-logo">
+        <h2 style="margin-bottom: 8px;">Portal Login</h2>
+        <p style="color:var(--text-muted); font-size:14px; margin-bottom:24px;">Antipolo City Senior High School SIS</p>
+        
+        <div style="margin-bottom: 16px;">
+            <span class="field-label">System Role</span>
+            <select id="lRole"><option value="student">Student Account</option><option value="admin">Administrator</option></select>
+        </div>
+        
+        <div style="margin-bottom: 16px;">
+            <span class="field-label">Student ID / Username</span>
+            <input type="text" id="lId" placeholder="e.g. 12-1234-567">
+        </div>
+
+        <div style="margin-bottom: 24px;">
+            <span class="field-label">Password</span>
+            <div class="pass-container">
                 <input type="password" id="lPass" placeholder="••••••••">
-                <i class="fa-solid fa-eye pass-eye" onclick="ui.toggle('lPass')"></i>
-            </div>
-            <button class="btn-auth" onclick="app.login()">AUTHENTICATE</button>
-            <div class="auth-footer">
-                <span class="link-text" onclick="ui.swap('boxF')">Forgot Password?</span><br><br>
-                Don't have an account? <span class="link-text" onclick="ui.swap('boxR')">Enroll Now</span>
+                <i class="fa-solid fa-eye pass-toggle" onclick="ui.toggle('lPass')"></i>
             </div>
         </div>
 
-        <div class="auth-card" id="boxR" style="display:none">
-            <h2 style="margin-bottom:20px">New Student Enrollment</h2>
-            <div class="field-label">Full Name</div><div class="input-group"><input type="text" id="rName"></div>
-            <div class="field-label">Student ID</div><div class="input-group"><input type="text" id="rId"></div>
-            <div class="field-label">Slip Code (112233)</div><div class="input-group"><input type="text" id="rSlip"></div>
-            <div class="field-label">Section</div><div class="input-group"><input type="text" id="rTrack" placeholder="ICT 1202"></div>
-            <div class="field-label">Password</div><div class="input-group"><input type="password" id="rPass"></div>
-            <button class="btn-auth" onclick="app.register()">SUBMIT REGISTRY</button>
-            <div class="auth-footer"><span class="link-text" onclick="ui.swap('boxL')">Return to Login</span></div>
+        <button class="btn-primary" onclick="engine.login()">AUTHENTICATE</button>
+        
+        <div style="margin-top: 20px; text-align: center; font-size: 13px;">
+            <span style="color:var(--primary); cursor:pointer; font-weight:600" onclick="ui.swap('forgotBox')">Forgot Password?</span>
+            <span style="margin:0 10px; color:#ccc">|</span>
+            <span style="color:var(--primary); cursor:pointer; font-weight:600" onclick="ui.swap('regBox')">New Enrollment</span>
         </div>
+    </div>
 
-        <div class="auth-card" id="boxF" style="display:none">
-            <h2 style="margin-bottom:20px">Reset Credentials</h2>
-            <p style="font-size:13px; margin-bottom:20px; color:var(--text-slate)">Enter your Student ID and Slip Code to set a new password.</p>
-            <div class="field-label">Student ID</div><div class="input-group"><input type="text" id="fId"></div>
-            <div class="field-label">Slip Code</div><div class="input-group"><input type="text" id="fSlip"></div>
-            <div class="field-label">New Password</div><div class="input-group"><input type="password" id="fPass"></div>
-            <button class="btn-auth" onclick="app.resetPass()">UPDATE PASSWORD</button>
-            <div class="auth-footer"><span class="link-text" onclick="ui.swap('boxL')">Back to Login</span></div>
+    <div class="auth-card" id="regBox" style="display:none">
+        <h2>Student Registry</h2>
+        <div style="margin-top:20px">
+            <span class="field-label">Full Name</span><input type="text" id="rName" style="margin-bottom:12px">
+            <span class="field-label">Student ID</span><input type="text" id="rId" style="margin-bottom:12px">
+            <span class="field-label">Enrollment Code (112233)</span><input type="text" id="rSlip" style="margin-bottom:12px">
+            <span class="field-label">Create Password</span><input type="password" id="rPass">
+            <button class="btn-primary" style="margin-top:20px" onclick="engine.register()">REGISTER ACCOUNT</button>
+            <p onclick="ui.swap('loginBox')" style="text-align:center; margin-top:15px; font-size:13px; cursor:pointer">Back to Login</p>
         </div>
+    </div>
+
+    <div class="auth-card" id="forgotBox" style="display:none">
+        <h2>Account Recovery</h2>
+        <p style="font-size:13px; color:var(--text-muted); margin: 10px 0 20px">Verify your Student ID and Registry Slip to reset.</p>
+        <span class="field-label">Student ID</span><input type="text" id="fId" style="margin-bottom:12px">
+        <span class="field-label">Slip Code</span><input type="text" id="fSlip" style="margin-bottom:12px">
+        <span class="field-label">New Password</span><input type="password" id="fPass">
+        <button class="btn-primary" style="margin-top:20px" onclick="engine.reset()">RESET PASSWORD</button>
+        <p onclick="ui.swap('loginBox')" style="text-align:center; margin-top:15px; font-size:13px; cursor:pointer">Cancel</p>
     </div>
 </div>
 
 <div id="vPortal" style="display:none">
-    <header>
-        <div class="header-brand"><img src="acshslogo.jpg"> myACSHS Enterprise</div>
-        <div style="color:white; font-size:12px; font-weight:600">
-            <span id="topName"></span> | <i class="fa-solid fa-power-off" onclick="app.logout()" style="cursor:pointer; margin-left:10px"></i>
+    <header class="app-header">
+        <div style="display:flex; align-items:center; gap:12px">
+            <img src="acshslogo.jpg" style="width:40px; border-radius:8px">
+            <span style="font-weight:800; font-size:18px">myACSHS</span>
+        </div>
+        <div style="display:flex; align-items:center; gap:20px">
+            <span id="userNameTop" style="font-size:13px; font-weight:600"></span>
+            <button class="btn-primary" style="width:100px; height:35px; background:var(--danger)" onclick="engine.logout()">Logout</button>
         </div>
     </header>
 
-    <div class="portal-grid">
-        <aside class="sidebar">
-            <div class="mini-profile">
-                <div class="pfp-small" id="userPfp"></div>
-                <div class="profile-name" id="sideName">Student Name</div>
-                <span class="profile-id" id="sideId">20240001</span>
-            </div>
-            
-            <nav class="nav-menu">
-                <div class="nav-item active" onclick="ui.nav('dash', this)"><i class="fa-solid fa-house"></i> Overview</div>
-                <div class="nav-item" onclick="ui.nav('acad', this)"><i class="fa-solid fa-graduation-cap"></i> Academics</div>
-                <div class="nav-item" onclick="ui.nav('sched', this)"><i class="fa-solid fa-calendar-days"></i> Timetable</div>
-                <div id="admLink" class="nav-item" style="display:none" onclick="ui.nav('admin', this)"><i class="fa-solid fa-user-shield"></i> Administration</div>
-            </nav>
-        </aside>
+    <div class="main-container">
+        <div class="main-area">
+            <div class="tabs" id="tabContainer"></div>
+            <div id="viewRender"></div>
+        </div>
 
-        <main class="main-view" id="renderZone"></main>
+        <aside class="sidebar-area">
+            <div class="card">
+                <div class="avatar-frame" id="userAvatar"></div>
+                <h3 id="sideName">---</h3>
+                <p id="sideMeta" style="font-size:12px; color:var(--text-muted); margin-bottom:15px"></p>
+                <div style="display:flex; gap:5px; flex-wrap:wrap">
+                    <span class="pill">SY 2025-2026</span>
+                    <span class="pill" id="sideStatus">Regular</span>
+                </div>
+                <div style="margin-top:20px; border-top:1px solid #f1f5f9; padding-top:15px">
+                    <span class="field-label">Current Date</span>
+                    <p style="font-weight:600; font-size:14px" id="liveDate"></p>
+                </div>
+            </div>
+
+            <div class="card">
+                <h4 style="margin-bottom:15px">Today's Sessions</h4>
+                <div id="quickSched"></div>
+            </div>
+        </aside>
     </div>
 </div>
 
-<div id="printArea" style="display:none"></div>
-
 <script>
+    /* --- DATA ENGINE --- */
     const CONFIG = {
         SLIPS: ["112233"],
-        SUBJECTS: ["Media & Info Literacy", "JAVA", "Inquiries & Immersion", "Work Immersion", "PE & Health"],
-        FULL_SCHED: {
+        // EXTRACTED FROM IMAGE
+        ICT_1202: {
             "Monday": [
-                { t: "06:15 - 07:15", s: "Homeroom Guidance", i: "Adviser" },
-                { t: "07:15 - 08:15", s: "JAVA", i: "Espiritu" },
-                { t: "08:35 - 09:35", s: "PE & Health", i: "Jordan" },
-                { t: "09:35 - 10:35", s: "Inquiries & Immersion", i: "Inocian" },
-                { t: "10:35 - 11:35", s: "Work Immersion", i: "Espiritu" }
+                { t: "6:15-7:15", s: "Homeroom Guidance", i: "Adviser" },
+                { t: "7:15-8:15", s: "JAVA", i: "Espiritu" },
+                { t: "8:35-9:35", s: "PE & Health", i: "Jordan" },
+                { t: "9:35-10:35", s: "Inquiries & Immersion", i: "Inocian" },
+                { t: "10:35-11:35", s: "Work Immersion", i: "Espiritu" }
             ],
             "Tuesday": [
-                { t: "06:15 - 07:15", s: "Media & Info Literacy", i: "Sofia" },
-                { t: "07:15 - 08:15", s: "JAVA", i: "Espiritu" },
-                { t: "08:35 - 09:35", s: "JAVA", i: "Espiritu" },
-                { t: "09:35 - 10:35", s: "Inquiries & Immersion", i: "Inocian" }
+                { t: "6:15-7:15", s: "Media & Info Literacy", i: "Sofia" },
+                { t: "7:15-8:15", s: "JAVA", i: "Espiritu" },
+                { t: "8:35-9:35", s: "JAVA", i: "Espiritu" },
+                { t: "9:35-10:35", s: "Inquiries & Immersion", i: "Inocian" },
+                { t: "10:35-11:35", s: "Work Immersion", i: "Espiritu" }
             ]
         }
     };
 
-    const INIT_USERS = [
-        { id: "20240001", name: "John Doe", pass: "123", track: "ICT 1202", pic: null, grades: {"Media & Info Literacy":85, "JAVA":90, "Inquiries & Immersion":88, "Work Immersion":92, "PE & Health":85} },
-        { id: "20240002", name: "Jane Smith", pass: "123", track: "ICT 1202", pic: null, grades: {"Media & Info Literacy":92, "JAVA":88, "Inquiries & Immersion":94, "Work Immersion":90, "PE & Health":89} }
+    const INITIAL_DB = [
+        { id: "12-1234-567", name: "Dela Cruz, Juan", pass: "123", track: "ICT 1202", pic: null, grades: {"JAVA":92, "Media & Info Literacy":88, "Work Immersion":95} }
     ];
 
-    const db = {
-        k: 'ACSHS_ELITE_v42',
-        save: (d) => localStorage.setItem(db.k, JSON.stringify(d)),
-        load: () => JSON.parse(localStorage.getItem(db.k) || JSON.stringify(INIT_USERS)),
-        sess: (u) => u ? localStorage.setItem(db.k+'_s', JSON.stringify(u)) : JSON.parse(localStorage.getItem(db.k+'_s'))
+    const storage = {
+        k: 'ACSHS_PRO_DB',
+        save: (d) => localStorage.setItem(storage.k, JSON.stringify(d)),
+        load: () => JSON.parse(localStorage.getItem(storage.k) || JSON.stringify(INITIAL_DB)),
+        session: (u) => u ? localStorage.setItem('ACSHS_SESS', JSON.stringify(u)) : JSON.parse(localStorage.getItem('ACSHS_SESS'))
     };
 
-    const app = {
-        user: null, editIdx: null,
-        init() { const s = db.sess(); if(s) { this.user = s; this.launch(); } },
+    /* --- APPLICATION LOGIC --- */
+    const engine = {
+        user: null,
+        init() {
+            liveDate.innerText = new Date().toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+            const s = storage.session();
+            if(s) { this.user = s; this.launch(); }
+        },
         login() {
-            const r = lRole.value, id = lId.value.trim(), p = lPass.value.trim();
-            if(r==='admin' && id==='admin' && p==='admin123') this.user = { role:'admin', name:'Registrar', id:'ADMIN' };
-            else {
-                const u = db.load().find(x => x.id === id && x.pass === p);
-                if(!u) return alert("Credentials Invalid");
+            const r = lRole.value, id = lId.value.trim(), p = lPass.value;
+            if(r === 'admin' && id === 'admin' && p === 'admin123') {
+                this.user = { role:'admin', name:'System Registrar', id:'ADMIN-001' };
+            } else {
+                const u = storage.load().find(x => x.id === id && x.pass === p);
+                if(!u) return alert("System Error: Invalid Credentials");
                 this.user = { role:'student', ...u };
             }
-            db.sess(this.user); this.launch();
+            storage.session(this.user); this.launch();
         },
         register() {
-            if(!CONFIG.SLIPS.includes(rSlip.value)) return alert("Invalid Enrollment Code");
-            let u = db.load(); u.push({ id: rId.value, name: rName.value, pass: rPass.value, track: rTrack.value, pic: null, grades: {"Media & Info Literacy":75, "JAVA":75, "Inquiries & Immersion":75, "Work Immersion":75, "PE & Health":75} });
-            db.save(u); alert("Success!"); ui.swap('boxL');
+            if(!CONFIG.SLIPS.includes(rSlip.value)) return alert("Invalid Registry Slip");
+            let db = storage.load();
+            if(db.some(x => x.id === rId.value)) return alert("ID Already Registered");
+            db.push({ id: rId.value, name: rName.value, pass: rPass.value, track: "ICT 1202", pic: null, grades: {"JAVA":0, "Media & Info Literacy":0} });
+            storage.save(db); alert("Registry Successful. Please Login."); ui.swap('loginBox');
         },
-        resetPass() {
-            let users = db.load(); const i = users.findIndex(x => x.id === fId.value && CONFIG.SLIPS.includes(fSlip.value));
-            if(i===-1) return alert("Verification Failed");
-            users[i].pass = fPass.value; db.save(users); alert("Password Reset Success!"); ui.swap('boxL');
+        reset() {
+            let db = storage.load();
+            const i = db.findIndex(x => x.id === fId.value && CONFIG.SLIPS.includes(fSlip.value));
+            if(i === -1) return alert("Verification Failed");
+            db[i].pass = fPass.value; storage.save(db); alert("Password Reset Success."); ui.swap('loginBox');
         },
-        logout() { localStorage.removeItem(db.k+'_s'); location.reload(); },
+        logout() { localStorage.removeItem('ACSHS_SESS'); location.reload(); },
         launch() {
             vAuth.style.display='none'; vPortal.style.display='block';
-            topName.innerText = this.user.name; sideName.innerText = this.user.name; sideId.innerText = this.user.id;
-            if(this.user.role==='admin') admLink.style.display='flex';
-            ui.updatePfp(); ui.nav('dash', document.querySelector('.nav-item'));
+            userNameTop.innerText = this.user.name; sideName.innerText = this.user.name;
+            sideMeta.innerText = `${this.user.role.toUpperCase()} • ${this.user.id}`;
+            this.updateAvatar(); this.renderQuickSched();
+            ui.buildTabs();
+        },
+        updateAvatar() {
+            userAvatar.innerHTML = this.user.pic 
+                ? `<img src="${this.user.pic}">` 
+                : `<div style="height:100%; display:flex; align-items:center; justify-content:center; background:#eef2ff; color:var(--primary); font-weight:800; font-size:40px">${this.user.name[0]}</div>`;
+        },
+        renderQuickSched() {
+            const day = new Date().toLocaleDateString('en-US', { weekday:'Long' });
+            const items = CONFIG.ICT_1202[day] || CONFIG.ICT_1202["Monday"];
+            let h = "";
+            items.slice(0, 3).forEach(i => {
+                h += `<div class="sched-item"><div class="sched-time">${i.t}</div><div class="sched-info"><b>${i.s}</b><span>${i.i}</span></div></div>`;
+            });
+            quickSched.innerHTML = h;
         }
     };
 
+    /* --- UI HANDLERS --- */
     const ui = {
-        toggle: (id) => { const x=document.getElementById(id); x.type=x.type==='password'?'text':'password'; },
-        swap: (b) => { ['boxL','boxR','boxF'].forEach(x => document.getElementById(x).style.display = x===b?'block':'none'); },
-        updatePfp() { userPfp.innerHTML = app.user.pic ? `<img src="${app.user.pic}">` : `<i class="fa-solid fa-user-shield" style="font-size:30px; color:#cbd5e1"></i>`; },
-        nav(view, el) {
-            document.querySelectorAll('.nav-item').forEach(t => t.classList.remove('active')); el.classList.add('active');
-            let h = "";
-            if(view==='dash') {
-                h = `<h3>Academic Overview</h3><div class="panel"><h4>Status: Enrolled</h4><p>You are currently enrolled for the 2nd Semester 2025-2026.</p></div>`;
-                h += `<h3>Quick Schedule</h3><div class="panel">`;
-                (CONFIG.FULL_SCHED["Monday"]).slice(0,3).forEach(i => h += `<div class="schedule-row"><span class="sched-time">${i.t}</span><span class="sched-subj">${i.s}</span></div>`);
-                h += `</div>`;
-            } 
-            else if(view==='acad') {
-                h = `<div class="section-header"><h3>Official Scholastic Records</h3><button class="btn-auth" style="width:150px; height:35px" onclick="ui.print()">EXPORT PDF</button></div><div class="panel">`;
-                Object.entries(app.user.grades || {}).forEach(([k,v]) => h += `<div class="schedule-row"><span>${k}</span><b style="color:var(--primary)">${v}</b></div>`);
-                h += `</div>`;
+        toggle: (id) => { const el = document.getElementById(id); el.type = el.type === 'password' ? 'text' : 'password'; },
+        swap: (b) => { ['loginBox','regBox','forgotBox'].forEach(x => document.getElementById(x).style.display = x===b?'block':'none'); },
+        buildTabs() {
+            tabContainer.innerHTML = "";
+            const menu = engine.user.role === 'admin' 
+                ? ['Home', 'Manage Students', 'Grade Entry', 'Schedule Config']
+                : ['Main Dashboard', 'Class Schedule', 'Academic Records', 'Attendance'];
+            
+            menu.forEach((m, idx) => {
+                const btn = document.createElement('button');
+                btn.className = `tab-btn ${idx===0?'active':''}`;
+                btn.innerText = m;
+                btn.onclick = () => {
+                    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    ui.renderView(m);
+                };
+                tabContainer.appendChild(btn);
+            });
+            ui.renderView(menu[0]);
+        },
+        renderView(v) {
+            let h = `<div class="card"><h3>${v}</h3><div class="hr" style="margin:15px 0; border-bottom:1px solid #eee"></div>`;
+            
+            if(v === 'Main Dashboard' || v === 'Home') {
+                h += `<p>Welcome to the <b>ACSHS Enterprise Portal</b>. You are currently logged in as a <b>${engine.user.role}</b>.</p>
+                      <div style="margin-top:20px; display:grid; grid-template-columns: 1fr 1fr; gap:15px">
+                        <div class="card" style="background:#f0f7ff; border:none"><b>Registry Status</b><br><small>Verified</small></div>
+                        <div class="card" style="background:#f0fff4; border:none"><b>Account Security</b><br><small>Level 2</small></div>
+                      </div>`;
             }
-            else if(view==='sched') {
-                h = `<h3>Complete Weekly Timetable</h3>`;
-                Object.entries(CONFIG.FULL_SCHED).forEach(([day, sessions]) => {
-                    h += `<div class="panel"><h4>${day}</h4>`;
-                    sessions.forEach(s => h += `<div class="schedule-row"><span class="sched-time">${s.t}</span><div class="sched-subj">${s.s}<br><small class="sched-instr">${s.i}</small></div></div>`);
-                    h += `</div>`;
+            else if(v === 'Class Schedule') {
+                Object.entries(CONFIG.ICT_1202).forEach(([day, list]) => {
+                    h += `<h4 style="margin:15px 0 10px">${day}</h4>`;
+                    list.forEach(i => h += `<div class="sched-item"><div class="sched-time">${i.t}</div><div class="sched-info"><b>${i.s}</b><span>Room: ${i.i}</span></div></div>`);
                 });
             }
-            else if(view==='admin') {
-                h = `<h3>Faculty Management Console</h3><div class="editor-container">
-                    <div class="panel" style="max-height:500px; overflow-y:auto"><h4>Student Directory</h4>`;
-                db.load().forEach((u, i) => h += `<div class="student-list-item" onclick="ui.openEditor(${i})"><span>${u.name}</span><i class="fa-solid fa-chevron-right"></i></div>`);
-                h += `</div><div class="panel" id="editorPanel"><i>Select a student to modify records.</i></div></div>`;
+            else if(v === 'Academic Records') {
+                h += `<table><thead><tr><th>Subject</th><th>Final Grade</th><th>Status</th></tr></thead><tbody>`;
+                Object.entries(engine.user.grades || {}).forEach(([k,v]) => {
+                    h += `<tr><td>${k}</td><td><b>${v}</b></td><td><span class="pill" style="background:#dcfce7; color:#166534">Passed</span></td></tr>`;
+                });
+                h += `</tbody></table><button class="btn-primary" style="margin-top:20px; width:200px" onclick="window.print()">Export Grade Slip</button>`;
             }
-            renderZone.innerHTML = h;
+            else if(v === 'Manage Students') {
+                const db = storage.load();
+                h += `<table><thead><tr><th>ID</th><th>Name</th><th>Action</th></tr></thead><tbody>`;
+                db.forEach((u, i) => h += `<tr><td>${u.id}</td><td>${u.name}</td><td><button class="tab-btn" style="padding:4px 8px" onclick="ui.adminEditGrades(${i})">Edit Grades</button></td></tr>`);
+                h += `</tbody></table>`;
+            }
+            
+            h += `</div><div id="subView"></div>`;
+            viewRender.innerHTML = h;
         },
-        openEditor(idx) {
-            app.editIdx = idx; const u = db.load()[idx];
-            let h = `<h4>Modifying: ${u.name}</h4><hr style="margin:15px 0">`;
-            Object.entries(u.grades).forEach(([k,v]) => h += `<div class="grade-input-box"><label>${k}</label><input type="number" class="gInp" data-k="${k}" value="${v}"></div>`);
-            h += `<button class="btn-auth" onclick="ui.saveGrades()">SAVE UPDATES</button>`;
-            editorPanel.innerHTML = h;
+        adminEditGrades(idx) {
+            const u = storage.load()[idx];
+            let h = `<div class="card"><h4>Grading: ${u.name}</h4>`;
+            Object.entries(u.grades).forEach(([k,v]) => {
+                h += `<div style="margin:10px 0"><span class="field-label">${k}</span><input type="number" class="grade-input" data-subj="${k}" value="${v}"></div>`;
+            });
+            h += `<button class="btn-primary" onclick="ui.saveGrades(${idx})">UPDATE STUDENT RECORD</button></div>`;
+            subView.innerHTML = h;
+            subView.scrollIntoView({ behavior: 'smooth' });
         },
-        saveGrades() {
-            let u = db.load(); document.querySelectorAll('.gInp').forEach(i => u[app.editIdx].grades[i.dataset.k] = parseInt(i.value));
-            db.save(u); alert("Success!"); ui.nav('admin', document.querySelector('.nav-item:last-child'));
-        },
-        print() {
-            let h = `<div style="padding:40px; border:5px solid var(--primary)">
-                <center><img src="acshslogo.jpg" style="width:100px"><br><h1>ACSHS Academic Record</h1></center><br>
-                <b>Student:</b> ${app.user.name}<br><b>ID:</b> ${app.user.id}<hr>`;
-            Object.entries(app.user.grades).forEach(([k,v]) => h += `<div class="schedule-row"><span>${k}</span><b>${v}</b></div>`);
-            printArea.innerHTML = h; window.print();
+        saveGrades(idx) {
+            let db = storage.load();
+            document.querySelectorAll('.grade-input').forEach(inp => {
+                db[idx].grades[inp.dataset.subj] = parseInt(inp.value);
+            });
+            storage.save(db); alert("Database Synced."); ui.renderView('Manage Students');
         }
     };
-    app.init();
+
+    engine.init();
 </script>
 </body>
 </html>
