@@ -3,446 +3,894 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-    <title>myACSHS Enterprise | Comprehensive SIS v6.0</title>
+    <title>myACSHS | Enterprise Portal v7.0</title>
     
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     
     <style>
-        /* --- PROFESSIONAL DESIGN SYSTEM --- */
+        /* --- PROFESSIONAL ENHANCED STYLING --- */
         :root {
-            --primary: #2563eb;
-            --primary-dark: #1d4ed8;
-            --accent: #6a11cb;
-            --bg-body: #f1f5f9;
-            --bg-card: #ffffff;
-            --text-main: #0f172a;
-            --text-muted: #64748b;
-            --border-color: #e2e8f0;
-            --success: #10b981;
-            --danger: #ef4444;
-            --warning: #f59e0b;
-            --radius-lg: 12px;
-            --radius-md: 8px;
-            --shadow-sm: 0 1px 3px rgba(0,0,0,0.1);
-            --shadow-lg: 0 10px 25px -5px rgba(0,0,0,0.1);
+            --bg-1: #f8fafc;
+            --bg-2: #ffffff;
+            --primary: #1e40af;
+            --primary-light: #3b82f6;
+            --accent: #7c3aed;
+            --accent-light: #a855f7;
+            --muted: #64748b;
+            --muted-light: #94a3b8;
+            --card: #ffffff;
+            --card-hover: #f1f5f9;
+            --danger: #dc2626;
+            --danger-light: #ef4444;
+            --success: #059669;
+            --success-light: #10b981;
+            --warning: #d97706;
+            --radius: 16px;
+            --radius-sm: 8px;
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
-        /* --- RESET & BASE STYLES --- */
-        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-font-smoothing: antialiased; }
-        body { 
-            font-family: 'Inter', sans-serif; 
-            background: var(--bg-body); 
-            color: var(--text-main); 
-            line-height: 1.6;
-            min-height: 100vh;
+        * { 
+            box-sizing: border-box; 
+            -webkit-font-smoothing: antialiased; 
+            -moz-osx-font-smoothing: grayscale;
         }
 
-        /* --- AUTHENTICATION (LOGIN/FORGOT/REG) --- */
-        .auth-container {
-            min-height: 100vh;
+        body {
+            margin: 0;
+            font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, var(--bg-1) 0%, #e2e8f0 100%);
+            color: #1e293b;
+            padding: 20px;
             display: flex;
-            align-items: center;
             justify-content: center;
-            background: linear-gradient(135deg, #001f3f 0%, #003366 100%);
+            min-height: 100vh;
+            line-height: 1.6;
+        }
+
+        .app {
+            width: 100%;
+            max-width: 1200px;
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+            animation: fadeIn 0.8s ease-out;
+        }
+
+        @keyframes fadeIn { 
+            from { opacity: 0; transform: translateY(20px); } 
+            to { opacity: 1; transform: translateY(0); } 
+        }
+
+        /* --- AUTHENTICATION STYLES --- */
+        .auth-overlay {
+            position: fixed; 
+            top: 0; 
+            left: 0; 
+            width: 100%; 
+            height: 100%;
+            background: rgba(255, 255, 255, 0.95); 
+            backdrop-filter: blur(20px);
+            z-index: 9999; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center;
             padding: 20px;
         }
-        .auth-card {
-            background: var(--bg-card);
-            width: 100%;
-            max-width: 440px;
-            padding: 40px;
-            border-radius: var(--radius-lg);
+
+        .auth-box {
+            background: var(--card); 
+            width: 100%; 
+            max-width: 450px;
+            padding: 48px; 
+            border-radius: var(--radius); 
+            box-shadow: var(--shadow-xl);
+            border: 1px solid rgba(148, 163, 184, 0.1);
+            animation: slideUp 0.5s ease-out;
+        }
+
+        @keyframes slideUp { 
+            from { opacity: 0; transform: translateY(30px); } 
+            to { opacity: 1; transform: translateY(0); } 
+        }
+
+        .auth-logo { 
+            width: 80px; 
+            height: 80px; 
+            margin: 0 auto 24px; 
+            display: block; 
+            border-radius: var(--radius-sm); 
+            box-shadow: var(--shadow);
+        }
+
+        .auth-box h2 {
+            text-align: center;
+            margin-bottom: 8px;
+            font-weight: 800;
+            font-size: 28px;
+            color: var(--primary);
+        }
+
+        .auth-box p {
+            text-align: center;
+            color: var(--muted);
+            font-size: 14px;
+            margin-bottom: 32px;
+        }
+
+        /* --- HEADER --- */
+        .app-header {
+            display: flex; 
+            align-items: center; 
+            justify-content: space-between;
+            background: rgba(255, 255, 255, 0.9); 
+            backdrop-filter: blur(20px);
+            padding: 20px 32px; 
+            border-radius: var(--radius); 
+            border: 1px solid rgba(255, 255, 255, 0.2);
             box-shadow: var(--shadow-lg);
-            animation: slideUp 0.5s ease;
+            transition: var(--transition);
         }
-        @keyframes slideUp { from { opacity:0; transform: translateY(20px); } to { opacity:1; transform: translateY(0); } }
+
+        .app-header:hover {
+            box-shadow: var(--shadow-xl);
+        }
+
+        .header-brand { 
+            display: flex; 
+            align-items: center; 
+            gap: 16px; 
+        }
         
-        .auth-logo { width: 80px; height: 80px; margin: 0 auto 20px; display: block; border-radius: 12px; }
-        .field-label { display: block; font-size: 11px; font-weight: 800; color: var(--text-muted); margin-bottom: 6px; text-transform: uppercase; letter-spacing: 1px; }
+        .header-brand img {
+            width: 48px;
+            height: 48px;
+            border-radius: var(--radius-sm);
+            box-shadow: var(--shadow);
+        }
         
-        .input-group { margin-bottom: 20px; position: relative; }
-        input, select, textarea {
-            width: 100%; height: 50px; padding: 0 16px; border-radius: var(--radius-md);
-            border: 1.5px solid var(--border-color); font-size: 15px; transition: 0.3s;
-        }
-        input:focus { border-color: var(--primary); outline: none; box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.1); }
-        .eye-icon { position: absolute; right: 15px; top: 15px; cursor: pointer; color: var(--text-muted); }
-
-        .btn-auth {
-            width: 100%; height: 52px; background: var(--primary); color: white; border: none;
-            border-radius: var(--radius-md); font-weight: 700; cursor: pointer; font-size: 16px;
-        }
-        .btn-auth:hover { background: var(--primary-dark); }
-
-        /* --- PORTAL GRID LAYOUT --- */
-        .app-shell { display: none; } /* Shown after login */
-        .top-nav {
-            background: #fff; height: 70px; display: flex; align-items: center; justify-content: space-between;
-            padding: 0 40px; border-bottom: 1px solid var(--border-color); position: sticky; top: 0; z-index: 100;
-        }
-        .portal-grid {
-            max-width: 1400px; margin: 30px auto; padding: 0 20px;
-            display: grid; grid-template-columns: 320px 1fr; gap: 24px;
+        .header-brand h1 { 
+            font-size: 24px; 
+            margin: 0; 
+            font-weight: 900; 
+            letter-spacing: -0.5px;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
 
-        /* --- SIDEBAR PANEL (PROFILE) --- */
-        .sidebar-panel { position: sticky; top: 100px; height: fit-content; }
-        .profile-card {
-            background: #fff; border-radius: var(--radius-lg); padding: 30px;
-            border: 1px solid var(--border-color); text-align: center; box-shadow: var(--shadow-sm);
-        }
-        .pfp-square {
-            width: 140px; height: 140px; border-radius: var(--radius-md);
-            margin: 0 auto 20px; background: #f8fafc; border: 4px solid var(--primary);
-            overflow: hidden; display: flex; align-items: center; justify-content: center;
-        }
-        .pfp-square img { width: 100%; height: 100%; object-fit: cover; }
-        .user-title { font-size: 20px; font-weight: 800; color: var(--text-main); margin-bottom: 5px; }
-        .user-sub { font-family: 'JetBrains Mono', monospace; font-size: 13px; color: var(--primary); font-weight: 600; }
-
-        .stat-bar {
-            display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 25px;
-            padding-top: 25px; border-top: 1px solid #f1f5f9;
-        }
-        .stat-item { background: #f8fafc; padding: 12px; border-radius: var(--radius-md); }
-        .stat-item span { display: block; font-size: 10px; font-weight: 800; color: var(--text-muted); text-transform: uppercase; }
-        .stat-item b { font-size: 18px; color: var(--primary); }
-
-        /* --- MAIN CONTENT PANELS --- */
-        .content-panel { display: flex; flex-direction: column; gap: 24px; }
-        .panel-card {
-            background: #fff; border-radius: var(--radius-lg); padding: 30px;
-            border: 1px solid var(--border-color); box-shadow: var(--shadow-sm);
-        }
-        .panel-header {
-            display: flex; justify-content: space-between; align-items: center;
-            margin-bottom: 25px; border-bottom: 2px solid #f1f5f9; padding-bottom: 15px;
+        .header-user {
+            display: flex;
+            align-items: center;
+            gap: 16px;
         }
 
-        /* --- TABS --- */
-        .tab-menu { display: flex; gap: 10px; margin-bottom: 20px; overflow-x: auto; padding-bottom: 10px; }
-        .tab-link {
-            padding: 12px 24px; border-radius: var(--radius-md); border: none;
-            background: #e2e8f0; color: var(--text-muted); font-weight: 700;
-            font-size: 14px; cursor: pointer; white-space: nowrap; transition: 0.2s;
+        .header-user b {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--primary);
         }
-        .tab-link.active { background: var(--primary); color: #fff; box-shadow: 0 4px 12px rgba(37,99,235,0.2); }
 
-        /* --- SCHEDULE LISTS (MON-FRI) --- */
-        .sched-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; }
-        .day-box { background: #fcfdfe; border: 1px solid #e2e8f0; border-radius: var(--radius-md); padding: 20px; }
-        .day-label { 
-            font-weight: 800; color: var(--primary); font-size: 14px; 
-            margin-bottom: 15px; border-bottom: 2px solid var(--primary); padding-bottom: 5px;
+        /* --- MAIN GRID (The 2-Column Layout) --- */
+        .main-grid {
+            display: grid;
+            grid-template-columns: 1fr 360px; /* Sidebar on the RIGHT as provided */
+            gap: 24px;
         }
-        .sched-row { display: flex; gap: 15px; padding: 12px 0; border-bottom: 1px dotted #e2e8f0; }
-        .sched-row:last-child { border-bottom: none; }
-        .sched-time { font-family: 'JetBrains Mono', monospace; font-size: 11px; font-weight: 700; color: var(--text-muted); min-width: 85px; }
-        .sched-info b { display: block; font-size: 13px; color: var(--text-main); }
-        .sched-info small { font-size: 11px; color: var(--text-muted); }
 
-        /* --- TABLES --- */
-        .table-container { overflow-x: auto; }
-        table { width: 100%; border-collapse: collapse; }
-        th { text-align: left; padding: 15px; background: #f8fafc; font-size: 11px; font-weight: 800; color: var(--text-muted); text-transform: uppercase; border-bottom: 2px solid var(--border-color); }
-        td { padding: 15px; border-bottom: 1px solid #f1f5f9; font-size: 14px; }
-        .grade-badge { background: #dcfce7; color: #166534; padding: 4px 10px; border-radius: 99px; font-size: 12px; font-weight: 700; }
-
-        /* --- MOBILE RESPONSIVENESS --- */
         @media (max-width: 1024px) {
-            .portal-grid { grid-template-columns: 1fr; }
-            .sidebar-panel { position: relative; top: 0; }
-            .top-nav { padding: 0 20px; }
+            .main-grid { grid-template-columns: 1fr; }
+            .sidebar { order: -1; } /* Profile moves to top on mobile */
         }
 
-        /* --- UTILITIES --- */
-        .badge-status { background: #fef3c7; color: #92400e; padding: 5px 12px; border-radius: 6px; font-size: 12px; font-weight: 700; }
-        .toast {
-            position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%) translateY(100px);
-            background: #1e293b; color: #fff; padding: 12px 30px; border-radius: 30px;
-            font-weight: 600; transition: 0.4s; z-index: 1000;
+        /* --- SIDEBAR COMPONENTS --- */
+        .sidebar { 
+            display: flex; 
+            flex-direction: column; 
+            gap: 24px; 
         }
-        .toast.active { transform: translateX(-50%) translateY(0); }
+        
+        .card {
+            background: var(--card); 
+            border-radius: var(--radius); 
+            padding: 32px;
+            box-shadow: var(--shadow); 
+            border: 1px solid rgba(148, 163, 184, 0.1);
+            transition: var(--transition);
+        }
+
+        .card:hover {
+            box-shadow: var(--shadow-lg);
+            transform: translateY(-2px);
+        }
+
+        /* The SQUARE avatar from your file */
+        .avatar-square {
+            width: 140px; 
+            height: 140px; 
+            background: linear-gradient(135deg, #f1f5f9, #e2e8f0); 
+            border-radius: var(--radius);
+            margin: 0 auto 24px; 
+            overflow: hidden; 
+            border: 4px solid #ffffff;
+            display: flex; 
+            align-items: center; 
+            justify-content: center;
+            box-shadow: var(--shadow-lg);
+            transition: var(--transition);
+        }
+        
+        .avatar-square:hover {
+            transform: scale(1.05);
+        }
+        
+        .avatar-square img { 
+            width: 100%; 
+            height: 100%; 
+            object-fit: cover; 
+        }
+        
+        .avatar-square i { 
+            font-size: 60px; 
+            color: var(--primary); 
+        }
+
+        .profile-name { 
+            font-size: 22px; 
+            font-weight: 800; 
+            text-align: center; 
+            margin: 0; 
+            color: var(--primary);
+        }
+        
+        .profile-id { 
+            font-family: 'JetBrains Mono'; 
+            font-size: 13px; 
+            color: var(--accent); 
+            text-align: center; 
+            display: block; 
+            margin-top: 8px; 
+            font-weight: 600; 
+            letter-spacing: 0.5px;
+        }
+
+        .stat-row { 
+            display: grid; 
+            grid-template-columns: 1fr 1fr; 
+            gap: 16px; 
+            margin-top: 24px; 
+        }
+        
+        .stat-item { 
+            background: linear-gradient(135deg, #f8fafc, #f1f5f9); 
+            padding: 16px; 
+            border-radius: var(--radius-sm); 
+            text-align: center; 
+            border: 1px solid rgba(148, 163, 184, 0.1);
+            transition: var(--transition);
+        }
+        
+        .stat-item:hover {
+            background: linear-gradient(135deg, #f1f5f9, #e2e8f0);
+        }
+        
+        .stat-item label { 
+            font-size: 11px; 
+            font-weight: 800; 
+            color: var(--muted); 
+            text-transform: uppercase; 
+            display: block; 
+            letter-spacing: 0.5px;
+        }
+        
+        .stat-item span { 
+            font-size: 20px; 
+            font-weight: 900; 
+            color: var(--primary); 
+        }
+
+        .status-section {
+            margin-top: 32px; 
+            border-top: 1px solid #e2e8f0; 
+            padding-top: 24px;
+        }
+
+        .status-section label {
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--muted);
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        .status-indicator {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .status-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: var(--success);
+            box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.2);
+        }
+
+        .status-text {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--success);
+        }
+
+        /* --- TABS & CONTENT --- */
+        .tab-nav { 
+            display: flex; 
+            gap: 12px; 
+            margin-bottom: 24px; 
+            overflow-x: auto; 
+            padding-bottom: 8px;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+        }
+        
+        .tab-nav::-webkit-scrollbar {
+            display: none;
+        }
+        
+        .tab-btn {
+            padding: 14px 24px; 
+            border-radius: var(--radius-sm); 
+            border: 2px solid transparent;
+            background: #f1f5f9;
+            color: var(--primary); 
+            font-weight: 700; 
+            font-size: 14px; 
+            cursor: pointer;
+            white-space: nowrap; 
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .tab-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s;
+        }
+        
+        .tab-btn:hover::before {
+            left: 100%;
+        }
+        
+        .tab-btn.active { 
+            background: linear-gradient(135deg, var(--primary), var(--primary-light)); 
+            color: #ffffff; 
+            box-shadow: 0 4px 15px rgba(30, 64, 175, 0.3);
+            border-color: var(--primary);
+        }
+
+        /* --- SCHEDULE DESIGN --- */
+        .schedule-table { 
+            width: 100%; 
+            border-collapse: collapse; 
+            border-radius: var(--radius-sm);
+            overflow: hidden;
+            box-shadow: var(--shadow);
+        }
+        
+        .schedule-table th { 
+            text-align: left; 
+            font-size: 12px; 
+            text-transform: uppercase; 
+            color: var(--muted); 
+            padding: 16px; 
+            border-bottom: 2px solid #e2e8f0;
+            background: #f8fafc;
+            font-weight: 800;
+            letter-spacing: 0.5px;
+        }
+        
+        .schedule-table td { 
+            padding: 16px; 
+            border-bottom: 1px solid #f1f5f9; 
+            font-size: 14px;
+            transition: background-color 0.2s;
+        }
+        
+        .schedule-table tr:hover td {
+            background-color: #f8fafc;
+        }
+        
+        .day-badge { 
+            background: linear-gradient(135deg, #eef2ff, #e0e7ff); 
+            color: var(--primary); 
+            padding: 6px 12px; 
+            border-radius: var(--radius-sm); 
+            font-weight: 800; 
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* --- INPUTS & BUTTONS --- */
+        .form-group { 
+            margin-bottom: 20px; 
+        }
+        
+        label { 
+            font-size: 13px; 
+            font-weight: 700; 
+            color: var(--muted); 
+            display: block; 
+            margin-bottom: 8px;
+            letter-spacing: 0.3px;
+        }
+        
+        input, select {
+            width: 100%; 
+            height: 52px; 
+            padding: 0 16px; 
+            border-radius: var(--radius-sm);
+            border: 2px solid #e2e8f0; 
+            background: #ffffff; 
+            font-size: 16px; 
+            transition: var(--transition);
+            font-family: inherit;
+        }
+        
+        input:focus, select:focus { 
+            border-color: var(--primary); 
+            outline: none; 
+            background: #ffffff; 
+            box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
+        }
+        
+        .btn-main {
+            width: 100%; 
+            height: 52px; 
+            background: linear-gradient(135deg, var(--primary), var(--primary-light)); 
+            color: #ffffff; 
+            border: none;
+            border-radius: var(--radius-sm); 
+            font-weight: 800; 
+            cursor: pointer; 
+            transition: var(--transition);
+            font-size: 16px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .btn-main::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s;
+        }
+        
+        .btn-main:hover::before {
+            left: 100%;
+        }
+        
+        .btn-main:hover { 
+            background: linear-gradient(135deg, var(--accent), var(--accent-light)); 
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .btn-secondary {
+            background: #f1f5f9;
+            color: var(--primary);
+            border: 2px solid #e2e8f0;
+        }
+
+        .btn-secondary:hover {
+            background: #e2e8f0;
+            border-color: var(--primary);
+        }
+
+        .toast {
+            position: fixed; 
+            bottom: 30px; 
+            left: 50%; 
+            transform: translateX(-50%);
+            background: linear-gradient(135deg, #1e293b, #334155); 
+            color: #ffffff; 
+            padding: 16px 32px; 
+            border-radius: 50px;
+            font-weight: 600; 
+            font-size: 14px; 
+            opacity: 0; 
+            transition: var(--transition); 
+            z-index: 10000;
+            box-shadow: var(--shadow-xl);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .toast.show { 
+            opacity: 1; 
+            bottom: 50px; 
+        }
+
+        /* --- ADDITIONAL PROFESSIONAL TOUCHES --- */
+        .card h3, .card h4 {
+            margin: 0 0 16px 0;
+            font-weight: 800;
+            color: var(--primary);
+            font-size: 20px;
+        }
+
+        .card hr {
+            border: 0;
+            border-top: 1px solid #e2e8f0;
+            margin: 24px 0;
+        }
+
+        .mini-schedule-item {
+            font-size: 13px;
+            margin-bottom: 12px;
+            padding: 8px;
+            background: #f8fafc;
+            border-radius: var(--radius-sm);
+            border-left: 4px solid var(--primary);
+        }
+
+                .mini-schedule-item b {
+            color: var(--primary);
+        }
+
+        .mini-schedule-item span {
+            color: var(--muted);
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .app-header {
+                padding: 16px 20px;
+                flex-direction: column;
+                gap: 16px;
+            }
+
+            .header-brand h1 {
+                font-size: 20px;
+            }
+
+            .auth-box {
+                padding: 32px 24px;
+                max-width: 100%;
+            }
+
+            .card {
+                padding: 24px;
+            }
+
+            .avatar-square {
+                width: 120px;
+                height: 120px;
+            }
+
+            .stat-row {
+                grid-template-columns: 1fr;
+                gap: 12px;
+            }
+
+            .tab-nav {
+                flex-wrap: wrap;
+            }
+
+            .tab-btn {
+                padding: 12px 16px;
+                font-size: 13px;
+            }
+        }
     </style>
 </head>
 <body>
 
-<div id="authSection" class="auth-container">
-    <div class="auth-card" id="loginBox">
-        <img src="acshslogo.jpg" class="auth-logo">
-        <h2 style="text-align:center; margin-bottom:5px">Student Portal</h2>
-        <p style="text-align:center; font-size:13px; color:var(--text-muted); margin-bottom:30px">Antipolo City Senior High School</p>
+<div id="vAuth" class="auth-overlay">
+    <div class="auth-box" id="loginBox">
+        <img src="acshslogo.jpg" class="auth-logo" alt="ACSHS Logo">
+        <h2>Portal Login</h2>
+        <p>Antipolo City Senior High School</p>
         
-        <div class="field-label">Portal Role</div>
-        <div class="input-group">
-            <select id="roleInp"><option value="student">Student Account</option><option value="admin">Administrator</option></select>
+        <div class="form-group">
+            <label>Role</label>
+            <select id="lRole">
+                <option value="student">Student</option>
+                <option value="admin">Administrator</option>
+            </select>
         </div>
-
-        <div class="field-label">Student ID</div>
-        <div class="input-group"><input type="text" id="idInp" placeholder="2024-XXXX-XXX"></div>
-
-        <div class="field-label">Password</div>
-        <div class="input-group">
-            <input type="password" id="passInp" placeholder="••••••••">
-            <i class="fa-solid fa-eye eye-icon" onclick="ui.togglePass('passInp')"></i>
+        <div class="form-group">
+            <label>Student ID</label>
+            <input type="text" id="lId" placeholder="2024-XXXX-XXX">
         </div>
-
-        <button class="btn-auth" onclick="sys.login()">AUTHORIZE ACCESS</button>
-        
-        <div style="margin-top:25px; text-align:center; font-size:13px">
-            <span style="color:var(--primary); cursor:pointer; font-weight:700" onclick="ui.showBox('forgotBox')">Forgot Password?</span>
+        <div class="form-group">
+            <label>Password</label>
+            <input type="password" id="lPass" placeholder="••••••••">
+        </div>
+        <button class="btn-main" onclick="sys.login()">LOGIN</button>
+        <div style="margin-top:20px; text-align:center; font-size:13px">
+            <span style="color:var(--primary); cursor:pointer; font-weight:700" onclick="ui.swapAuth('forgotBox')">Forgot Password?</span>
             <span style="margin:0 10px; color:#cbd5e1">|</span>
-            <span style="color:var(--primary); cursor:pointer; font-weight:700" onclick="ui.showBox('regBox')">New Enrollment</span>
+            <span style="color:var(--primary); cursor:pointer; font-weight:700" onclick="ui.swapAuth('regBox')">Register</span>
         </div>
     </div>
 
-    <div class="auth-card" id="regBox" style="display:none">
-        <h2>New Student Registry</h2>
-        <p style="font-size:13px; color:var(--text-muted); margin-bottom:20px">Fill in the details to create your academic account.</p>
-        <div class="field-label">Full Name</div><div class="input-group"><input type="text" id="rName"></div>
-        <div class="field-label">Student ID</div><div class="input-group"><input type="text" id="rId"></div>
-        <div class="field-label">Enrollment Slip Code (112233)</div><div class="input-group"><input type="text" id="rSlip"></div>
-        <div class="field-label">Password</div><div class="input-group"><input type="password" id="rPass"></div>
-        <button class="btn-auth" onclick="sys.register()">REGISTER ACCOUNT</button>
-        <p style="text-align:center; margin-top:15px; cursor:pointer; font-size:13px" onclick="ui.showBox('loginBox')">Return to Login</p>
+    <div class="auth-box" id="regBox" style="display:none">
+        <h2>New Student</h2>
+        <div class="form-group">
+            <label>Full Name</label>
+            <input type="text" id="rName" placeholder="Enter your full name">
+        </div>
+        <div class="form-group">
+            <label>Student ID</label>
+            <input type="text" id="rId" placeholder="2024-XXXX-XXX">
+        </div>
+        <div class="form-group">
+            <label>Slip Code (112233)</label>
+            <input type="text" id="rSlip" placeholder="Enter slip code">
+        </div>
+        <div class="form-group">
+            <label>Password</label>
+            <input type="password" id="rPass" placeholder="Create a password">
+        </div>
+        <button class="btn-main" onclick="sys.register()">CREATE ACCOUNT</button>
+        <p style="text-align:center; margin-top:15px; cursor:pointer; font-size:13px" onclick="ui.swapAuth('loginBox')">Cancel</p>
     </div>
 
-    <div class="auth-card" id="forgotBox" style="display:none">
-        <h2>Password Recovery</h2>
-        <p style="font-size:13px; color:var(--text-muted); margin-bottom:20px">Verify your identity using your Student ID and Slip Code.</p>
-        <div class="field-label">Student ID</div><div class="input-group"><input type="text" id="fId"></div>
-        <div class="field-label">Slip Code</div><div class="input-group"><input type="text" id="fSlip"></div>
-        <div class="field-label">New Password</div><div class="input-group"><input type="password" id="fPass"></div>
-        <button class="btn-auth" onclick="sys.reset()">RESET PASSWORD</button>
-        <p style="text-align:center; margin-top:15px; cursor:pointer; font-size:13px" onclick="ui.showBox('loginBox')">Back to Login</p>
+    <div class="auth-box" id="forgotBox" style="display:none">
+        <h2>Recover Account</h2>
+        <div class="form-group">
+            <label>Student ID</label>
+            <input type="text" id="fId" placeholder="2024-XXXX-XXX">
+        </div>
+        <div class="form-group">
+            <label>Registry Slip Code</label>
+            <input type="text" id="fSlip" placeholder="Enter slip code">
+        </div>
+        <div class="form-group">
+            <label>New Password</label>
+            <input type="password" id="fPass" placeholder="New password">
+        </div>
+        <button class="btn-main" onclick="sys.reset()">RESET PASSWORD</button>
+        <p style="text-align:center; margin-top:15px; cursor:pointer; font-size:13px" onclick="ui.swapAuth('loginBox')">Back to Login</p>
     </div>
 </div>
 
-<div id="portalApp" class="app-shell">
-    <header class="top-nav">
-        <div style="display:flex; align-items:center; gap:15px">
-            <img src="acshslogo.jpg" style="width:40px; border-radius:8px">
-            <span style="font-weight:900; font-size:20px; letter-spacing:-0.5px">myACSHS <span style="color:var(--primary)">Elite</span></span>
+<div class="app" id="vApp" style="display:none">
+    <header class="app-header">
+        <div class="header-brand">
+            <img src="acshslogo.jpg" alt="ACSHS Logo">
+            <h1>myACSHS <span>Portal</span></h1>
         </div>
-        <div style="display:flex; align-items:center; gap:20px">
-            <div style="text-align:right">
-                <b id="topName" style="font-size:14px; display:block">---</b>
-                <small class="badge-status">Semester Active</small>
-            </div>
-            <button class="btn-auth" style="width:100px; height:38px; background:var(--danger)" onclick="sys.logout()">Logout</button>
+        <div class="header-user">
+            <b id="topUser">User Name</b>
+            <button class="btn-main" style="width:90px; height:35px; background:var(--danger); font-size:12px" onclick="sys.logout()">LOGOUT</button>
         </div>
     </header>
 
-    <div class="portal-grid">
-        <aside class="sidebar-panel">
-            <div class="profile-card">
-                <div class="pfp-square" id="userPfp"></div>
-                <h3 class="user-title" id="sideName">---</h3>
-                <span class="user-sub" id="sideId">---</span>
+    <div class="main-grid">
+        <div class="main-content">
+            <div class="tab-nav" id="tabArea"></div>
+            <div id="viewArea"></div>
+        </div>
+
+        <aside class="sidebar">
+            <div class="card">
+                <div class="avatar-square" id="sideAvatar"></div>
+                <h3 class="profile-name" id="sideName">Dela Cruz, Juan</h3>
+                <span class="profile-id" id="sideId">2024-1234-567</span>
                 
-                <div class="stat-bar">
-                    <div class="stat-item"><span>GPA</span><b id="statGpa">0.0</b></div>
-                    <div class="stat-item"><span>Section</span><b id="statSec">ICT 1202</b></div>
+                <div class="stat-row">
+                    <div class="stat-item">
+                        <label>Gen Ave</label>
+                        <span id="statAve">92.4</span>
+                    </div>
+                    <div class="stat-item">
+                        <label>Absences</label>
+                        <span id="statAbs">0</span>
+                    </div>
                 </div>
-                
-                <div style="margin-top:20px; text-align:left; font-size:12px; color:var(--text-muted)">
-                    <b>System Messages:</b><br>
-                    • No pending clearances.<br>
-                    • Examination permits ready.
+
+                <div class="status-section">
+                    <label>Current Status</label>
+                    <div class="status-indicator">
+                        <div class="status-dot"></div>
+                        <span class="status-text">Enrolled (Regular)</span>
+                    </div>
                 </div>
             </div>
-        </aside>
 
-        <main class="content-panel">
-            <div class="tab-menu" id="tabBar"></div>
-            <div id="dynamicContent"></div>
-        </main>
+            <div class="card">
+                <h4>Today's Subjects</h4>
+                <div id="todayMiniSched"></div>
+            </div>
+        </aside>
     </div>
 </div>
 
-<div id="toast" class="toast">Action completed successfully</div>
+<div id="toast" class="toast">Action Successful</div>
 
 <script>
+    /* --- ENTERPRISE CORE ENGINE --- 
+    */
     const CONFIG = {
         SLIPS: ["112233"],
-        SUBJECTS: ["Media & Info Literacy", "JAVA (Advanced)", "Inquiries & Immersion", "Work Immersion", "PE & Health"],
-        // FULL ICT 1202 SCHEDULE (Mon-Fri)
-        ICT_1202: {
+        SUBJECTS: ["Media & Info Literacy", "JAVA (Enterprise)", "Inquiries & Immersion", "Work Immersion", "PE & Health"],
+        // FULL SCHEDULE MON-FRI
+        SCHEDULE: {
             "Monday": [
-                { t: "06:15 - 07:15", s: "Homeroom Guidance", i: "Adviser" },
-                { t: "07:15 - 08:15", s: "JAVA", i: "Espiritu" },
-                { t: "08:35 - 09:35", s: "PE & Health", i: "Jordan" },
-                { t: "09:35 - 10:35", s: "Inquiries & Immersion", i: "Inocian" },
-                { t: "10:35 - 11:35", s: "Work Immersion", i: "Espiritu" }
+                { time: "06:15-07:15", sub: "Homeroom Guidance", prof: "Adviser" },
+                { time: "07:15-08:15", sub: "JAVA (Enterprise)", prof: "Espiritu" },
+                { time: "08:35-09:35", sub: "PE & Health", prof: "Jordan" },
+                { time: "09:35-10:35", sub: "Inquiries & Immersion", prof: "Inocian" },
+                { time: "10:35-11:35", sub: "Work Immersion", prof: "Espiritu" }
             ],
             "Tuesday": [
-                { t: "06:15 - 07:15", s: "Media & Info Literacy", i: "Sofia" },
-                { t: "07:15 - 08:15", s: "JAVA", i: "Espiritu" },
-                { t: "08:35 - 09:35", s: "JAVA", i: "Espiritu" },
-                { t: "09:35 - 10:35", s: "Inquiries & Immersion", i: "Inocian" }
+                { time: "06:15-07:15", sub: "Media & Info Literacy", prof: "Sofia" },
+                { time: "07:15-08:15", sub: "JAVA (Enterprise)", prof: "Espiritu" },
+                { time: "08:35-09:35", sub: "JAVA (Enterprise)", prof: "Espiritu" },
+                { time: "09:35-10:35", sub: "Inquiries & Immersion", prof: "Inocian" }
             ],
             "Wednesday": [
-                { t: "06:15 - 07:15", s: "Media & Info Literacy", i: "Sofia" },
-                { t: "07:15 - 08:15", s: "JAVA", i: "Espiritu" },
-                { t: "08:35 - 09:35", s: "Inquiries & Immersion", i: "Inocian" },
-                { t: "09:35 - 10:35", s: "Work Immersion", i: "Espiritu" }
+                { time: "06:15-07:15", sub: "Media & Info Literacy", prof: "Sofia" },
+                { time: "07:15-08:15", sub: "JAVA (Enterprise)", prof: "Espiritu" },
+                { time: "08:35-09:35", sub: "Inquiries & Immersion", prof: "Inocian" },
+                { time: "09:35-10:35", sub: "Work Immersion", prof: "Espiritu" }
             ],
             "Thursday": [
-                { t: "06:15 - 07:15", s: "Media & Info Literacy", i: "Sofia" },
-                { t: "07:15 - 08:15", s: "JAVA", i: "Espiritu" },
-                { t: "08:35 - 09:35", s: "JAVA", i: "Espiritu" },
-                { t: "09:35 - 10:35", s: "Inquiries & Immersion", i: "Inocian" }
+                { time: "06:15-07:15", sub: "Media & Info Literacy", prof: "Sofia" },
+                { time: "07:15-08:15", sub: "JAVA (Enterprise)", prof: "Espiritu" },
+                { time: "08:35-09:35", sub: "JAVA (Enterprise)", prof: "Espiritu" },
+                { time: "09:35-10:35", sub: "Inquiries & Immersion", prof: "Inocian" }
             ],
             "Friday": [
-                { t: "06:15 - 07:15", s: "Media & Info Literacy", i: "Sofia" },
-                { t: "07:15 - 08:15", s: "JAVA", i: "Espiritu" },
-                { t: "08:35 - 09:35", s: "Work Immersion", i: "Espiritu" },
-                { t: "09:35 - 10:35", s: "Review Sessions", i: "Staff" }
+                { time: "06:15-07:15", sub: "Media & Info Literacy", prof: "Sofia" },
+                { time: "07:15-08:15", sub: "JAVA (Enterprise)", prof: "Espiritu" },
+                { time: "08:35-09:35", sub: "Work Immersion", prof: "Espiritu" },
+                { time: "09:35-10:35", sub: "Student Review", prof: "Staff" }
             ]
         }
     };
 
     const INITIAL_USERS = [
-        { id: "2024-0001", name: "Dela Cruz, Juan", pass: "123", grades: {"Media & Info Literacy":92, "JAVA (Advanced)":94, "Inquiries & Immersion":89, "Work Immersion":91, "PE & Health":90}, pic: null }
+        { id: "2024-0001", name: "Dela Cruz, Juan", pass: "123", grades: {"Media & Info Literacy":92, "JAVA (Enterprise)":94, "Inquiries & Immersion":89, "Work Immersion":91, "PE & Health":90}, pic: null, abs: 0 }
     ];
 
     const db = {
-        k: 'ACSHS_DATA_V6',
+        k: 'ACSHS_V7_PRO',
         save: (d) => localStorage.setItem(db.k, JSON.stringify(d)),
         load: () => JSON.parse(localStorage.getItem(db.k) || JSON.stringify(INITIAL_USERS)),
-        setSess: (u) => localStorage.setItem(db.k+'_s', JSON.stringify(u)),
-        getSess: () => JSON.parse(localStorage.getItem(db.k+'_s'))
+        sessSet: (u) => localStorage.setItem(db.k+'_sess', JSON.stringify(u)),
+        sessGet: () => JSON.parse(localStorage.getItem(db.k+'_sess'))
     };
 
-    /* --- LOGIC ENGINE --- */
     const sys = {
-        user: null, activeTab: 'Dashboard',
+        user: null, tab: 'Dashboard',
         init() {
-            const s = db.getSess();
+            const s = db.sessGet();
             if(s) { this.user = s; this.launch(); }
         },
         login() {
-            const role = roleInp.value, id = idInp.value.trim(), pass = passInp.value;
-            if(role === 'admin' && id === 'admin' && pass === 'admin123') {
-                this.user = { role: 'admin', name: 'Registrar Staff', id: 'FACULTY-01' };
+            const r = lRole.value, id = lId.value.trim(), p = lPass.value;
+            if(r === 'admin' && id === 'admin' && p === 'admin123') {
+                this.user = { role:'admin', name:'Registrar Admin', id:'FAC-001' };
             } else {
-                const u = db.load().find(x => x.id === id && x.pass === pass);
-                if(!u) return ui.notify("Invalid Credentials", true);
-                this.user = { role: 'student', ...u };
+                const u = db.load().find(x => x.id === id && x.pass === p);
+                if(!u) return ui.notify("Invalid Account Credentials", true);
+                this.user = { role:'student', ...u };
             }
-            db.setSess(this.user); this.launch();
+            db.sessSet(this.user); this.launch();
         },
         register() {
-            if(!CONFIG.SLIPS.includes(rSlip.value)) return ui.notify("Invalid Registry Code", true);
-            let users = db.load();
-            users.push({ id: rId.value, name: rName.value, pass: rPass.value, grades: CONFIG.SUBJECTS.reduce((a,s)=>({...a, [s]:0}), {}), pic: null });
-            db.save(users); ui.notify("Registration Success!"); ui.showBox('loginBox');
+            if(!CONFIG.SLIPS.includes(rSlip.value)) return ui.notify("Invalid Slip Code", true);
+            let u = db.load();
+            if(u.some(x => x.id === rId.value)) return ui.notify("ID Already Exists", true);
+            u.push({ id: rId.value, name: rName.value, pass: rPass.value, grades: CONFIG.SUBJECTS.reduce((a,s)=>({...a,[s]:0}),{}), pic:null, abs:0 });
+            db.save(u); ui.notify("Account Created!"); ui.swapAuth('loginBox');
         },
         reset() {
             if(!CONFIG.SLIPS.includes(fSlip.value)) return ui.notify("Verification Failed", true);
-            let users = db.load();
-            const i = users.findIndex(u => u.id === fId.value);
+            let u = db.load();
+            const i = u.findIndex(x => x.id === fId.value);
             if(i === -1) return ui.notify("ID Not Found", true);
-            users[i].pass = fPass.value; db.save(users); ui.notify("Password Updated!"); ui.showBox('loginBox');
+            u[i].pass = fPass.value; db.save(u); ui.notify("Password Reset Success!"); ui.swapAuth('loginBox');
         },
-        logout() { localStorage.removeItem(db.k+'_s'); location.reload(); },
+        logout() { localStorage.removeItem(db.k+'_sess'); location.reload(); },
         launch() {
-            authSection.style.display = 'none'; portalApp.style.display = 'block';
-            topName.innerText = this.user.name; sideName.innerText = this.user.name; sideId.innerText = this.user.id;
-            this.updateProfile(); ui.buildTabs();
+            vAuth.style.display = 'none'; vApp.style.display = 'flex';
+            topUser.innerText = this.user.name; sideName.innerText = this.user.name; sideId.innerText = this.user.id;
+            this.updateProfile(); ui.initTabs();
         },
         updateProfile() {
-            userPfp.innerHTML = this.user.pic ? `<img src="${this.user.pic}">` : `<i class="fa-solid fa-user-graduate" style="font-size:50px; color:#cbd5e1"></i>`;
+            sideAvatar.innerHTML = this.user.pic ? `<img src="${this.user.pic}">` : `<i class="fa-solid fa-user-tie"></i>`;
             if(this.user.role === 'student') {
-                const vals = Object.values(this.user.grades);
-                statGpa.innerText = (vals.reduce((a,b)=>a+b,0)/vals.length).toFixed(1);
+                const g = Object.values(this.user.grades);
+                statAve.innerText = (g.reduce((a,b)=>a+b,0)/g.length).toFixed(1);
+                statAbs.innerText = this.user.abs;
             }
+            const day = new Date().toLocaleDateString('en-US', { weekday:'Long' });
+            const list = CONFIG.SCHEDULE[day] || CONFIG.SCHEDULE["Monday"];
+            let h = "";
+            list.slice(0, 3).forEach(x => h += `<div class="mini-schedule-item"><b>${x.time}</b><br><span>${x.sub}</span></div>`);
+            todayMiniSched.innerHTML = h;
         }
     };
 
-    /* --- UI ENGINE --- */
     const ui = {
-        togglePass: (id) => { const el=document.getElementById(id); el.type=el.type==='password'?'text':'password'; },
-        showBox: (id) => { ['loginBox','regBox','forgotBox'].forEach(b=>document.getElementById(b).style.display=b===id?'block':'none'); },
-        notify: (msg, err=false) => { 
-            toast.innerText=msg; toast.style.background=err? 'var(--danger)':'var(--text-main)'; 
-            toast.classList.add('active'); setTimeout(()=>toast.classList.remove('active'), 3000); 
-        },
-        buildTabs() {
-            const menu = sys.user.role === 'admin' ? ['Admin Home', 'Student Directory', 'Grading Tool'] : ['Dashboard', 'My Schedule', 'Grades & Records'];
-            tabBar.innerHTML = "";
+        swapAuth: (id) => { ['loginBox','regBox','forgotBox'].forEach(b=>document.getElementById(b).style.display=b===id?'block':'none'); },
+        notify: (m, e=false) => { toast.innerText=m; toast.style.background=e? 'var(--danger)':'#1e293b'; toast.classList.add('show'); setTimeout(()=>toast.classList.remove('show'), 3000); },
+        initTabs() {
+            const menu = sys.user.role === 'admin' ? ['Admin Control', 'Students List', 'Reports'] : ['Dashboard', 'Weekly Schedule', 'Grade Records'];
+            tabArea.innerHTML = "";
             menu.forEach(m => {
                 const b = document.createElement('button');
-                b.className = `tab-link ${m === sys.activeTab ? 'active' : ''}`;
+                b.className = `tab-btn ${m === sys.tab ? 'active' : ''}`;
                 b.innerText = m;
                 b.onclick = () => { 
-                    document.querySelectorAll('.tab-link').forEach(l=>l.classList.remove('active'));
+                    document.querySelectorAll('.tab-btn').forEach(btn=>btn.classList.remove('active'));
                     b.classList.add('active'); ui.renderView(m); 
                 };
-                tabBar.appendChild(b);
+                tabArea.appendChild(b);
             });
             ui.renderView(menu[0]);
         },
         renderView(v) {
-            let h = `<div class="panel-card"><div class="panel-header"><h3>${v}</h3></div>`;
+            let h = `<div class="card"><h3>${v}</h3><hr>`;
             
             if(v === 'Dashboard') {
-                h += `<p style="color:var(--text-muted); margin-bottom:20px">Welcome to your academic overview. All systems functional.</p>
-                      <div class="stat-bar" style="grid-template-columns: repeat(3, 1fr)">
-                        <div class="stat-item"><span>Status</span><b>ENROLLED</b></div>
-                        <div class="stat-item"><span>Semester</span><b>2ND SEM</b></div>
-                        <div class="stat-item"><span>Clearance</span><b>CLEARED</b></div>
+                h += `<p style="color:var(--muted)">System status: <span style="color:var(--success); font-weight:800">Operational</span></p>
+                      <div class="stat-row">
+                        <div class="card" style="background:#f0f7ff; border:none"><b>SY 2025-2026</b><br><small>Active Term</small></div>
+                        <div class="card" style="background:#f0fff4; border:none"><b>Registry</b><br><small>Verified</small></div>
                       </div>`;
             }
-            else if(v === 'My Schedule') {
-                h += `<div class="sched-grid">`;
-                Object.entries(CONFIG.ICT_1202).forEach(([day, sessions]) => {
-                    h += `<div class="day-box"><div class="day-label">${day}</div>`;
+            else if(v === 'Weekly Schedule') {
+                h += `<div style="overflow-x:auto"><table class="schedule-table"><thead><tr><th>Day</th><th>Time</th><th>Subject</th><th>Instructor</th></tr></thead><tbody>`;
+                Object.entries(CONFIG.SCHEDULE).forEach(([day, sessions]) => {
                     sessions.forEach(s => {
-                        h += `<div class="sched-row"><div class="sched-time">${s.t}</div><div class="sched-info"><b>${s.s}</b><small>Instructor: ${s.i}</small></div></div>`;
+                        h += `<tr><td><span class="day-badge">${day}</span></td><td><b>${s.time}</b></td><td>${s.sub}</td><td>${s.prof}</td></tr>`;
                     });
-                    h += `</div>`;
-                });
-                h += `</div>`;
-            }
-            else if(v === 'Grades & Records') {
-                h += `<div class="table-container"><table><thead><tr><th>Subject</th><th>Final Grade</th><th>Remark</th></tr></thead><tbody>`;
-                Object.entries(sys.user.grades).forEach(([s,g]) => {
-                    h += `<tr><td>${s}</td><td><b>${g}</b></td><td><span class="grade-badge">${g>=75?'Passed':'Failed'}</span></td></tr>`;
-                });
-                h += `</tbody></table></div><button class="btn-auth" style="margin-top:20px; width:200px" onclick="window.print()">Export Grade Slip</button>`;
-            }
-            else if(v === 'Student Directory') {
-                const users = db.load();
-                h += `<div class="table-container"><table><thead><tr><th>Name</th><th>ID</th><th>Action</th></tr></thead><tbody>`;
-                users.forEach((u, i) => {
-                    h += `<tr><td>${u.name}</td><td>${u.id}</td><td><button class="tab-link" style="padding:5px 10px; font-size:12px" onclick="ui.editMode(${i})">Edit Grades</button></td></tr>`;
                 });
                 h += `</tbody></table></div>`;
             }
+            else if(v === 'Grade Records') {
+                h += `<table class="schedule-table"><thead><tr><th>Subject</th><th>Final</th><th>Status</th></tr></thead><tbody>`;
+                Object.entries(sys.user.grades).forEach(([s,g]) => {
+                    h += `<tr><td>${s}</td><td><b>${g}</b></td><td><span style="color:${g>=75? 'var(--success)':'var(--danger)'}; font-weight:800">${g>=75?'PASSED':'FAILED'}</span></td></tr>`;
+                });
+                h += `</tbody></table><button class="btn-main" style="margin-top:20px; width:180px" onclick="window.print()">PRINT GRADE SLIP</button>`;
+            }
+            else if(v === 'Students List') {
+                const u = db.load();
+                h += `<table class="schedule-table"><thead><tr><th>Student</th><th>ID</th><th>Action</th></tr></thead><tbody>`;
+                u.forEach((x, i) => {
+                    h += `<tr><td><b>${x.name}</b></td><td>${x.id}</td><td><button class="tab-btn" style="padding:5px 10px; font-size:11px" onclick="ui.editGrades(${i})">Manage</button></td></tr>`;
+                });
+                h += `</tbody></table>`;
+            }
 
             h += `</div><div id="subZone"></div>`;
-            dynamicContent.innerHTML = h;
+            viewArea.innerHTML = h;
         },
-        editMode(idx) {
-            const u = db.load()[idx];
-            let h = `<div class="panel-card"><h4>Managing: ${u.name}</h4><div style="display:grid; grid-template-columns: 1fr 1fr; gap:15px; margin-top:20px">`;
-            Object.entries(u.grades).forEach(([s,g]) => {
-                h += `<div><span class="field-label">${s}</span><input type="number" class="g-inp" data-s="${s}" value="${g}"></div>`;
+        editGrades(idx) {
+            const x = db.load()[idx];
+            let h = `<div class="card"><h4>Grading Interface: ${x.name}</h4><div style="display:grid; grid-template-columns: 1fr 1fr; gap:15px; margin-top:20px">`;
+            Object.entries(x.grades).forEach(([s,g]) => {
+                h += `<div class="form-group"><label>${s}</label><input type="number" class="g-inp" data-s="${s}" value="${g}"></div>`;
             });
-            h += `</div><button class="btn-auth" style="margin-top:25px" onclick="ui.saveGrades(${idx})">Save Updates</button></div>`;
-            subZone.innerHTML = h;
-            subZone.scrollIntoView({ behavior: 'smooth' });
-        },
-        saveGrades(idx) {
-            let users = db.load();
-            document.querySelectorAll('.g-inp').forEach(i => users[idx].grades[i.dataset.s] = parseInt(i.value));
-            db.save(users); ui.notify("Records Updated"); ui.renderView('Student Directory');
-        }
-    };
-
-    sys.init();
-</script>
-</body>
-</html>
+            h += `</div><button class="btn-main" onclick="ui.saveGrades(${idx})">SYNC DATA
