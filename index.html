@@ -3,106 +3,102 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-    <title>myACSHS | Enterprise SIS v29.0</title>
+    <title>myACSHS | SIS Ultimate v34.0</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     
     <style>
-        /* * ==========================================
-         * 1. SYSTEM DESIGN TOKENS
-         * ==========================================
-         */
         :root {
             --navy: #003366;
-            --blue-glow: #0056b3;
+            --blue: #0056b3;
             --white: #ffffff;
             --danger: #dc3545;
             --success: #28a745;
+            --warning: #ffc107;
             --bg: #f4f7f9;
-            --text: #1a1a1a;
-            --muted: #6c757d;
             --border: #d1d9e0;
-            --radius: 10px;
         }
 
         * { box-sizing: border-box; -webkit-font-smoothing: antialiased; margin: 0; padding: 0; }
-        body { font-family: 'Inter', sans-serif; background-color: var(--bg); color: var(--text); }
+        body { font-family: 'Inter', sans-serif; background-color: var(--bg); color: #1a1a1a; line-height: 1.5; }
 
-        /* * ==========================================
-         * 2. AUTHENTICATION STYLES
-         * ==========================================
-         */
-        .auth-container { display: flex; align-items: center; justify-content: center; min-height: 100vh; padding: 20px; }
+        /* HEADER & LOGO RESTORATION */
+        header { 
+            background: var(--navy); 
+            color: #fff; 
+            padding: 12px 25px; 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            position: sticky; 
+            top: 0; 
+            z-index: 1000; 
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .brand-box { display: flex; align-items: center; gap: 12px; }
+        .site-logo { 
+            width: 42px; 
+            height: 42px; 
+            background: #fff; 
+            border-radius: 50%; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            color: var(--navy);
+            font-size: 22px;
+            border: 2px solid var(--blue);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+
+        /* AUTHENTICATION */
+        .auth-container { display: flex; align-items: center; justify-content: center; min-height: 90vh; padding: 20px; }
         .auth-card {
-            width: 100%; max-width: 440px; background: var(--white); border-radius: var(--radius);
+            width: 100%; max-width: 440px; background: var(--white); border-radius: 12px;
             padding: 45px; box-shadow: 0 10px 30px rgba(0, 51, 102, 0.1); border: 1px solid var(--border);
         }
-
-        .input-box { margin-bottom: 22px; position: relative; }
-        .input-box label { display: block; font-size: 11px; font-weight: 800; color: var(--navy); margin-bottom: 8px; text-transform: uppercase; }
-        .input-box input, .input-box select {
+        .field { margin-bottom: 22px; }
+        .field label { display: block; font-size: 11px; font-weight: 800; color: var(--navy); margin-bottom: 8px; text-transform: uppercase; }
+        .field input, .field select {
             width: 100%; height: 50px; padding: 0 15px; border: 2px solid #e2e8f0; border-radius: 8px; font-size: 15px; outline: none; transition: 0.2s;
         }
-        .input-box input:focus { border-color: var(--blue-glow); }
+        .field input:focus { border-color: var(--blue); }
 
-        .eye-btn { position: absolute; right: 15px; top: 38px; cursor: pointer; color: #94a3b8; padding: 5px; }
-
-        /* FACEBOOK-STYLE ERROR LOGIC */
-        .input-box.has-error input { border-color: var(--danger) !important; background-color: #fffafa; animation: shake 0.3s; }
-        .err-msg { color: var(--danger); font-size: 11px; font-weight: 700; margin-top: 5px; display: none; }
-        .input-box.has-error .err-msg { display: block; }
-
-        @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-4px); } 75% { transform: translateX(4px); } }
-
-        .btn-action {
+        .btn {
             width: 100%; height: 55px; background: var(--navy); color: #fff; border: none; 
             border-radius: 8px; font-weight: 800; cursor: pointer; transition: 0.3s;
+            display: flex; align-items: center; justify-content: center; gap: 10px;
         }
-        .btn-action:hover { background: var(--blue-glow); transform: translateY(-2px); }
+        .btn:hover { background: var(--blue); transform: translateY(-1px); }
 
-        /* * ==========================================
-         * 3. PORTAL CORE UI
-         * ==========================================
-         */
-        header {
-            background: var(--navy); color: #fff; padding: 15px 30px;
-            display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 1000;
-        }
-
-        .nav-tabs { display: flex; background: #fff; border-bottom: 1px solid var(--border); overflow-x: auto; }
+        /* PORTAL COMPONENTS */
+        .tabs { display: flex; background: #fff; border-bottom: 1px solid var(--border); overflow-x: auto; }
         .tab {
             flex: 1; padding: 18px; text-align: center; cursor: pointer; font-weight: 800; font-size: 10px;
             color: #94a3b8; text-transform: uppercase; letter-spacing: 1px; min-width: 120px;
         }
         .tab.active { color: var(--navy); border-bottom: 4px solid var(--navy); background: #f8fafc; }
 
-        .portal-container { max-width: 650px; margin: 25px auto; padding: 0 15px 100px; }
-
-        /* ANALYTICS STRIP */
-        .analytics {
-            background: #eef4ff; padding: 15px; border-radius: 12px; margin-bottom: 25px;
-            display: flex; justify-content: space-around; border: 1px solid #d0e0ff;
-        }
-        .stat-val { display: block; font-weight: 900; color: var(--navy); font-size: 20px; text-align: center; }
-        .stat-lbl { font-size: 10px; font-weight: 700; color: var(--blue-glow); text-transform: uppercase; }
-
-        .widget { background: #fff; border-radius: 15px; padding: 25px; border: 1px solid var(--border); margin-bottom: 20px; }
+        .container { max-width: 650px; margin: 25px auto; padding: 0 15px 100px; }
+        .widget { background: #fff; border-radius: 15px; padding: 25px; border: 1px solid var(--border); margin-bottom: 20px; position: relative; }
         .widget-h { font-weight: 800; color: var(--navy); font-size: 14px; margin-bottom: 20px; text-transform: uppercase; border-left: 4px solid var(--navy); padding-left: 10px; }
         
         .row { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid #f1f5f9; }
-        .badge { background: #eef4ff; color: var(--navy); padding: 5px 10px; border-radius: 4px; font-size: 10px; font-weight: 800; }
+        .pill { background: #eef4ff; color: var(--navy); padding: 5px 10px; border-radius: 4px; font-size: 10px; font-weight: 800; }
 
-        /* EDITOR MODAL */
-        #editorModal {
-            position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 2000;
+        /* MODAL SYSTEM */
+        #modal {
+            position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 2000;
             display: none; align-items: center; justify-content: center; padding: 20px;
         }
-        .modal-card { background: #fff; width: 100%; max-width: 400px; border-radius: 15px; padding: 30px; box-shadow: 0 20px 50px rgba(0,0,0,0.2); }
+        .modal-body { background: #fff; width: 100%; max-width: 450px; border-radius: 15px; padding: 30px; box-shadow: 0 20px 50px rgba(0,0,0,0.3); }
 
-        #main-loader { position: fixed; inset: 0; background: rgba(255,255,255,0.9); z-index: 9999; display: none; align-items: center; justify-content: center; }
-        .spin { width: 40px; height: 40px; border: 4px solid #f3f3f3; border-top: 4px solid var(--navy); border-radius: 50%; animation: rot 0.8s linear infinite; }
-        @keyframes rot { to { transform: rotate(360deg); } }
+        /* PRINTING */
+        @media print {
+            body * { visibility: hidden; }
+            #printArea, #printArea * { visibility: visible; }
+            #printArea { position: absolute; left: 0; top: 0; width: 100%; padding: 40px; color: #000; }
+        }
 
         .view-panel { display: none; }
         .view-panel.active { display: block; }
@@ -110,219 +106,214 @@
 </head>
 <body>
 
-<div id="main-loader"><div class="spin"></div></div>
-
-<div id="editorModal">
-    <div class="modal-card">
-        <h3 id="editStudentName" style="color:var(--navy); margin-bottom:20px; font-weight:900">Edit Grades</h3>
-        <div id="gradesInputsZone"></div>
+<div id="modal">
+    <div class="modal-body">
+        <h3 id="mTitle" style="color:var(--navy); margin-bottom:20px; font-weight:900">Editor</h3>
+        <div id="mContent"></div>
         <div style="display:flex; gap:10px; margin-top:20px">
-            <button class="btn-action" style="flex:1" onclick="app.saveGrades()">SAVE</button>
-            <button class="btn-action" style="flex:1; background:#94a3b8" onclick="editorModal.style.display='none'">CANCEL</button>
+            <button class="btn" id="mSave">SAVE CHANGES</button>
+            <button class="btn" style="background:#94a3b8" onclick="modal.style.display='none'">CANCEL</button>
         </div>
     </div>
 </div>
 
-<header id="navMain" style="display:none">
-    <div style="font-weight:900; font-size:22px; letter-spacing:-1px">myACSHS</div>
-    <div style="display:flex; gap:20px; align-items:center">
-        <i class="fa-solid fa-power-off" onclick="app.logout()" style="cursor:pointer"></i>
-    </div>
-</header>
-
-<div id="pAuth" class="view-panel active">
+<div id="vAuth" class="view-panel active">
     <div class="auth-container">
-        <div id="boxLogin" class="auth-card">
+        <div id="boxL" class="auth-card">
             <h1 style="color:var(--navy); font-weight:900; margin-bottom:30px; text-align:center">Secure Login</h1>
-            <div class="input-box"><label>Role</label><select id="liRole"><option value="student">Student</option><option value="admin">Administrator</option></select></div>
-            <div class="input-box" id="errId"><label>ID</label><input type="text" id="liId" placeholder="ID Number"><div class="err-msg">ID not found.</div></div>
-            <div class="input-box" id="errPass"><label>Password</label><input type="password" id="liPass" placeholder="••••••••"><i class="fa-solid fa-eye eye-btn" onclick="app.eye('liPass')"></i><div class="err-msg">Incorrect password.</div></div>
-            <button class="btn-action" onclick="app.login()">SIGN IN</button>
-            <button style="width:100%; background:none; border:none; margin-top:20px; font-weight:700; color:var(--navy); cursor:pointer" onclick="app.swapAuth('boxReg')">New Student? Register</button>
+            <div class="field"><label>Access Level</label><select id="lRole"><option value="student">Student</option><option value="admin">Administrator</option></select></div>
+            <div class="field"><label>ID Number</label><input type="text" id="lId" placeholder="Enter ID"></div>
+            <div class="field"><label>Password</label><input type="password" id="lPass" placeholder="••••••••"></div>
+            <button class="btn" onclick="app.login()">SIGN IN</button>
+            <p onclick="app.swapAuth('boxR')" style="text-align:center; margin-top:20px; font-size:12px; font-weight:700; color:var(--navy); cursor:pointer">New Student? Register here</p>
         </div>
-        <div id="boxReg" class="auth-card" style="display:none">
-            <h1 style="color:var(--navy); font-weight:900; margin-bottom:30px; text-align:center">Register</h1>
-            <div class="input-box"><label>Full Name</label><input type="text" id="rgName"></div>
-            <div class="input-box"><label>8-Digit ID</label><input type="number" id="rgId"></div>
-            <div class="input-box"><label>6-Digit Slip</label><input type="number" id="rgSlip"></div>
-            <div class="input-box"><label>Section</label><input type="text" id="rgTrack"></div>
-            <div class="input-box"><label>Password</label><input type="password" id="rgPass"><i class="fa-solid fa-eye eye-btn" onclick="app.eye('rgPass')"></i></div>
-            <button class="btn-action" onclick="app.register()">SUBMIT REGISTRATION</button>
-            <button style="width:100%; background:none; border:none; margin-top:20px; font-weight:700; color:var(--navy); cursor:pointer" onclick="app.swapAuth('boxLogin')">Back to Login</button>
+        <div id="boxR" class="auth-card" style="display:none">
+            <h1 style="color:var(--navy); font-weight:900; margin-bottom:30px; text-align:center">Student Registry</h1>
+            <div class="field"><label>Full Name</label><input type="text" id="rName"></div>
+            <div class="field"><label>8-Digit Student ID</label><input type="number" id="rId"></div>
+            <div class="field"><label>6-Digit Slip Code (112233)</label><input type="number" id="rSlip"></div>
+            <div class="field"><label>Section/Track</label><input type="text" id="rTrack"></div>
+            <div class="field"><label>Password</label><input type="password" id="rPass"></div>
+            <button class="btn" onclick="app.register()">COMPLETE ENROLLMENT</button>
+            <p onclick="app.swapAuth('boxL')" style="text-align:center; margin-top:20px; font-size:12px; font-weight:700; color:var(--navy); cursor:pointer">Return to Login</p>
         </div>
     </div>
 </div>
 
-<div id="pPortal" class="view-panel">
-    <nav class="nav-tabs">
+<div id="vPortal" class="view-panel">
+    <header>
+        <div class="brand-box">
+            <div class="site-logo">
+                <i class="fa-solid fa-graduation-cap"></i>
+            </div>
+            <div style="font-weight:900; font-size:20px; letter-spacing:-0.5px">myACSHS</div>
+        </div>
+        <i class="fa-solid fa-power-off" onclick="app.logout()" style="cursor:pointer; font-size: 20px;"></i>
+    </header>
+    
+    <nav class="tabs">
         <div class="tab active" onclick="app.nav('home', this)">Schedule</div>
         <div class="tab" onclick="app.nav('acads', this)">Academic Records</div>
-        <div id="tabAdmin" class="tab" style="display:none" onclick="app.nav('admin', this)">Directory & Management</div>
+        <div class="tab" onclick="app.nav('att', this)">Attendance</div>
+        <div id="tabAdmin" class="tab" style="display:none" onclick="app.nav('admin', this)">Management</div>
     </nav>
 
-    <main class="portal-container">
-        <div id="adminAnalytics" class="analytics" style="display:none">
-            <div class="stat-box"><span class="stat-val" id="totalCount">0</span><span class="stat-lbl">Enrolled</span></div>
-            <div class="stat-box"><span class="stat-val">Online</span><span class="stat-lbl">Registry</span></div>
-        </div>
+    <main class="container">
         <div class="widget" style="text-align:center">
-            <div id="uPic" style="width:100px; height:100px; border-radius:50%; border:3px solid var(--navy); margin:0 auto 15px; overflow:hidden; background:#eee; display:flex; align-items:center; justify-content:center"></div>
-            <h2 id="uName" style="color:var(--navy); font-weight:900">...</h2>
-            <p id="uMeta" style="font-size:11px; font-weight:800; color:#888; text-transform:uppercase"></p>
+            <div id="dispPic" style="width:100px; height:100px; border-radius:50%; border:3px solid var(--navy); margin:0 auto 15px; overflow:hidden; background:#eee; display:flex; align-items:center; justify-content:center"></div>
+            <h2 id="dispName" style="color:var(--navy); font-weight:900">...</h2>
+            <p id="dispMeta" style="font-size:11px; font-weight:800; color:#888; text-transform:uppercase"></p>
         </div>
         <div id="renderZone"></div>
     </main>
 </div>
 
+<div id="printArea" style="display:none"></div>
+
 <script>
-    /**
-     * SIS ENTERPRISE SYSTEM v29.0
-     * Core: Local DB, Grades Editor, Auth Validation
-     */
     const CONFIG = {
-        SLIPS: ["112233", "445566", "123456", "654321", "224466"],
-        DAYS: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
-        SUBJECTS: ["Programming", "Practical Research", "Media Literacy", "Mathematics"],
-        TIMETABLE: {
-            "Monday": [{t: "06:15-08:15", s: "Media Literacy"}, {t: "08:35-11:35", s: "Immersion"}],
-            "Tuesday": [{t: "06:15-08:15", s: "JAVA Programming"}, {t: "08:35-11:35", s: "Immersion"}],
-            "Wednesday": [{t: "06:15-08:15", s: "Research 2"}, {t: "08:35-11:35", s: "Immersion"}],
-            "Thursday": [{t: "06:15-08:15", s: "JAVA Programming"}, {t: "08:35-11:35", s: "Immersion"}],
-            "Friday": [{t: "06:15-08:15", s: "PE & Health"}, {t: "08:35-11:35", s: "Immersion"}]
-        }
+        SLIPS: ["112233", "445566", "123456"],
+        SUBS: ["Programming", "Mathematics", "Science", "Research"],
+        DAYS: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"]
     };
 
     const db = {
-        save: (k,v) => localStorage.setItem('sis_v29_'+k, JSON.stringify(v)),
-        get: (k) => JSON.parse(localStorage.getItem('sis_v29_'+k) || '[]'),
-        sess: (v) => v ? localStorage.setItem('sis_v29_session', JSON.stringify(v)) : JSON.parse(localStorage.getItem('sis_v29_session'))
+        save: (k,v) => localStorage.setItem('sis_v34_'+k, JSON.stringify(v)),
+        get: (k) => JSON.parse(localStorage.getItem('sis_v34_'+k) || '[]'),
+        sess: (v) => v ? localStorage.setItem('sis_v34_session', JSON.stringify(v)) : JSON.parse(localStorage.getItem('sis_v34_session'))
     };
 
     const app = {
-        user: null, editingIdx: null, activeDay: CONFIG.DAYS[new Date().getDay() - 1] || "Monday",
+        user: null, curIdx: null,
 
         init: () => { const s = db.sess(); if(s) { app.user = s; app.launch(); } },
-        eye: (id) => { const x = document.getElementById(id); x.type = x.type === 'password' ? 'text' : 'password'; },
-        swapAuth: (id) => { boxLogin.style.display = id === 'boxLogin' ? 'block' : 'none'; boxReg.style.display = id === 'boxReg' ? 'block' : 'none'; },
+        swapAuth: (id) => { boxL.style.display = id==='boxL'?'block':'none'; boxR.style.display = id==='boxR'?'block':'none'; },
 
         login: () => {
-            const r = liRole.value, id = liId.value.trim(), p = liPass.value.trim();
-            errId.classList.remove('has-error'); errPass.classList.remove('has-error');
-            document.getElementById('main-loader').style.display = 'flex';
-
-            setTimeout(() => {
-                document.getElementById('main-loader').style.display = 'none';
-                if(r === 'admin') {
-                    if(id === 'admin' && p === 'admin123') app.user = { role:'admin', name:'Staff Admin', id:'FAC-01' };
-                    else { id !== 'admin' ? errId.classList.add('has-error') : errPass.classList.add('has-error'); return; }
-                } else {
-                    const u = db.get('u').find(x => x.id === id);
-                    if(!u) return errId.classList.add('has-error');
-                    if(u.pass !== p) return errPass.classList.add('has-error');
-                    app.user = { role:'student', ...u };
-                }
-                db.sess(app.user); app.launch();
-            }, 800);
+            const r = lRole.value, id = lId.value.trim(), p = lPass.value.trim();
+            if(r === 'admin') {
+                if(id === 'admin' && p === 'admin123') app.user = { role:'admin', name:'Registrar Staff', id:'ADM-001' };
+                else return alert("Invalid Admin Credentials");
+            } else {
+                const u = db.get('u').find(x => x.id === id && x.pass === p);
+                if(!u) return alert("Student Record Not Found");
+                app.user = { role:'student', ...u };
+            }
+            db.sess(app.user); app.launch();
         },
 
         register: () => {
-            const id = rgId.value, slip = rgSlip.value;
-            if(id.length !== 8 || !CONFIG.SLIPS.includes(slip)) return alert("Data Validation Error.");
+            if(!CONFIG.SLIPS.includes(rSlip.value)) return alert("Invalid Enrollment Slip");
             let users = db.get('u');
-            if(users.some(u => u.id === id)) return alert("ID Already Registered.");
+            if(users.some(u => u.id === rId.value)) return alert("ID Already Registered");
             
-            users.push({ id, name: rgName.value, pass: rgPass.value, track: rgTrack.value, pic: null, 
-                         grades: {"Programming":75, "Practical Research":75, "Media Literacy":75, "Mathematics":75} });
+            users.push({ 
+                id: rId.value, name: rName.value, pass: rPass.value, track: rTrack.value, pic: null, 
+                grades: {Programming:75, Mathematics:75, Science:75, Research:75},
+                att: {present: 0, absent: 0}
+            });
             db.save('u', users);
-            alert("Registered Successfully."); app.swapAuth('boxLogin');
+            alert("Registration Successful"); app.swapAuth('boxL');
         },
 
         launch: () => {
-            pAuth.classList.remove('active'); pPortal.classList.add('active'); navMain.style.display = 'flex';
-            uName.innerText = app.user.name; uMeta.innerText = app.user.role === 'admin' ? 'FACULTY ACCESS' : `${app.user.id} | ${app.user.track}`;
-            uPic.innerHTML = app.user.pic ? `<img src="${app.user.pic}" style="width:100%;height:100%;object-fit:cover">` : `<i class="fa-solid fa-user-tie" style="font-size:40px; color:var(--navy)"></i>`;
-            
-            if(app.user.role === 'admin') {
-                adminAnalytics.style.display = 'flex'; totalCount.innerText = db.get('u').length; tabAdmin.style.display = 'block';
-            }
+            vAuth.classList.remove('active'); vPortal.classList.add('active');
+            dispName.innerText = app.user.name; 
+            dispMeta.innerText = app.user.role==='admin'?'FACULTY ACCESS':`${app.user.id} | ${app.user.track}`;
+            app.refreshAvatar();
+            if(app.user.role === 'admin') tabAdmin.style.display = 'block';
             app.nav('home', document.querySelector('.tab'));
         },
 
-        nav: (view, el) => {
-            document.querySelectorAll('.tab').forEach(b => b.classList.remove('active'));
-            el.classList.add('active'); app.render(view);
+        refreshAvatar: () => {
+            dispPic.innerHTML = app.user.pic ? `<img src="${app.user.pic}" style="width:100%;height:100%;object-fit:cover">` : `<i class="fa-solid fa-user-circle" style="font-size:50px; color:#ccc"></i>`;
         },
 
-        render: (view) => {
+        nav: (v, el) => {
+            document.querySelectorAll('.tab').forEach(b => b.classList.remove('active'));
+            el.classList.add('active');
             let h = "";
-            if(view === 'home') {
-                h = `<div class="widget"><h3 class="widget-h">Timetable</h3>` +
-                    `<div style="display:flex; gap:5px; margin-bottom:15px; overflow-x:auto">` +
-                    CONFIG.DAYS.map(d => `<button onclick="app.setDay('${d}')" style="background:${d===app.activeDay?'var(--navy)':'#fff'}; color:${d===app.activeDay?'#fff':'#666'}; border:1px solid #ddd; padding:8px 12px; border-radius:6px; font-size:10px; font-weight:800; cursor:pointer">${d}</button>`).join('') +
-                    `</div>` + (CONFIG.TIMETABLE[app.activeDay] || []).map(c => `<div class="row"><span class="badge">${c.t}</span><b>${c.s}</b></div>`).join('') + `</div>`;
-            } else if(view === 'acads') {
-                const g = app.user.grades || {};
-                h = `<div class="widget"><h3 class="widget-h">My Performance</h3>` +
-                    Object.entries(g).map(([k,v])=>`<div class="row"><span>${k}</span><b style="color:var(--blue-glow); font-size:18px">${v}</b></div>`).join('') + `</div>`;
-            } else if(view === 'admin') {
-                h = `<div class="widget"><h3 class="widget-h">Directory</h3>` +
-                    `<input type="text" placeholder="Search students..." onkeyup="app.filter(this.value)" style="width:100%; height:42px; padding:0 15px; border-radius:20px; border:1px solid #ddd; outline:none; margin-bottom:15px">` +
-                    `<div id="dirT">` + app.dirHTML(db.get('u')) + `</div></div>`;
+            if(v === 'home') {
+                h = `<div class="widget"><h3 class="widget-h">Daily Schedule</h3><div class="row"><span class="pill">08:00 - 10:00</span><b>Major Subject</b></div><div class="row"><span class="pill">10:00 - 12:00</span><b>Minor Subject</b></div></div>`;
+            } else if(v === 'acads') {
+                h = `<div class="widget"><h3 class="widget-h">Academic Evaluation</h3>`;
+                Object.entries(app.user.grades || {}).forEach(([k,v]) => h += `<div class="row"><span>${k}</span><b style="color:var(--blue)">${v}</b></div>`);
+                h += `<button class="btn" style="margin-top:20px; height:45px" onclick="app.exportPDF()"><i class="fa-solid fa-file-pdf"></i> Download Report</button></div>`;
+            } else if(v === 'att') {
+                const a = app.user.att || {present:0, absent:0};
+                h = `<div class="widget"><h3 class="widget-h">Attendance Record</h3><div class="row"><span>Days Present</span><b style="color:var(--success)">${a.present}</b></div><div class="row"><span>Days Absent</span><b style="color:var(--danger)">${a.absent}</b></div></div>`;
+            } else if(v === 'admin') {
+                h = `<div class="widget"><h3 class="widget-h">Student Registry Management</h3>`;
+                db.get('u').forEach((u, i) => h += `
+                    <div class="row">
+                        <div><b>${u.name}</b><br><small style="color:#888">${u.id}</small></div>
+                        <div style="display:flex; gap:12px; font-size:18px">
+                            <i class="fa-solid fa-camera" title="Upload Photo" style="color:var(--navy); cursor:pointer" onclick="app.adminPhoto(${i})"></i>
+                            <i class="fa-solid fa-edit" title="Edit Grades" style="color:var(--blue); cursor:pointer" onclick="app.adminGrades(${i})"></i>
+                            <i class="fa-solid fa-calendar-check" title="Attendance" style="color:var(--success); cursor:pointer" onclick="app.adminAtt(${i})"></i>
+                            <i class="fa-solid fa-file-pdf" title="Export" style="color:var(--danger); cursor:pointer" onclick="app.exportPDF(${i})"></i>
+                        </div>
+                    </div>`);
+                h += `</div>`;
             }
             renderZone.innerHTML = h;
         },
 
-        setDay: (d) => { app.activeDay = d; app.render('home'); },
+        adminPhoto: (idx) => {
+            const input = document.createElement('input'); input.type = 'file';
+            input.onchange = e => {
+                const reader = new FileReader();
+                reader.onload = ev => {
+                    let users = db.get('u'); users[idx].pic = ev.target.result; db.save('u', users);
+                    if(app.user.id === users[idx].id) { app.user.pic = ev.target.result; db.sess(app.user); app.refreshAvatar(); }
+                    app.nav('admin', document.querySelector('.tab:last-child'));
+                };
+                reader.readAsDataURL(e.target.files[0]);
+            }; input.click();
+        },
 
-        dirHTML: (list) => list.map((u,i) => `
-            <div class="row">
-                <div><b>${u.name}</b><br><small style="color:#888">${u.id}</small></div>
-                <div style="display:flex; gap:5px">
-                    <button onclick="app.openEditor(${i})" style="background:var(--success); color:#fff; border:none; padding:8px 12px; border-radius:6px; font-size:9px; font-weight:800; cursor:pointer">GRADES</button>
-                    <button onclick="app.updatePhoto(${i})" style="background:var(--navy); color:#fff; border:none; padding:8px 12px; border-radius:6px; font-size:9px; font-weight:800; cursor:pointer">PFP</button>
-                </div>
-            </div>`).join(''),
+        adminGrades: (idx) => {
+            app.curIdx = idx; const u = db.get('u')[idx];
+            mTitle.innerText = `Edit Grades: ${u.name}`;
+            let html = "";
+            CONFIG.SUBS.forEach(s => html += `<div class="field"><label>${s}</label><input type="number" class="grade-in" data-s="${s}" value="${u.grades[s]}"></div>`);
+            mContent.innerHTML = html;
+            mSave.onclick = () => {
+                let users = db.get('u');
+                document.querySelectorAll('.grade-in').forEach(i => users[app.curIdx].grades[i.dataset.s] = i.value);
+                db.save('u', users); modal.style.display = 'none'; app.nav('admin', document.querySelector('.tab:last-child'));
+            };
+            modal.style.display = 'flex';
+        },
 
-        filter: (q) => { const f = db.get('u').filter(u => u.name.toLowerCase().includes(q.toLowerCase()) || u.id.includes(q)); dirT.innerHTML = app.dirHTML(f); },
+        adminAtt: (idx) => {
+            app.curIdx = idx; const u = db.get('u')[idx];
+            mTitle.innerText = `Attendance: ${u.name}`;
+            mContent.innerHTML = `<div class="field"><label>Present</label><input type="number" id="attP" value="${u.att.present}"></div><div class="field"><label>Absent</label><input type="number" id="attA" value="${u.att.absent}"></div>`;
+            mSave.onclick = () => {
+                let users = db.get('u');
+                users[app.curIdx].att = { present: attP.value, absent: attA.value };
+                db.save('u', users); modal.style.display = 'none'; app.nav('admin', document.querySelector('.tab:last-child'));
+            };
+            modal.style.display = 'flex';
+        },
 
-        openEditor: (idx) => {
-            const users = db.get('u');
-            const target = users[idx];
-            app.editingIdx = idx;
-            editStudentName.innerText = `Update: ${target.name}`;
-            let inputs = "";
-            CONFIG.SUBJECTS.forEach(sub => {
-                inputs += `<div class="input-box"><label>${sub}</label><input type="number" class="grade-input" data-sub="${sub}" value="${target.grades[sub] || 75}"></div>`;
+        exportPDF: (idx = null) => {
+            const target = (idx !== null) ? db.get('u')[idx] : app.user;
+            let html = `<div style="text-align:center; border-bottom:3px solid #003366; padding-bottom:20px; margin-bottom:20px">
+                <h1 style="color:#003366; font-size:28px">OFFICIAL SCHOLASTIC RECORD</h1>
+                <p><strong>Name:</strong> ${target.name} | <strong>Student ID:</strong> ${target.id}</p>
+                <p><strong>Section:</strong> ${target.track}</p>
+            </div><table style="width:100%; border-collapse:collapse; font-size:18px">`;
+            Object.entries(target.grades).forEach(([k,v]) => {
+                html += `<tr style="border-bottom:1px solid #ddd"><td style="padding:12px">${k}</td><td style="text-align:right; font-weight:900">${v}</td></tr>`;
             });
-            gradesInputsZone.innerHTML = inputs;
-            editorModal.style.display = 'flex';
+            html += `</table><div style="margin-top:50px; text-align:right"><p>_______________________</p><p>Registrar Signature</p></div>`;
+            printArea.innerHTML = html;
+            window.print();
         },
 
-        saveGrades: () => {
-            let users = db.get('u');
-            const inputs = document.querySelectorAll('.grade-input');
-            inputs.forEach(inp => {
-                const sub = inp.getAttribute('data-sub');
-                users[app.editingIdx].grades[sub] = parseInt(inp.value);
-            });
-            db.save('u', users);
-            editorModal.style.display = 'none';
-            app.render('admin');
-            alert("Academic records updated.");
-        },
-
-        updatePhoto: (idx) => {
-            const inp = document.createElement('input'); inp.type = 'file';
-            inp.onchange = e => {
-                const r = new FileReader(); r.onload = ev => {
-                    let u = db.get('u'); u[idx].pic = ev.target.result; db.save('u', u);
-                    if(app.user.id === u[idx].id) { app.user.pic = ev.target.result; db.sess(app.user); }
-                    app.launch();
-                }; r.readAsDataURL(e.target.files[0]);
-            }; inp.click();
-        },
-
-        logout: () => { if(confirm("Sign out?")) { localStorage.removeItem('sis_v29_session'); location.reload(); } }
+        logout: () => { if(confirm("Sign out?")) { localStorage.removeItem('sis_v34_session'); location.reload(); } }
     };
 
     window.onload = app.init;
