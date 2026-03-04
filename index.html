@@ -3,25 +3,23 @@ import java.awt.*;
 import java.awt.event.*;
 import java.util.ArrayList;
 
-// =======================
-// Encapsulation
-// =======================
 class Medicine {
     private String name;
+    private String description;
+    private String category;
     private int stock;
 
-    public Medicine(String name, int stock) {
+    public Medicine(String name, String description, String category, int stock) {
         this.name = name;
+        this.description = description;
+        this.category = category;
         this.stock = stock;
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public int getStock() {
-        return stock;
-    }
+    public String getName() { return name; }
+    public String getDescription() { return description; }
+    public String getCategory() { return category; }
+    public int getStock() { return stock; }
 
     public void addStock(int qty) {
         stock += qty;
@@ -35,107 +33,77 @@ class Medicine {
     }
 }
 
-// =======================
-// Abstraction
-// =======================
-abstract class Person {
-    protected String name;
-    abstract void role();
-}
-
-// =======================
-// Inheritance + Polymorphism
-// =======================
-class Pharmacist extends Person {
-
-    public Pharmacist(String name) {
-        this.name = name;
-    }
-
-    @Override
-    void role() {
-        System.out.println(name + " is managing the pharmacy.");
-    }
-}
-
-// =======================
-// Main System Class
-// =======================
 public class PharmacySystem {
 
     static ArrayList<Medicine> medicines = new ArrayList<>();
 
     public static void main(String[] args) {
 
-        // Sample Data
-        medicines.add(new Medicine("Paracetamol", 20));
-        medicines.add(new Medicine("Biogesic", 15));
-        medicines.add(new Medicine("Amoxicillin", 10));
-
-        // GUI Frame
         JFrame frame = new JFrame("Pharmacy Inventory System");
-        frame.setSize(600, 450);
+        frame.setSize(700, 550);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setLocationRelativeTo(null);
 
-        // Main Panel
-        JPanel mainPanel = new JPanel();
-        mainPanel.setLayout(new BorderLayout(10,10));
-        mainPanel.setBorder(BorderFactory.createEmptyBorder(10,10,10,10));
+        JPanel panel = new JPanel(new BorderLayout(10,10));
+        panel.setBorder(BorderFactory.createEmptyBorder(10,10,10,10));
 
-        // Title
         JLabel title = new JLabel("PHARMACY INVENTORY SYSTEM", JLabel.CENTER);
         title.setFont(new Font("Arial", Font.BOLD, 22));
         title.setForeground(new Color(0,102,204));
-        mainPanel.add(title, BorderLayout.NORTH);
+        panel.add(title, BorderLayout.NORTH);
 
-        // Center Panel (Form)
-        JPanel formPanel = new JPanel();
-        formPanel.setLayout(new GridLayout(4,2,10,10));
+        JPanel form = new JPanel(new GridLayout(7,2,10,10));
 
         JTextField nameField = new JTextField();
+        JTextField descField = new JTextField();
         JTextField qtyField = new JTextField();
+
+        String[] categories = {"Capsule", "Tablet", "Syrup"};
+        JComboBox<String> categoryBox = new JComboBox<>(categories);
 
         JButton addBtn = new JButton("Add Medicine");
         JButton sellBtn = new JButton("Sell Medicine");
+        JButton deleteBtn = new JButton("Delete Medicine");
         JButton viewBtn = new JButton("View Inventory");
 
-        formPanel.add(new JLabel("Medicine Name:"));
-        formPanel.add(nameField);
-        formPanel.add(new JLabel("Quantity:"));
-        formPanel.add(qtyField);
-        formPanel.add(addBtn);
-        formPanel.add(sellBtn);
-        formPanel.add(viewBtn);
+        form.add(new JLabel("Medicine Name:"));
+        form.add(nameField);
+        form.add(new JLabel("Description:"));
+        form.add(descField);
+        form.add(new JLabel("Category:"));
+        form.add(categoryBox);
+        form.add(new JLabel("Quantity:"));
+        form.add(qtyField);
+        form.add(addBtn);
+        form.add(sellBtn);
+        form.add(deleteBtn);
+        form.add(viewBtn);
 
-        mainPanel.add(formPanel, BorderLayout.CENTER);
+        panel.add(form, BorderLayout.CENTER);
 
-        // Output Area
-        JTextArea outputArea = new JTextArea(8,20);
+        JTextArea outputArea = new JTextArea(12,20);
         outputArea.setEditable(false);
         outputArea.setFont(new Font("Monospaced", Font.PLAIN, 14));
-        JScrollPane scrollPane = new JScrollPane(outputArea);
+        panel.add(new JScrollPane(outputArea), BorderLayout.SOUTH);
 
-        mainPanel.add(scrollPane, BorderLayout.SOUTH);
-
-        frame.add(mainPanel);
+        frame.add(panel);
         frame.setVisible(true);
 
         // ==========================
-        // Button Functionalities
+        // ADD
         // ==========================
-
-        // Add Medicine
         addBtn.addActionListener(e -> {
             try {
                 String name = nameField.getText();
+                String desc = descField.getText();
+                String category = (String) categoryBox.getSelectedItem();
                 int qty = Integer.parseInt(qtyField.getText());
 
-                if(name.isEmpty()){
-                    throw new Exception("Medicine name required!");
+                if(name.isEmpty() || desc.isEmpty()){
+                    throw new Exception("All fields required!");
                 }
 
-                medicines.add(new Medicine(name, qty));
+                medicines.add(new Medicine(name, desc, category, qty));
                 outputArea.setText("Medicine added successfully!");
 
             } catch (NumberFormatException ex) {
@@ -145,7 +113,9 @@ public class PharmacySystem {
             }
         });
 
-        // Sell Medicine
+        // ==========================
+        // SELL
+        // ==========================
         sellBtn.addActionListener(e -> {
             try {
                 String name = nameField.getText();
@@ -168,17 +138,48 @@ public class PharmacySystem {
             }
         });
 
-        // View Inventory
+        // ==========================
+        // DELETE
+        // ==========================
+        deleteBtn.addActionListener(e -> {
+            String name = nameField.getText();
+            boolean found = false;
+
+            for (int i = 0; i < medicines.size(); i++) {
+                if (medicines.get(i).getName().equalsIgnoreCase(name)) {
+                    medicines.remove(i);
+                    found = true;
+                    break;
+                }
+            }
+
+            if (found) {
+                outputArea.setText("Medicine deleted successfully!");
+            } else {
+                outputArea.setText("Medicine not found!");
+            }
+        });
+
+        // ==========================
+        // VIEW INVENTORY
+        // ==========================
         viewBtn.addActionListener(e -> {
             StringBuilder result = new StringBuilder();
-            result.append("=== INVENTORY LIST ===\n");
+            int totalStock = 0;
+
+            result.append("=== INVENTORY LIST ===\n\n");
 
             for (Medicine m : medicines) {
-                result.append(m.getName())
-                      .append(" - Stock: ")
-                      .append(m.getStock())
-                      .append("\n");
+                result.append("Name: ").append(m.getName()).append("\n");
+                result.append("Description: ").append(m.getDescription()).append("\n");
+                result.append("Category: ").append(m.getCategory()).append("\n");
+                result.append("Stock: ").append(m.getStock()).append("\n");
+                result.append("---------------------------\n");
+
+                totalStock += m.getStock();
             }
+
+            result.append("\nTOTAL STOCK: ").append(totalStock);
 
             outputArea.setText(result.toString());
         });
