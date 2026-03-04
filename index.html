@@ -3,23 +3,51 @@ import java.awt.*;
 import java.awt.event.*;
 import java.util.ArrayList;
 
+// =============================
+// Medicine Class
+// =============================
 class Medicine {
     private String name;
     private String description;
-    private String category;
     private int stock;
+    private double price;
 
-    public Medicine(String name, String description, String category, int stock) {
+    public Medicine(String name, int stock) {
         this.name = name;
-        this.description = description;
-        this.category = category;
         this.stock = stock;
+        this.description = generateDescription(name);
+        this.price = generatePrice(name);
+    }
+
+    private String generateDescription(String name) {
+        switch (name.toLowerCase()) {
+            case "paracetamol":
+                return "Used for fever and mild pain.";
+            case "amoxicillin":
+                return "Antibiotic for bacterial infections.";
+            case "cetirizine":
+                return "Used for allergies and itching.";
+            case "ibuprofen":
+                return "Pain reliever and anti-inflammatory.";
+            default:
+                return "No description available.";
+        }
+    }
+
+    private double generatePrice(String name) {
+        switch (name.toLowerCase()) {
+            case "paracetamol": return 5.00;
+            case "amoxicillin": return 10.00;
+            case "cetirizine": return 8.00;
+            case "ibuprofen": return 7.00;
+            default: return 6.00;
+        }
     }
 
     public String getName() { return name; }
     public String getDescription() { return description; }
-    public String getCategory() { return category; }
     public int getStock() { return stock; }
+    public double getPrice() { return price; }
 
     public void addStock(int qty) {
         stock += qty;
@@ -33,6 +61,9 @@ class Medicine {
     }
 }
 
+// =============================
+// Main Pharmacy System
+// =============================
 public class PharmacySystem {
 
     static ArrayList<Medicine> medicines = new ArrayList<>();
@@ -40,7 +71,7 @@ public class PharmacySystem {
     public static void main(String[] args) {
 
         JFrame frame = new JFrame("Pharmacy Inventory System");
-        frame.setSize(700, 550);
+        frame.setSize(700, 600);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setLocationRelativeTo(null);
 
@@ -52,36 +83,40 @@ public class PharmacySystem {
         title.setForeground(new Color(0,102,204));
         panel.add(title, BorderLayout.NORTH);
 
-        JPanel form = new JPanel(new GridLayout(7,2,10,10));
+        // ================= FORM =================
+        JPanel form = new JPanel(new GridLayout(6,2,10,10));
 
         JTextField nameField = new JTextField();
-        JTextField descField = new JTextField();
+        JTextField ageField = new JTextField();
+        JTextField medicineField = new JTextField();
         JTextField qtyField = new JTextField();
 
-        String[] categories = {"Capsule", "Tablet", "Syrup"};
-        JComboBox<String> categoryBox = new JComboBox<>(categories);
-
-        JButton addBtn = new JButton("Add Medicine");
+        JButton addBtn = new JButton("Add Stock");
         JButton sellBtn = new JButton("Sell Medicine");
-        JButton deleteBtn = new JButton("Delete Medicine");
+        JButton clearBtn = new JButton("Clear Fields");
         JButton viewBtn = new JButton("View Inventory");
 
-        form.add(new JLabel("Medicine Name:"));
+        form.add(new JLabel("Name:"));
         form.add(nameField);
-        form.add(new JLabel("Description:"));
-        form.add(descField);
-        form.add(new JLabel("Category:"));
-        form.add(categoryBox);
+
+        form.add(new JLabel("Age:"));
+        form.add(ageField);
+
+        form.add(new JLabel("Medicine:"));
+        form.add(medicineField);
+
         form.add(new JLabel("Quantity:"));
         form.add(qtyField);
+
         form.add(addBtn);
         form.add(sellBtn);
-        form.add(deleteBtn);
+        form.add(clearBtn);
         form.add(viewBtn);
 
         panel.add(form, BorderLayout.CENTER);
 
-        JTextArea outputArea = new JTextArea(12,20);
+        // ================= OUTPUT =================
+        JTextArea outputArea = new JTextArea(15,20);
         outputArea.setEditable(false);
         outputArea.setFont(new Font("Monospaced", Font.PLAIN, 14));
         panel.add(new JScrollPane(outputArea), BorderLayout.SOUTH);
@@ -89,22 +124,18 @@ public class PharmacySystem {
         frame.add(panel);
         frame.setVisible(true);
 
-        // ==========================
-        // ADD
-        // ==========================
+        // ================= ADD STOCK =================
         addBtn.addActionListener(e -> {
             try {
-                String name = nameField.getText();
-                String desc = descField.getText();
-                String category = (String) categoryBox.getSelectedItem();
+                String medName = medicineField.getText();
                 int qty = Integer.parseInt(qtyField.getText());
 
-                if(name.isEmpty() || desc.isEmpty()){
-                    throw new Exception("All fields required!");
+                if(medName.isEmpty()){
+                    throw new Exception("Medicine name required!");
                 }
 
-                medicines.add(new Medicine(name, desc, category, qty));
-                outputArea.setText("Medicine added successfully!");
+                medicines.add(new Medicine(medName, qty));
+                outputArea.setText("Stock added successfully!");
 
             } catch (NumberFormatException ex) {
                 outputArea.setText("Quantity must be a number!");
@@ -113,18 +144,36 @@ public class PharmacySystem {
             }
         });
 
-        // ==========================
-        // SELL
-        // ==========================
+        // ================= SELL + RECEIPT =================
         sellBtn.addActionListener(e -> {
             try {
-                String name = nameField.getText();
+                String customerName = nameField.getText();
+                int age = Integer.parseInt(ageField.getText());
+                String medName = medicineField.getText();
                 int qty = Integer.parseInt(qtyField.getText());
 
                 for (Medicine m : medicines) {
-                    if (m.getName().equalsIgnoreCase(name)) {
+                    if (m.getName().equalsIgnoreCase(medName)) {
+
                         m.sell(qty);
-                        outputArea.setText("Medicine sold successfully!");
+
+                        double total = m.getPrice() * qty;
+
+                        String receipt =
+                                "=========== RECEIPT ===========\n" +
+                                "Customer Name: " + customerName + "\n" +
+                                "Age: " + age + "\n" +
+                                "--------------------------------\n" +
+                                "Medicine: " + m.getName() + "\n" +
+                                "Description: " + m.getDescription() + "\n" +
+                                "Price per Unit: ₱" + m.getPrice() + "\n" +
+                                "Quantity: " + qty + "\n" +
+                                "--------------------------------\n" +
+                                "TOTAL: ₱" + total + "\n" +
+                                "================================\n" +
+                                "   Thank you for your purchase!\n";
+
+                        outputArea.setText(receipt);
                         return;
                     }
                 }
@@ -132,49 +181,34 @@ public class PharmacySystem {
                 outputArea.setText("Medicine not found!");
 
             } catch (NumberFormatException ex) {
-                outputArea.setText("Quantity must be a number!");
+                outputArea.setText("Age and Quantity must be numbers!");
             } catch (Exception ex) {
                 outputArea.setText(ex.getMessage());
             }
         });
 
-        // ==========================
-        // DELETE
-        // ==========================
-        deleteBtn.addActionListener(e -> {
-            String name = nameField.getText();
-            boolean found = false;
-
-            for (int i = 0; i < medicines.size(); i++) {
-                if (medicines.get(i).getName().equalsIgnoreCase(name)) {
-                    medicines.remove(i);
-                    found = true;
-                    break;
-                }
-            }
-
-            if (found) {
-                outputArea.setText("Medicine deleted successfully!");
-            } else {
-                outputArea.setText("Medicine not found!");
-            }
+        // ================= CLEAR =================
+        clearBtn.addActionListener(e -> {
+            nameField.setText("");
+            ageField.setText("");
+            medicineField.setText("");
+            qtyField.setText("");
+            outputArea.setText("Fields cleared.");
         });
 
-        // ==========================
-        // VIEW INVENTORY
-        // ==========================
+        // ================= VIEW INVENTORY =================
         viewBtn.addActionListener(e -> {
             StringBuilder result = new StringBuilder();
             int totalStock = 0;
 
-            result.append("=== INVENTORY LIST ===\n\n");
+            result.append("====== INVENTORY LIST ======\n\n");
 
             for (Medicine m : medicines) {
-                result.append("Name: ").append(m.getName()).append("\n");
+                result.append("Medicine: ").append(m.getName()).append("\n");
                 result.append("Description: ").append(m.getDescription()).append("\n");
-                result.append("Category: ").append(m.getCategory()).append("\n");
                 result.append("Stock: ").append(m.getStock()).append("\n");
-                result.append("---------------------------\n");
+                result.append("Price: ₱").append(m.getPrice()).append("\n");
+                result.append("------------------------------\n");
 
                 totalStock += m.getStock();
             }
