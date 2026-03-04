@@ -1,166 +1,199 @@
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.*;
 
-class Pharmacy {
-    // Instance variables for stock
-    int paracetamolStock = 100;
-    int amoxicillinStock = 100;
-    int cetirizineStock = 100;
-    int ibuprofenStock = 100;
+class MedicineInfo {
 
-    // Sell medicine method
-    public String sellMedicine(String medicine, int qty) throws Exception {
-        String description;
-        double price;
-        switch (medicine.toLowerCase()) {
-            case "paracetamol":
-                description = "Used for fever and mild pain.";
-                price = 5.0;
-                if(qty > paracetamolStock) throw new Exception("Not enough stock!");
-                paracetamolStock -= qty;
-                break;
-            case "amoxicillin":
-                description = "Antibiotic for bacterial infections.";
-                price = 10.0;
-                if(qty > amoxicillinStock) throw new Exception("Not enough stock!");
-                amoxicillinStock -= qty;
-                break;
-            case "cetirizine":
-                description = "Used for allergies.";
-                price = 8.0;
-                if(qty > cetirizineStock) throw new Exception("Not enough stock!");
-                cetirizineStock -= qty;
-                break;
-            case "ibuprofen":
-                description = "Pain reliever and anti-inflammatory.";
-                price = 7.0;
-                if(qty > ibuprofenStock) throw new Exception("Not enough stock!");
-                ibuprofenStock -= qty;
-                break;
+    public static String getDescription(String medicine) {
+        switch (medicine) {
+
+            // TABLETS 
+            case "Paracetamol Tablet":
+                return "Description:\nUsed for fever and mild pain.";
+            case "Ibuprofen Tablet":
+                return "Description:\nPain reliever and anti-inflammatory.";
+            case "Aspirin Tablet":
+                return "Description:\nUsed for pain relief and heart protection.";
+            case "Metformin Tablet":
+                return "Description:\nUsed to control blood sugar levels.";
+            case "Amlodipine Tablet":
+                return "Description:\nUsed to treat high blood pressure.";
+
+            // SYRUPS 
+            case "Cetirizine Syrup":
+                return "Description:\nUsed for allergies.";
+            case "Tempra Syrup":
+                return "Description:\nUsed to reduce fever in children.";
+            case "Ambroxol Syrup":
+                return "Description:\nUsed for cough with mucus.";
+            case "Ascoril Syrup":
+                return "Description:\nRelieves cough and congestion.";
+            case "Benadryl Syrup":
+                return "Description:\nUsed for cough and cold symptoms.";
+
+            // CAPSULES
+            case "Amoxicillin Capsule":
+                return "Description:\nAntibiotic for bacterial infections.";
+            case "Mefenamic Capsule":
+                return "Description:\nRelieves pain and inflammation.";
+            case "Doxycycline Capsule":
+                return "Description:\nAntibiotic for infections.";
+            case "Omeprazole Capsule":
+                return "Description:\nReduces stomach acid.";
+            case "Vitamin E Capsule":
+                return "Description:\nUsed as a dietary supplement.";
+
             default:
-                throw new Exception("Medicine not available!");
-        }
-        return "Description: " + description + "\nPrice per Unit: ₱" + price;
-    }
-
-    // View current stock
-    public String viewStock() {
-        return "=== CURRENT STOCK ===\n" +
-                "Paracetamol: " + paracetamolStock + "\n" +
-                "Amoxicillin: " + amoxicillinStock + "\n" +
-                "Cetirizine: " + cetirizineStock + "\n" +
-                "Ibuprofen: " + ibuprofenStock + "\n";
-    }
-
-    // Get price for receipt
-    public double getPrice(String medicine) {
-        switch (medicine.toLowerCase()) {
-            case "paracetamol": return 5.0;
-            case "amoxicillin": return 10.0;
-            case "cetirizine": return 8.0;
-            case "ibuprofen": return 7.0;
-            default: return 0;
+                return "No information available.";
         }
     }
 }
 
-public class PharmacySystem {
+class PharmacySystem {
+
     public static void main(String[] args) {
-        JFrame frame = new JFrame("Pharmacy System");
-        frame.setSize(700,600);
+
+        JFrame frame = new JFrame("Pharmacy Information System");
+        frame.setSize(750, 600);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setLocationRelativeTo(null);
 
-        Pharmacy pharmacy = new Pharmacy(); // Instance of Pharmacy
+        JPanel panel = new JPanel(new BorderLayout(15, 15));
+        panel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
+        panel.setBackground(new Color(240, 248, 255));
 
-        JPanel panel = new JPanel(new BorderLayout(10,10));
-        panel.setBorder(BorderFactory.createEmptyBorder(10,10,10,10));
-
-        JLabel title = new JLabel("PHARMACY INVENTORY SYSTEM", JLabel.CENTER);
-        title.setFont(new Font("Arial", Font.BOLD, 22));
-        title.setForeground(new Color(0,102,204));
+        // TITLE
+        JLabel title = new JLabel("PHARMACY CHECKOUT SYSTEM", JLabel.CENTER);
+        title.setFont(new Font("Segoe UI", Font.BOLD, 26));
         panel.add(title, BorderLayout.NORTH);
 
-        // Form
-        JPanel form = new JPanel(new GridLayout(6,2,10,10));
+        // PANEL
+        JPanel panel2 = new JPanel();
+        panel2.setLayout(new GridLayout(5, 2, 10, 10));  // 5 rows, 2 columns
+        panel2.setBackground(Color.WHITE);
 
+        // TEXT FIELDS
         JTextField nameField = new JTextField();
         JTextField ageField = new JTextField();
-        JTextField medicineField = new JTextField();
-        JTextField qtyField = new JTextField();
 
-        JButton sellBtn = new JButton("Sell Medicine");
-        JButton clearBtn = new JButton("Clear Fields");
-        JButton viewBtn = new JButton("View Stock");
+        // ARRAYS
+        String[] categories = {"Select Category", "TABLETS", "SYRUP", "CAPSULE"};
+        JComboBox<String> categoryBox = new JComboBox<>(categories);
+        JComboBox<String> medicineBox = new JComboBox<>();
+        medicineBox.addItem("Select Medicine");
 
-        form.add(new JLabel("Name:"));
-        form.add(nameField);
-        form.add(new JLabel("Age:"));
-        form.add(ageField);
-        form.add(new JLabel("Medicine:"));
-        form.add(medicineField);
-        form.add(new JLabel("Quantity:"));
-        form.add(qtyField);
-        form.add(sellBtn);
-        form.add(clearBtn);
-        form.add(viewBtn);
+        JButton checkoutBtn = new JButton("Checkout");
+        checkoutBtn.setBackground(new Color(0, 120, 215));
+        checkoutBtn.setForeground(Color.WHITE);
+        checkoutBtn.setFocusPainted(false);
 
-        panel.add(form, BorderLayout.CENTER);
+        JButton clearBtn = new JButton("Clear Selection");
+        clearBtn.setBackground(new Color(200, 50, 50));
+        clearBtn.setForeground(Color.WHITE);
+        clearBtn.setFocusPainted(false);
 
-        JTextArea outputArea = new JTextArea(15,20);
+        // Add components without Clear in the grid
+        panel2.add(new JLabel("Customer Name:"));
+        panel2.add(nameField);
+
+        panel2.add(new JLabel("Age:"));
+        panel2.add(ageField);
+
+        panel2.add(new JLabel("Category:"));
+        panel2.add(categoryBox);
+
+        panel2.add(new JLabel("Medicine:"));
+        panel2.add(medicineBox);
+
+        panel2.add(checkoutBtn);
+        panel2.add(clearBtn);
+
+        panel.add(panel2, BorderLayout.CENTER);
+
+        // OUTPUT AREA
+        JTextArea outputArea = new JTextArea(12, 20);
         outputArea.setEditable(false);
-        outputArea.setFont(new Font("Monospaced", Font.PLAIN, 14));
+        outputArea.setFont(new Font("Consolas", Font.PLAIN, 15));
+        outputArea.setBackground(new Color(230, 240, 255));
+
         panel.add(new JScrollPane(outputArea), BorderLayout.SOUTH);
 
         frame.add(panel);
         frame.setVisible(true);
 
-        // SELL BUTTON
-        sellBtn.addActionListener(e -> {
-            try {
-                String customerName = nameField.getText();
-                int age = Integer.parseInt(ageField.getText());
-                String medicine = medicineField.getText();
-                int qty = Integer.parseInt(qtyField.getText());
+        // CATEGORY listener
+        categoryBox.addActionListener(e -> {
+            medicineBox.removeAllItems();
+            medicineBox.addItem("Select Medicine");
 
-                String medInfo = pharmacy.sellMedicine(medicine, qty);
-                double total = pharmacy.getPrice(medicine) * qty;
+            String selected = (String) categoryBox.getSelectedItem();
 
-                String receipt =
-                        "=========== RECEIPT ===========\n" +
-                        "Customer Name: " + customerName + "\n" +
-                        "Age: " + age + "\n" +
-                        "--------------------------------\n" +
-                        "Medicine: " + medicine.toUpperCase() + "\n" +
-                        medInfo + "\n" +
-                        "Quantity: " + qty + "\n" +
-                        "--------------------------------\n" +
-                        "TOTAL: ₱" + total + "\n" +
-                        "================================\n" +
-                        "Thank you for your purchase!\n";
-
-                outputArea.setText(receipt);
-
-            } catch (NumberFormatException ex) {
-                outputArea.setText("Age and Quantity must be numbers!");
-            } catch (Exception ex) {
-                outputArea.setText(ex.getMessage());
+            if (selected.equals("TABLETS")) {
+                medicineBox.addItem("Paracetamol Tablet");
+                medicineBox.addItem("Ibuprofen Tablet");
+                medicineBox.addItem("Aspirin Tablet");
+                medicineBox.addItem("Metformin Tablet");
+                medicineBox.addItem("Amlodipine Tablet");
+                
+            } else if (selected.equals("SYRUP")) {
+                medicineBox.addItem("Cetirizine Syrup");
+                medicineBox.addItem("Tempra Syrup");
+                medicineBox.addItem("Ambroxol Syrup");
+                medicineBox.addItem("Ascoril Syrup");
+                medicineBox.addItem("Benadryl Syrup");
+                
+            } else if (selected.equals("CAPSULE")) {
+                medicineBox.addItem("Amoxicillin Capsule");
+                medicineBox.addItem("Mefenamic Capsule");
+                medicineBox.addItem("Doxycycline Capsule");
+                medicineBox.addItem("Omeprazole Capsule");
+                medicineBox.addItem("Vitamin E Capsule");
             }
         });
 
-        // CLEAR BUTTON
+        // CHECKOUT listener
+        checkoutBtn.addActionListener(e -> {
+            String name = nameField.getText();
+            String ageText = ageField.getText();
+            String category = (String) categoryBox.getSelectedItem();
+            String medicine = (String) medicineBox.getSelectedItem();
+
+            if (name.isEmpty() || ageText.isEmpty()) {
+                outputArea.setText("Please enter Name and Age.");
+                return;
+            }
+
+            // Exception handling for numeric age
+            int age;
+            try {
+                age = Integer.parseInt(ageText);
+            } catch (NumberFormatException ex) {
+                outputArea.setText("Age must be a number!");
+                return;
+            }
+
+            if (category.equals("Select Category") || medicine.equals("Select Medicine")) {
+                outputArea.setText("Please select category and medicine.");
+                return;
+            }
+
+            outputArea.setText(
+                    "=========== CHECKOUT RECEIPT ===========\n\n" +
+                            "Customer Name: " + name + "\n" +
+                            "Age: " + age + "\n\n" +
+                            "Category: " + category + "\n" +
+                            "Medicine: " + medicine + "\n\n" +
+                            MedicineInfo.getDescription(medicine)
+            );
+        });
+
+        // CLEAR button listener clears all input fields and selections
         clearBtn.addActionListener(e -> {
             nameField.setText("");
             ageField.setText("");
-            medicineField.setText("");
-            qtyField.setText("");
-            outputArea.setText("Fields cleared.");
-        });
-
-        // VIEW STOCK
-        viewBtn.addActionListener(e -> {
-            outputArea.setText(pharmacy.viewStock());
+            categoryBox.setSelectedIndex(0); // Reset to "Select Category"
+            medicineBox.removeAllItems();
+            medicineBox.addItem("Select Medicine");
+            outputArea.setText("");
         });
     }
 }
