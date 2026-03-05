@@ -1,53 +1,6 @@
 import javax.swing.*;
 import java.awt.*;
 
-class MedicineInfo {
-
-    public static String getDescription(String medicine) {
-        switch (medicine) {
-
-            // TABLETS 
-            case "Paracetamol Tablet":
-                return "Description:\nUsed for fever and mild pain.";
-            case "Ibuprofen Tablet":
-                return "Description:\nPain reliever and anti-inflammatory.";
-            case "Aspirin Tablet":
-                return "Description:\nUsed for pain relief and heart protection.";
-            case "Metformin Tablet":
-                return "Description:\nUsed to control blood sugar levels.";
-            case "Amlodipine Tablet":
-                return "Description:\nUsed to treat high blood pressure.";
-
-            // SYRUPS 
-            case "Cetirizine Syrup":
-                return "Description:\nUsed for allergies.";
-            case "Tempra Syrup":
-                return "Description:\nUsed to reduce fever in children.";
-            case "Ambroxol Syrup":
-                return "Description:\nUsed for cough with mucus.";
-            case "Ascoril Syrup":
-                return "Description:\nRelieves cough and congestion.";
-            case "Benadryl Syrup":
-                return "Description:\nUsed for cough and cold symptoms.";
-
-            // CAPSULES
-            case "Amoxicillin Capsule":
-                return "Description:\nAntibiotic for bacterial infections.";
-            case "Mefenamic Capsule":
-                return "Description:\nRelieves pain and inflammation.";
-            case "Doxycycline Capsule":
-                return "Description:\nAntibiotic for infections.";
-            case "Omeprazole Capsule":
-                return "Description:\nReduces stomach acid.";
-            case "Vitamin E Capsule":
-                return "Description:\nUsed as a dietary supplement.";
-
-            default:
-                return "No information available.";
-        }
-    }
-}
-
 class PharmacySystem {
 
     public static void main(String[] args) {
@@ -57,70 +10,73 @@ class PharmacySystem {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setLocationRelativeTo(null);
 
-        JPanel panel = new JPanel(new BorderLayout(15, 15));
-        panel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
+        JPanel panel = new JPanel();
+        panel.setLayout(null); // manual layout
         panel.setBackground(new Color(240, 248, 255));
 
         // TITLE
-        JLabel title = new JLabel("PHARMACY CHECKOUT SYSTEM", JLabel.CENTER);
-        title.setFont(new Font("Segoe UI", Font.BOLD, 26));
-        panel.add(title, BorderLayout.NORTH);
+        JLabel title = new JLabel("PHARMACY CHECKOUT SYSTEM");
+        title.setFont(new Font("Segoe UI", Font.BOLD, 24));
+        title.setBounds(180, 20, 400, 40);
+        panel.add(title);
 
-        // PANEL
-        JPanel panel2 = new JPanel();
-        panel2.setLayout(new GridLayout(5, 2, 10, 10));  // 5 rows, 2 columns
-        panel2.setBackground(Color.WHITE);
+        // LABELS
+        JLabel nameLabel = new JLabel("Customer Name:");
+        nameLabel.setBounds(100, 100, 150, 30);
+        panel.add(nameLabel);
+
+        JLabel ageLabel = new JLabel("Age:");
+        ageLabel.setBounds(100, 150, 150, 30);
+        panel.add(ageLabel);
+
+        JLabel categoryLabel = new JLabel("Category:");
+        categoryLabel.setBounds(100, 200, 150, 30);
+        panel.add(categoryLabel);
+
+        JLabel medicineLabel = new JLabel("Medicine:");
+        medicineLabel.setBounds(100, 250, 150, 30);
+        panel.add(medicineLabel);
 
         // TEXT FIELDS
         JTextField nameField = new JTextField();
-        JTextField ageField = new JTextField();
+        nameField.setBounds(250, 100, 200, 30);
+        panel.add(nameField);
 
-        // ARRAYS
+        JTextField ageField = new JTextField();
+        ageField.setBounds(250, 150, 200, 30);
+        panel.add(ageField);
+
+        // COMBO BOXES
         String[] categories = {"Select Category", "TABLETS", "SYRUP", "CAPSULE"};
         JComboBox<String> categoryBox = new JComboBox<>(categories);
+        categoryBox.setBounds(250, 200, 200, 30);
+        panel.add(categoryBox);
+
         JComboBox<String> medicineBox = new JComboBox<>();
+        medicineBox.setBounds(250, 250, 200, 30);
         medicineBox.addItem("Select Medicine");
+        panel.add(medicineBox);
 
+        // BUTTONS
         JButton checkoutBtn = new JButton("Checkout");
-        checkoutBtn.setBackground(new Color(0, 120, 215));
-        checkoutBtn.setForeground(Color.WHITE);
-        checkoutBtn.setFocusPainted(false);
+        checkoutBtn.setBounds(150, 320, 120, 40);
+        panel.add(checkoutBtn);
 
-        JButton clearBtn = new JButton("Clear Selection");
-        clearBtn.setBackground(new Color(200, 50, 50));
-        clearBtn.setForeground(Color.WHITE);
-        clearBtn.setFocusPainted(false);
+        JButton clearBtn = new JButton("Clear");
+        clearBtn.setBounds(300, 320, 120, 40);
+        panel.add(clearBtn);
 
-        // Add components without Clear in the grid
-        panel2.add(new JLabel("Customer Name:"));
-        panel2.add(nameField);
-
-        panel2.add(new JLabel("Age:"));
-        panel2.add(ageField);
-
-        panel2.add(new JLabel("Category:"));
-        panel2.add(categoryBox);
-
-        panel2.add(new JLabel("Medicine:"));
-        panel2.add(medicineBox);
-
-        panel2.add(checkoutBtn);
-        panel2.add(clearBtn);
-
-        panel.add(panel2, BorderLayout.CENTER);
-
-        // OUTPUT AREA
-        JTextArea outputArea = new JTextArea(12, 20);
+        // PRINT 
+        JTextArea outputArea = new JTextArea();
         outputArea.setEditable(false);
-        outputArea.setFont(new Font("Consolas", Font.PLAIN, 15));
-        outputArea.setBackground(new Color(230, 240, 255));
-
-        panel.add(new JScrollPane(outputArea), BorderLayout.SOUTH);
+        JScrollPane scrollPane = new JScrollPane(outputArea);
+        scrollPane.setBounds(100, 380, 500, 150);
+        panel.add(scrollPane);
 
         frame.add(panel);
         frame.setVisible(true);
 
-        // CATEGORY listener
+        // CATEGORY 
         categoryBox.addActionListener(e -> {
             medicineBox.removeAllItems();
             medicineBox.addItem("Select Medicine");
@@ -133,14 +89,14 @@ class PharmacySystem {
                 medicineBox.addItem("Aspirin Tablet");
                 medicineBox.addItem("Metformin Tablet");
                 medicineBox.addItem("Amlodipine Tablet");
-                
+
             } else if (selected.equals("SYRUP")) {
                 medicineBox.addItem("Cetirizine Syrup");
                 medicineBox.addItem("Tempra Syrup");
                 medicineBox.addItem("Ambroxol Syrup");
                 medicineBox.addItem("Ascoril Syrup");
                 medicineBox.addItem("Benadryl Syrup");
-                
+
             } else if (selected.equals("CAPSULE")) {
                 medicineBox.addItem("Amoxicillin Capsule");
                 medicineBox.addItem("Mefenamic Capsule");
@@ -150,8 +106,9 @@ class PharmacySystem {
             }
         });
 
-        // CHECKOUT listener
+        // CHECKOUT 
         checkoutBtn.addActionListener(e -> {
+
             String name = nameField.getText();
             String ageText = ageField.getText();
             String category = (String) categoryBox.getSelectedItem();
@@ -162,7 +119,6 @@ class PharmacySystem {
                 return;
             }
 
-            // Exception handling for numeric age
             int age;
             try {
                 age = Integer.parseInt(ageText);
@@ -176,21 +132,74 @@ class PharmacySystem {
                 return;
             }
 
+            // SWITCH 
+
+            switch (medicine) {
+
+                case "Paracetamol Tablet":
+                    description = "Used for fever and mild pain.";
+                    break;
+                case "Ibuprofen Tablet":
+                    description = "Pain reliever and anti-inflammatory.";
+                    break;
+                case "Aspirin Tablet":
+                    description = "Used for pain relief and heart protection.";
+                    break;
+                case "Metformin Tablet":
+                    description = "Used to control blood sugar levels.";
+                    break;
+                case "Amlodipine Tablet":
+                    description = "Used to treat high blood pressure.";
+                    break;
+                case "Cetirizine Syrup":
+                    description = "Used for allergies.";
+                    break;
+                case "Tempra Syrup":
+                    description = "Used to reduce fever in children.";
+                    break;
+                case "Ambroxol Syrup":
+                    description = "Used for cough with mucus.";
+                    break;
+                case "Ascoril Syrup":
+                    description = "Relieves cough and congestion.";
+                    break;
+                case "Benadryl Syrup":
+                    description = "Used for cough and cold symptoms.";
+                    break;
+                case "Amoxicillin Capsule":
+                    description = "Antibiotic for bacterial infections.";
+                    break;
+                case "Mefenamic Capsule":
+                    description = "Relieves pain and inflammation.";
+                    break;
+                case "Doxycycline Capsule":
+                    description = "Antibiotic for infections.";
+                    break;
+                case "Omeprazole Capsule":
+                    description = "Reduces stomach acid.";
+                    break;
+                case "Vitamin E Capsule":
+                    description = "Used as a dietary supplement.";
+                    break;
+                default:
+                    description = "No information available.";
+            }
+
             outputArea.setText(
                     "=========== CHECKOUT RECEIPT ===========\n\n" +
-                            "Customer Name: " + name + "\n" +
-                            "Age: " + age + "\n\n" +
-                            "Category: " + category + "\n" +
-                            "Medicine: " + medicine + "\n\n" +
-                            MedicineInfo.getDescription(medicine)
+                    "Customer Name: " + name + "\n" +
+                    "Age: " + age + "\n\n" +
+                    "Category: " + category + "\n" +
+                    "Medicine: " + medicine + "\n\n" +
+                    "Description: " + description
             );
         });
 
-        // CLEAR button listener clears all input fields and selections
+        // CLEAR BUTTON
         clearBtn.addActionListener(e -> {
             nameField.setText("");
             ageField.setText("");
-            categoryBox.setSelectedIndex(0); // Reset to "Select Category"
+            categoryBox.setSelectedIndex(0);
             medicineBox.removeAllItems();
             medicineBox.addItem("Select Medicine");
             outputArea.setText("");
